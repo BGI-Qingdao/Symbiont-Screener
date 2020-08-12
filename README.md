@@ -1,4 +1,4 @@
-# ContamFilter
+# ConFilter
 Filter contamination from filial tgs reads by parental kmer sets.
 
 
@@ -6,7 +6,7 @@ Filter contamination from filial tgs reads by parental kmer sets.
 
 ```
 Usage    :
-    ./ContamFilter.sh [OPTION]
+    ./ConFilter.sh [OPTION]
 
 Filter contamination from filial tgs reads by parental kmer sets.
 
