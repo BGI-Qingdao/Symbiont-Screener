@@ -200,7 +200,7 @@ CLASSIFY=$SPATH"/classify_3lib"
 ANALYSIS=$SPATH"/analysis_kmercount.sh"
 
 # sanity check
-if [[ $MEMORY -lt 1  || $CPU -lt 1 || -z $FILIAL || $MER -lt 11 ]]
+if [[ $MEMORY -lt 1  || $CPU -lt 1 || -z $FILIAL || $MER -lt 11 ]] ; then
     echo "ERROR : arguments invalid ... exit!!! "
     exit 1
 fi
@@ -268,29 +268,29 @@ if [[ $USE_EXISTING_LIB == "off" ]] ; then
     echo "  the real used kmer-count bounds of maternal is [ $MLOWER , $MUPPER ] "
     echo "  the real used kmer-count bounds of paternal is [ $PLOWER , $PUPPER ] "
 
+    MLOWER=$(($MLOWER-1))
+    MUPPER=$(($MUPPER+1))
     if [[ ! -e 'step_3_done' ]]  ; then
         $MERYL difference output mat_only.meryl threads=$CPU memory=$MEMORY maternal.meryl paternal.meryl
-        MLOWER=$(($MLOWER-1))
-        MUPPER=$(($MUPPER+1))
         $MERYL greater-than $MLOWER  mat_only.meryl output 'mat_only.gt'$MLOWER'.meryl' || exit  1
         $MERYL less-than $MUPPER  'mat_only.gt'$MLOWER'.meryl' output 'mat_only.gt'$MLOWER'.lt'$MUPPER'.meryl' || exit 1
-        ln -s  mat_only.gt'$MLOWER'.lt'$MUPPER'.meryl mat_only.filtered.meryl
-        $MERYL print mat_only.filtered.meryl | awk '{print $1}' >maternal.mer
+        ln -s  'mat_only.gt'$MLOWER'.lt'$MUPPER'.meryl' mat_only.filtered.meryl
+        $MERYL print mat_only.filtered.meryl | awk '{print $1}' >maternal.mer || exit  1
         date >>'step_3_done'
     else
         echo "skip get maternal.mer due to step_3_done exist"
     fi
 
 
+    PLOWER=$(($PLOWER-1))
+    PUPPER=$(($PUPPER+1))
     if [[ ! -e 'step_4_done' ]]  ; then
         $MERYL difference output pat_only.meryl threads=$CPU memory=$MEMORY paternal.meryl maternal.meryl || exit 1
-        PLOWER=$(($PLOWER-1))
-        PUPPER=$(($PUPPER+1))
         $MERYL greater-than $PLOWER  pat_only.meryl output 'pat_only.gt'$PLOWER'.meryl' || exit  1
         $MERYL less-than $PUPPER  'pat_only.gt'$PLOWER'.meryl' output 'pat_only.gt'$PLOWER'.lt'$PUPPER'.meryl' || exit 1
 
-        ln -s  pat_only.gt'$PLOWER'.lt'$PUPPER'.meryl pat_only.filtered.meryl
-        $MERYL print pat_only.filtered.meryl | awk '{print $1}' >paternal.mer
+        ln -s  'pat_only.gt'$PLOWER'.lt'$PUPPER'.meryl' pat_only.filtered.meryl
+        $MERYL print pat_only.filtered.meryl | awk '{print $1}' >paternal.mer || exit 1
         date >>'step_4_done'
     else
         echo "skip get paternal.mer due to step_4_done exist"
@@ -299,9 +299,9 @@ if [[ $USE_EXISTING_LIB == "off" ]] ; then
     if [[ ! -e 'step_5_done' ]]  ; then
         $MERYL intersect-sum output common.meryl threads=$CPU memory=$MEMORY paternal.meryl maternal.meryl  || exit 1
         CLOW=$((($PLOWER+$MLOWER)/2-1))
-        $MERYL greater-than $CLOW output 'common.gt'$CLOW'.meryl'
+        $MERYL greater-than $CLOW output 'common.gt'$CLOW'.meryl' common.meryl || exit 1
         ln -s 'common.gt'$CLOW'.meryl' 'common.filtered.meryl'
-        $MERYL print 'common.filtered.meryl'  | awk '{print $1}' >common.mer
+        $MERYL print 'common.filtered.meryl'  | awk '{print $1}' >common.mer || exit 1
         date >>'step_5_done'
     else
         echo "skip get common.mer due to step_5_done exist"
@@ -316,7 +316,7 @@ do
     READ="$READ"" --read ""$x"
 done
 
-if [[ USE_EXISTING_LIB == "off" ]] ; then
+if [[ $USE_EXISTING_LIB == "off" ]] ; then
     PATERNAL_MER='paternal.mer'
     MATERNAL_MER='maternal.mer'
     COMMON_MER='common.mer'
@@ -331,7 +331,7 @@ else
 fi
 
 if [[ ! -e "step_7_done" ]] ; then
-    grep  haplotype phasing.out | awk DENSITY_COMMON=$DENSITY_COMMON DENSITY_SPECIFIC=$DENSITY_SPECIFIC COUNT_SPECIFIC=$COUNT_SPECIFIC  '{if($10>=DENSITY_COMMON && ( $8+$9>DENSITY_SPECIFIC) && ($11+$12>COUNT_SPECIFIC))  print $2}' >filtered.readname.txt
+    grep  haplotype phasing.out | awk  '{if($10>=DENSITY_COMMON && ( $8+$9>DENSITY_SPECIFIC) && ($11+$12>COUNT_SPECIFIC))  print $2}' DENSITY_COMMON=$DENSITY_COMMON DENSITY_SPECIFIC=$DENSITY_SPECIFIC COUNT_SPECIFIC=$COUNT_SPECIFIC  >filtered.readname.txt || exit 1
     date >> "step_7_done"
 else
     echo "skip get filtered.readname.txt due to step_7_done exist"
