@@ -59,18 +59,18 @@ Options  :
 
 Examples :
 
-    ./ContamFilter.sh --filial son.fasta  --paternal father.fastq --maternal mater.fastq
+    ./ConFilter.sh --filial son.fasta  --paternal father.fastq --maternal mater.fastq
 
     # if the filial read file follow fastq format :
-    ./ContamFilter.sh --paternal father.fastq --maternal mater.fastq --filial son.fastq --format fastq
+    ./ConFilter.sh --paternal father.fastq --maternal mater.fastq --filial son.fastq --format fastq
 
     # if there are more than one filial read files :
-    ./ContamFilter.sh --paternal father.fastq --maternal mater.fastq --filial son.L01.fasta --filial son.L02.fasta
+    ./ConFilter.sh --paternal father.fastq --maternal mater.fastq --filial son.L01.fasta --filial son.L02.fasta
 
     # use existing libs
-    ./ContamFilter.sh --filial son.fasta  --use_existing_lib on  --paternal_mer p.kmer\
-                                                                 --maternal_mer m.kmer\
-                                                                 --common_mer   c.kmer
+    ./ConFilter.sh --filial son.fasta  --use_existing_lib on  --paternal_mer p.kmer\
+                                                              --maternal_mer m.kmer\
+                                                              --common_mer   c.kmer
 
 
 ```
