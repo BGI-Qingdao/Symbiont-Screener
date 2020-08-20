@@ -88,7 +88,7 @@ struct MeanCalc
             int count=0;
             total = 0;
             for( float i : data ) {
-                if( fabs(i-sd) < sd_range*sd ) {
+                if( fabs(i-mean) < sd_range*sd ) {
                     total += i ;
                     count ++ ;
                 }
