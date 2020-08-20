@@ -12,7 +12,7 @@
 #include <chrono>
 #include <getopt.h>
 #include "gzstream/gzstream.h"
-
+#include <cmath>
 void logtime(){
     time_t now = time(0);
     char* dt = ctime(&now);
@@ -47,6 +47,8 @@ std::string reverse_complement(const std::string & kmer){
 #define HAPLOTYPES 3
 std::unordered_set<std::string> g_kmers[HAPLOTYPES];
 int g_K=0;
+int g_binsize = 1000;
+float g_sd_fac = 2.0f ;
 int total_kmers[HAPLOTYPES];
 void load_kmers(const std::string & file,int index){
     std::ifstream ifs(file);
@@ -68,6 +70,36 @@ void load_kmers(const std::string & file,int index){
     total_kmers[index] = total_kmer ;
     std::cerr<<"Recorded "<<total_kmer<<" haplotype "<<index<<" specific "<<g_K<<"-mers\n"; 
 }
+
+struct MeanCalc
+{
+    public:
+        void Push( float i ){ data.push_back(i);}
+
+        float Mean(float sd_range = 2.0f) {
+            if( data.size() == 0 ) return 0 ;
+            float total = 0;
+            for( float i : data ) total+=i;
+            float mean = total / data.size() ;
+            float sd = 0 ;
+            for( float i : data ) sd += ( i -mean ) * ( i-mean) ;
+            sd /= data.size();
+            sd = sqrt(sd);
+            int count=0;
+            total = 0;
+            for( float i : data ) {
+                if( fabs(i-sd) < sd_range*sd ) {
+                    total += i ;
+                    count ++ ;
+                }
+            }
+            if( count == 0 ) return 0 ;
+            return total / count ;
+        }
+    private:
+        std::vector<float> data;
+};
+
 //
 // Output cache
 //
@@ -76,6 +108,7 @@ struct OutputCache {
         long long  read_id;
         std::string name;
         int hapCounts[HAPLOTYPES];
+        float density[HAPLOTYPES];
         int read_length ;
     };
     std::mutex mm;
@@ -93,10 +126,10 @@ struct OutputCache {
             double secondBest = 0 ;
             std::string readHap = "amibigous";
             double probablity[HAPLOTYPES];
-            double density[HAPLOTYPES];
+            //double density[HAPLOTYPES];
             for( int i = 0 ; i<HAPLOTYPES ; i++ ) {
                 probablity[i] = double(data.hapCounts[i]) / double(g_kmers[i].size());
-                density[i] = double(data.hapCounts[i]) / double( data.read_length -g_K  + 1 );
+                //density[i] = double(data.hapCounts[i]) / double( data.read_length -g_K  + 1 );
             }
             for( int i = 0 ; i<HAPLOTYPES ; i++ ) {
                 if( probablity[i] > 0 and probablity[i] < readHapCount and probablity[i] > secondBest)
@@ -125,7 +158,7 @@ struct OutputCache {
                 std::cout<<"\t"<<probablity[i];
             }
             for(int i = 0 ; i<HAPLOTYPES ; i++ ) {
-                std::cout<<"\t"<<density[i];
+                std::cout<<"\t"<<data.density[i];
             }
             for(int i = 0 ; i<HAPLOTYPES ; i++ ) {
                 std::cout<<"\t"<<data.hapCounts[i];
@@ -207,14 +240,37 @@ struct MultiThread {
         tmp.name = head.substr(1) ;
         tmp.read_length = seq.size();
         for(int i = 0 ; i< HAPLOTYPES; i++ ) tmp.hapCounts[i]=0;
+        int prev_bin_index = 0 ;
+        int bin_count[HAPLOTYPES] ;
+        for( int j = 0 ; j< HAPLOTYPES; j++ ){
+            bin_count[j] = 0 ;
+        }
+        int curr_bin_index = 0 ;
+        MeanCalc mc[HAPLOTYPES];
         for(int i = 0 ; i <(int)seq.size()-g_K+1;i++){
             std::string kmer = seq.substr(i,g_K);
+            curr_bin_index = i / g_binsize ;
+            if( curr_bin_index != prev_bin_index ) {
+                for( int j = 0 ; j< HAPLOTYPES; j++ ){
+                    mc[j].Push(bin_count[j]);
+                    bin_count[j] = 0 ;
+                }
+                prev_bin_index = curr_bin_index ;
+            }
             for( int j = 0 ; j< HAPLOTYPES; j++ )
-                if( g_kmers[j].find(kmer) != g_kmers[j].end() )
+            {
+                if( g_kmers[j].find(kmer) != g_kmers[j].end() ){
                     tmp.hapCounts[j] ++ ;
+                    bin_count[j] ++ ;
+                }
+            }
         }
-        //for( int j = 0 ; j< HAPLOTYPES; j++ )
-        //    tmp.hapCounts[j] /= total_kmers[j];
+        for( int j = 0 ; j< HAPLOTYPES; j++ ){
+            if( bin_count[j] > 0 || float ((seq.size()-g_K+1)%g_binsize)/float(g_binsize) > 0.5 ){
+                mc[j].Push(bin_count[j]);
+            }
+            tmp.density[j]=mc[j].Mean(g_sd_fac);
+        }
         data.SaveOutput(tmp);
     }
     void submit(std::string & head ,std::string & seq, long long id){
@@ -269,6 +325,7 @@ void processFastq(const std::string & file,int t_num){
     mt.wait();
     mt.data.PrintOutput();
 }
+
 void processFasta(const std::string & file,int t_num){
     std::string head;
     std::string seq;
@@ -302,7 +359,7 @@ void processFasta(const std::string & file,int t_num){
 }
 
 void printUsage(){
-    std::cerr<<"Uasge :\n\tclassify_read --hap hap0.kmer --hap hap1.kmer --read read.fa [--read read_2.fa] [--thread t_num (8 default) ] [--format fasta/fastq (default fasta)] "<<std::endl;
+    std::cerr<<"Uasge :\n\tclassify_read --hap hap0.kmer --hap hap1.kmer --read read.fa [--read read_2.fa] [--thread t_num (8 default) ] [--format fasta/fastq (default fasta)] [--bin_size binsize (1000 default)] [--sd_fac sd-factor (default 2.0) ]"<<std::endl;
     std::cerr<<"notice : --read accept file in gzip format , but file must end by \".gz\""<<std::endl;
     std::cerr<<"warn   : --read default only accept fasta read."<<std::endl;
     std::cerr<<"         add --format fastq if --read refer to fastq file."<<std::endl;
@@ -318,10 +375,12 @@ int main(int argc ,char ** argv ) {
         {"read",  required_argument, NULL, 'r'},
         {"format",required_argument, NULL, 'f'},
         {"thread",required_argument, NULL, 't'},
+        {"bin_size",required_argument,NULL, 'b'},
+        {"sd_fac",required_argument,NULL, 's'},
         {"help",  no_argument,       NULL, 'h'},
         {0, 0, 0, 0}
     };
-    static char optstring[] = "p:r:t:f:h";
+    static char optstring[] = "p:r:t:f:s:b:h";
     std::vector<std::string> haps;
     std::vector<std::string> read;
     std::string format="fasta";
@@ -330,6 +389,12 @@ int main(int argc ,char ** argv ) {
         int c = getopt_long(argc, argv, optstring, long_options, NULL);
         if (c<0) break;
         switch (c){
+            case 's':
+                g_sd_fac = atof(optarg);
+                break;
+            case 'b':
+                g_binsize = atoi(optarg);
+                break;
             case 'p':
                 haps.push_back(std::string(optarg));
                 break;
