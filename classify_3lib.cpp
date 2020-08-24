@@ -13,6 +13,7 @@
 #include <getopt.h>
 #include "gzstream/gzstream.h"
 #include <cmath>
+
 void logtime(){
     time_t now = time(0);
     char* dt = ctime(&now);
@@ -34,6 +35,7 @@ void InitMap(){
     g_oppo['n']='N';
     g_oppo['N']='N';
 }
+
 std::string reverse_complement(const std::string & kmer){
     std::string ret = kmer;
     for(int i = 0 ; i< (int)kmer.size(); i++)
@@ -71,6 +73,89 @@ void load_kmers(const std::string & file,int index){
     std::cerr<<"Recorded "<<total_kmer<<" haplotype "<<index<<" specific "<<g_K<<"-mers\n"; 
 }
 
+struct ReadCalc
+{
+    float gc_fac;
+
+    float aa_ratio; // AA TT
+    float at_ratio; // AT
+    float ag_ratio; // AG CT
+    float ac_ratio; // AC GT
+
+    float gg_ratio; // GG CC
+    float ga_ratio; // GA TC
+    float gc_ratio; // GC
+
+    float ta_ratio; // TA
+    float tg_ratio; // TG CA
+
+    float cg_ratio; // CG
+};
+
+inline bool isA(char c) { return c == 'A' || c == 'a' ; }
+inline bool isG(char c) { return c == 'G' || c == 'g' ; }
+inline bool isC(char c) { return c == 'C' || c == 'c' ; }
+inline bool isT(char c) { return c == 'T' || c == 't' ; }
+
+ReadCalc calc_read(const std::string & read ) {
+    ReadCalc ret ;
+    ret.gc_fac = 0;
+    ret.aa_ratio=0;
+    ret.at_ratio=0;
+    ret.ag_ratio=0;
+    ret.ac_ratio=0;
+    ret.gg_ratio=0;
+    ret.ga_ratio=0;
+    ret.gc_ratio=0;
+    ret.ta_ratio=0;
+    ret.tg_ratio=0;
+    ret.cg_ratio=0;
+    int total = 0;
+    char prev = 0;
+    for( char c : read ){
+        total ++;
+        if( isG(c) || isC(c) )
+            ret.gc_fac ++ ;
+        if( prev == 0 )  prev = c ;
+        else {
+            if( isA(prev) && isA(c) ) ret.aa_ratio ++ ;
+            if( isA(prev) && isT(c) ) ret.at_ratio ++ ;
+            if( isA(prev) && isG(c) ) ret.ag_ratio ++ ;
+            if( isA(prev) && isC(c) ) ret.ac_ratio ++ ;
+
+            if( isG(prev) && isA(c) ) ret.ga_ratio ++ ;
+            if( isG(prev) && isT(c) ) ret.gc_ratio ++ ;
+            if( isG(prev) && isG(c) ) ret.gg_ratio ++ ;
+            if( isG(prev) && isC(c) ) ret.ac_ratio ++ ;
+
+            if( isT(prev) && isA(c) ) ret.ta_ratio ++ ;
+            if( isT(prev) && isT(c) ) ret.aa_ratio ++ ;
+            if( isT(prev) && isG(c) ) ret.tg_ratio ++ ;
+            if( isT(prev) && isC(c) ) ret.ga_ratio ++ ;
+
+            if( isC(prev) && isA(c) ) ret.tg_ratio ++ ;
+            if( isC(prev) && isT(c) ) ret.ag_ratio ++ ;
+            if( isC(prev) && isG(c) ) ret.cg_ratio ++ ;
+            if( isC(prev) && isC(c) ) ret.gg_ratio ++ ;
+
+            prev = c ;
+        }
+    }
+    ret.gc_fac  /=total;
+    ret.aa_ratio/=total-1;
+    ret.at_ratio/=total-1;
+    ret.ag_ratio/=total-1;
+    ret.ac_ratio/=total-1;
+    ret.gg_ratio/=total-1;
+    ret.ga_ratio/=total-1;
+    ret.gc_ratio/=total-1;
+    ret.ta_ratio/=total-1;
+    ret.tg_ratio/=total-1;
+    ret.cg_ratio/=total-1;
+
+    return ret ;
+}
+
 struct MeanCalc
 {
     public:
@@ -99,7 +184,6 @@ struct MeanCalc
     private:
         std::vector<float> data;
 };
-
 //
 // Output cache
 //
@@ -110,6 +194,7 @@ struct OutputCache {
         int hapCounts[HAPLOTYPES];
         float density[HAPLOTYPES];
         int read_length ;
+        ReadCalc rc_data;
     };
     std::mutex mm;
     std::map<int , ReadInfo> output_cache;
@@ -163,6 +248,19 @@ struct OutputCache {
             for(int i = 0 ; i<HAPLOTYPES ; i++ ) {
                 std::cout<<"\t"<<data.hapCounts[i];
             }
+
+            std::cout<<'\t'<<data.rc_data.gc_fac;
+            std::cout<<'\t'<<data.rc_data.aa_ratio;
+            std::cout<<'\t'<<data.rc_data.at_ratio;
+            std::cout<<'\t'<<data.rc_data.ag_ratio;
+            std::cout<<'\t'<<data.rc_data.ac_ratio;
+            std::cout<<'\t'<<data.rc_data.gg_ratio;
+            std::cout<<'\t'<<data.rc_data.ga_ratio;
+            std::cout<<'\t'<<data.rc_data.gc_ratio;
+            std::cout<<'\t'<<data.rc_data.ta_ratio;
+            std::cout<<'\t'<<data.rc_data.tg_ratio;
+            std::cout<<'\t'<<data.rc_data.cg_ratio;
+
             std::cout<<'\n';
         }
     }
@@ -271,6 +369,7 @@ struct MultiThread {
             }
             tmp.density[j]=mc[j].Mean(g_sd_fac);
         }
+        tmp.rc_data = calc_read(seq);
         data.SaveOutput(tmp);
     }
     void submit(std::string & head ,std::string & seq, long long id){
