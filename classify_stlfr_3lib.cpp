@@ -100,9 +100,9 @@ void printBarcodeInfos(const BarcodeCache& g_barcode_haps){
         std::cout<<'\t'<<getHapCount(data,0);
         std::cout<<'\t'<<getHapCount(data,1);
         std::cout<<'\t'<<getHapCount(data,2);
-        std::cout<<'\t'<<getHapCount(data,0)/g_kmers[0].size();
-        std::cout<<'\t'<<getHapCount(data,1)/g_kmers[1].size();
-        std::cout<<'\t'<<getHapCount(data,2)/g_kmers[2].size();
+        std::cout<<'\t'<<float(getHapCount(data,0))/float(g_kmers[0].size());
+        std::cout<<'\t'<<float(getHapCount(data,1))/float(g_kmers[1].size());
+        std::cout<<'\t'<<float(getHapCount(data,2))/float(g_kmers[2].size());
         std::cout<<"\n";
         //std::cout<<'\t'<<getHapCount(data,-1)<<'\n';
     }
