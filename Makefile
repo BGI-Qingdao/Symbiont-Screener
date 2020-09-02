@@ -2,7 +2,7 @@
 
 all: classify_3lib classify_stlfr_3lib gc_nmer
 
-gc_nmer:
+gc_nmer: gc_nmer.cpp gzstream/gzstream.C gzstream/gzstream.h
 	g++ -c -g  gzstream/gzstream.C -I./gzstream -lz -o gzstream.o
 	g++ -g -std=c++11 gc_nmer.cpp gzstream.o -lz -lpthread -o gc_nmer 
 

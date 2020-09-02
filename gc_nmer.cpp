@@ -108,6 +108,7 @@ struct NmerFreq
     static std::set<std::string> allmer;
 
     static void GenAll(int n) {
+        NmerFreq::n = n ;
         allmer = GetAllMer(n);
     }
 
@@ -116,7 +117,7 @@ struct NmerFreq
         for ( const auto & p: cache )
             t+=p.second;
         for( const auto & tmp : allmer )
-            if ( cache.find(tmp) != cache.end() )
+            if ( cache.find(tmp) == cache.end() )
                 std::cout<<'\t'<< float(cache.at(tmp))/float(t);
             else
                 std::cout<<"\t0";
@@ -331,7 +332,7 @@ void processFasta(const std::string & file,int t_num){
 }
 
 void printUsage(){
-    std::cerr<<"Uasge :\n\tclassify_read --hap hap0.kmer --hap hap1.kmer --read read.fa [--read read_2.fa] [--thread t_num (8 default) ] [--format fasta/fastq (default fasta)] [--bin_size binsize (1000 default)] [--sd_fac sd-factor (default 2.0) ]"<<std::endl;
+    std::cerr<<"Uasge :\n\tgc_nmer  --read read.fa [--kmer k(default 4)] [--read read_2.fa] [--thread t_num (8 default) ] [--format fasta/fastq (default fasta)]"<<std::endl;
     std::cerr<<"notice : --read accept file in gzip format , but file must end by \".gz\""<<std::endl;
     std::cerr<<"warn   : --read default only accept fasta read."<<std::endl;
     std::cerr<<"         add --format fastq if --read refer to fastq file."<<std::endl;
