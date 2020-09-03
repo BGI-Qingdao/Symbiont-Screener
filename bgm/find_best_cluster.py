@@ -11,10 +11,13 @@ def Counter(Y):
             d[y] = 1;
     return d
 
+def takeSecond(elem):
+    return elem[1]
+
 def ReverseSortCounters(D):
     l = []
-    for k , v in D:
-        l.append([k,v])
+    for k  in D.keys():
+        l.append([k,D[k]])
     l.sort(key=takeSecond,reverse = True)
     return l
 
@@ -23,9 +26,10 @@ class BestHitFinder:
     def BestHit(self,predict_Y , formula_predict , covariances):
         self.covariances = covariances
         self.all_counter = Counter(predict_Y)
-
+        #print(self.all_counter)
         PY=predict_Y[formula_predict==1]
         self.pf_counter = Counter(PY)
+        #print(self.pf_counter)
         sorted_counters = ReverseSortCounters(self.pf_counter)
         best_var = 0.0 ;
         best_hit = -1

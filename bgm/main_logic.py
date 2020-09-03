@@ -23,18 +23,18 @@ if __name__ == '__main__':
     X, pca_ratio = machine_learning.doPCA(data.X)
     logger.log_pca_ration(pca_ratio);
 
-    results = consensus_result.ConsensusResult(X.shape[1],opts.loop_num)
+    results = consensus_result.ConsensusResult(X.shape[0],opts.loop_num)
     for i in range(opts.loop_num):
         predict_Y , covariances = machine_learning.doBGM(X)
         best_hit_finder = find_best_cluster.BestHitFinder()
         valid , best_hit = best_hit_finder.BestHit(predict_Y,data.formula_predict,covariances)
         if not valid :
             continue
-        logger.log_bgm_result(best_hit_finder);
+        logger.log_bgm_result(i,best_hit_finder);
         results.PushOneResult(predict_Y,best_hit)
 
     results.GenFinalResult()
     logger.log_meterics(data,results.hosts)
-    #print_result(results.hosts);
+    print_result(results.hosts);
 
 print("ALL DONE ... ", file=sys.stderr)

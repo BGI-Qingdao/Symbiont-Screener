@@ -30,4 +30,5 @@ def log_meterics(data,new_Y):
     if not data.debug :
         print("Info : no Y in non-debug mode.",file=sys.stderr)
     else :
-        print(classification_report(data.Y,new_Y,target_names=['contamination','host']),file=sys.stderr)
+        print("Info : in debug mode now : ",file=sys.stderr)
+        print(classification_report(data.Y,new_Y),file=sys.stderr)

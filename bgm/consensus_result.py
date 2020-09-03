@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
+import numpy as np
+
 class ConsensusResult:
 
     def __init__(self,total, loop_num , min_hit_fac=0.2):
@@ -19,7 +21,7 @@ class ConsensusResult:
         self.scores= np.zeros(self.total)
         self.hosts= np.zeros(self.total)
         for i,result in enumerate(self.results):
-            hit=np.where(result==best_hits[i])
+            hit=np.where(result==self.best_hits[i])
             for index in hit :
                 self.scores[index] +=1;
         for i,score in enumerate(self.scores) : 
