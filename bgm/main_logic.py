@@ -35,6 +35,6 @@ if __name__ == '__main__':
 
     results.GenFinalResult()
     logger.log_meterics(data,results.hosts)
-    print_result(results.hosts);
+    print_result.print_result(results.hosts);
 
 print("ALL DONE ... ", file=sys.stderr)
