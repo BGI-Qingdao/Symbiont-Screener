@@ -117,7 +117,7 @@ struct NmerFreq
         for ( const auto & p: cache )
             t+=p.second;
         for( const auto & tmp : allmer )
-            if ( cache.find(tmp) == cache.end() )
+            if ( cache.find(tmp) != cache.end() )
                 std::cout<<'\t'<< float(cache.at(tmp))/float(t);
             else
                 std::cout<<"\t0";
