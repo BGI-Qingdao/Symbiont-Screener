@@ -3,4 +3,4 @@
 
 def print_result(Y):
     for i in Y:
-        print("%d\n"%i)
+        print("%d"%i)
