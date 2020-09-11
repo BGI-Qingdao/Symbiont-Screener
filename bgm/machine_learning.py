@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 from sklearn.decomposition import PCA
-from sklearn.decomposition import PCA
 from sklearn import mixture
 
 def doPCA(X):

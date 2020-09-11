@@ -15,7 +15,7 @@
 #include <cmath>
 #include <set>
 
-int g_nmer=4;
+int g_nmer=2;
 
 inline bool isA(char c) { return c == 'A' || c == 'a' ; }
 inline bool isG(char c) { return c == 'G' || c == 'g' ; }

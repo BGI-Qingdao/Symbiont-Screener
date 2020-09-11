@@ -19,9 +19,6 @@ void logtime(){
     char* dt = ctime(&now);
     std::cerr<<dt<<std::endl;
 }
-double g_hap0_fac = 1.0f ;
-double g_hap1_fac = 1.0f ;
-double g_hap2_fac = 1.0f ;
 //
 // load & cache maternal unique kmer & paternal unique kmer
 //
@@ -64,27 +61,6 @@ struct BarcodeCache {
     }
 };
 
-//int getHap(const std::string & barcode , const std::map<int,int> & data){
-//    if( barcode == "0_0_0" || barcode == "0_0" || barcode == "0" )
-//        return -1;
-//    if( data.find(0) != data.end() &&  data.find(1) != data.end() ){
-//        double df0 =  double(data.at(0)) / double(g_kmers[0].size());
-//        double df1 =  double(data.at(1)) / double(g_kmers[1].size());
-//        df0 *= g_hap0_fac;
-//        df1 *= g_hap1_fac;
-//        if( df0 > df1 ) return 0 ; 
-//        if( df1 > df0 ) return 1 ;
-//        return -1 ;
-//    } else if ( data.find(0) != data.end() ) {
-//        if ( data.at(0) > 0 ) return 0 ;
-//        return -1 ;
-//    } else if ( data.find(1) != data.end() ) {
-//        if ( data.at(1) > 0 ) return 1 ;
-//        return -1 ;
-//    } else {
-//        return -1 ;
-//    }
-//}
 
 int getHapCount(const std::map<int,int> & data , int hap){
     if ( data.find(hap) != data.end() ) return data.at(hap);
@@ -300,25 +276,11 @@ Options:\n\
         -c/--hap2                       unshared kmer set of hap2.\n\
         -r/--read                       filial reads in fastq format. gzip file must be ended by \".gz\".\n\
         -t/--thread   (8 default)       thread number to used.\n\
-        -w/--weight0  (1.0 default)     weight of hap0.\n\
-        -u/--weight1  (1.0 default)     weight of hap1.\n\
-        -x/--weight2  (1.0 default)     weight of hap2.\n\
         -f/--adaptor_f                  forward adaptor sequence.\n\
                                         default \"CTGTCTCTTATACACATCTTAGGAAGACAAGCACTGACGACATGA\"\n\
         -q/--adaptor_r                  reverse adaptor sequence.\n\
                                         default \"TCTGCTGAGTCGAGAACGTCTCTGTGAGCCAAGGAGTTGCTCTGG\"\n\
 \n\
-Examples:\n\
-    ./classify --hap0 p.kmers --hap1 m.kmers --read input.fastq.gz\n\
-\n\
-    ./classify --hap0 p.kmers --hap1 m.kmers --read input.L01.fastq.gz --read input.L02.fastq.gz\n\
-\n\
-    ./classify --hap0 p.kmers --hap1 m.kmers --read input.L01.fastq.gz --read input.L02.fastq.gz -t 24 --weight1 1.04 -f CTGTCTCTTATACACATCTTAGGAAGACAA -q TCTGCTGAGTCGAGAACGTCTCTG\n\
-\n\
-Output format:\n\
-barcode\thaplotype(0/1/-1)\tkmer_count_hap0\tkmer_count_hap1\n\
-\n\
-Usage done.\n\
 ";
 }
 
@@ -400,16 +362,13 @@ int main(int argc ,char ** argv ){
         {"hap2",  required_argument, NULL, 'c'},
         {"read", required_argument,  NULL, 'r'},
         {"thread",required_argument, NULL, 't'},
-        {"weight0",required_argument, NULL, 'w'},
-        {"weight1",required_argument, NULL, 'u'},
-        {"weight2",required_argument, NULL, 'x'},
         {"adaptor_f",required_argument, NULL, 'f'},
         {"adaptor_r",required_argument, NULL, 'q'},
         {"help",  no_argument,       NULL, 'h'},
         {0, 0, 0, 0}
     };
-    static char optstring[] = "p:m:l:r:t:w:u:f:q:h";
-    std::string hap0 , hap1 ;
+    static char optstring[] = "p:m:c:r:t:f:q:h";
+    std::string hap0 , hap1 ,hap2 ;
     std::vector<std::string> read;
     int t_num=8;
     while(1){
@@ -428,17 +387,14 @@ int main(int argc ,char ** argv ){
             case 'm':
                 hap1 = std::string(optarg);
                 break;
+            case 'c':
+                hap2 = std::string(optarg);
+                break;
             case 'r':
                 read.push_back(std::string(optarg));
                 break;
             case 't':
                 t_num = atoi(optarg);
-                break;
-            case 'u':
-                g_hap1_fac=atof(optarg);
-                break;
-            case 'w':
-                g_hap0_fac=atof(optarg);
                 break;
             case 'h':
             default :
@@ -446,18 +402,18 @@ int main(int argc ,char ** argv ){
                 return -1;
         }
     }
-    if( hap0 == "" || hap1 == "" || read.empty()|| t_num< 1) {
+    if( hap0 == "" || hap1 == "" || hap2 == "" || read.empty()|| t_num< 1) {
         printUsage();
         return -1;
     }
     std::cerr<<"__START__"<<std::endl;
-    std::cerr<<" use hap0 weight "<<g_hap0_fac<<std::endl;
-    std::cerr<<" use hap1 weight "<<g_hap1_fac<<std::endl;
     logtime();
     std::cerr<<"__load hap0 kmers__"<<std::endl;
     load_kmers(hap0,0);
     std::cerr<<"__load hap1 kmers__"<<std::endl;
     load_kmers(hap1,1);
+    std::cerr<<"__load hap2 kmers__"<<std::endl;
+    load_kmers(hap2,2);
     InitAdaptor();
     logtime();
     BarcodeCache data;
