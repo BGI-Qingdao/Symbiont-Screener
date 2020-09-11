@@ -192,7 +192,7 @@ struct MultiThread {
         if( vote[1] > 0 )
             barcode_caches[index].IncrBarcodeHaps(barcode,1,vote[1]);
         if( vote[2] > 0 )
-            barcode_caches[index].IncrBarcodeHaps(barcode,2,vote[1]);
+            barcode_caches[index].IncrBarcodeHaps(barcode,2,vote[2]);
     }
     //void submit(const std::string & head ,const std::string & seq){
     void submit(const Buffer & buffer ){
