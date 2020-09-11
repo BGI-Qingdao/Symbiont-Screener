@@ -400,30 +400,6 @@ Usage done.\n\
 void TestAll(){
     assert(parseName("VSDSDS#XXX_xxx_s/1")=="XXX_xxx_s");
     assert(parseName("VSDSDS#Libxxx_XXX_xxx_s/1")=="Libxxx_XXX_xxx_s");
-    Kmer::InitFilter(5);
-    auto str1=BaseStr::str2BaseStr("AGCTC");
-    int  t1[] = { '\000','\003','\001','\002','\001'};
-    for( int i = 0 ; i <5 ; i++ ) assert(str1[i] == t1[i]);
-    auto str2 = BaseStr::str2BaseStr("GAGCT");
-    int  t2[] = {'\003','\000','\003','\001','\002'};
-    for( int i = 0 ; i <5 ; i++ ) assert(str2[i] == t2[i]);
-                         // 00 1101 1001
-    assert(Kmer::str2Kmer(BaseStr::str2BaseStr("AGCTC")).low == 0xD9);
-    assert(Kmer::str2Kmer(BaseStr::str2BaseStr("AGCTC")).high == 0);
-    assert(Kmer::str2Kmer(BaseStr::str2BaseStr("GAGCT")).low == 0xD9);
-    assert(Kmer::str2Kmer(BaseStr::str2BaseStr("GAGCT")).high == 0);
-    auto kmers = Kmer::chopRead2Kmer(BaseStr::str2BaseStr("GAGCTA"));
-    assert(kmers.size() == 2 );
-    // GAGCT->AGCTC 00 1101 1001 -> 0xD9
-    // AGCTA        00 1101 1000 -> 0xD8
-    assert(kmers[0].high == 0 );
-    assert(kmers[0].low == 0xD9 );
-    assert(kmers[1].high == 0 );
-    assert(kmers[1].low == 0xD8 );
-    std::string k1 = BaseStr::BaseStr2Str(Kmer::ToBaseStr(kmers[0]));
-    std::string k2 = BaseStr::BaseStr2Str(Kmer::ToBaseStr(kmers[1]));
-    assert(k1 == "AGCTC");
-    assert(k2 == "AGCTA");
 }
 
 //
@@ -435,10 +411,11 @@ int main(int argc ,char ** argv ){
     static struct option long_options[] = {
         {"read", required_argument,  NULL, 'r'},
         {"thread",required_argument, NULL, 't'},
+        {"nmer",required_argument,NULL,'n'},
         {"help",  no_argument,       NULL, 'h'},
         {0, 0, 0, 0}
     };
-    static char optstring[] = "r:t:h";
+    static char optstring[] = "r:t:n:h";
     std::vector<std::string> read;
     int t_num=8;
     while(1){
@@ -450,6 +427,9 @@ int main(int argc ,char ** argv ){
                 break;
             case 't':
                 t_num = atoi(optarg);
+                break;
+            case 'n':
+                g_nmer = atoi(optarg);
                 break;
             case 'h':
             default :
@@ -463,6 +443,8 @@ int main(int argc ,char ** argv ){
     }
     std::cerr<<"__START__"<<std::endl;
     logtime();
+    std::cerr<<" use nmer n="<<g_nmer<<std::endl;
+    NmerFreq::GenAll(g_nmer);
     BarcodeCache data;
     for(const auto r : read ){
         std::cerr<<"__process read: "<<r<<std::endl;
