@@ -365,34 +365,13 @@ void processFastq(const std::string & file,int t_num,BarcodeCache& data){
 void printUsage(){
     std::cerr<<"\n\
 Uasge :\n\
-    classify --hap0 hap0 --hap1 hap1 --read read1.fq [options]\n\
+    classify --nmer 2 --read read1.fq [options]\n\
 \n\
 Options:\n\
         -h/--help                       print this uasge and exit.\n\
-        -p/--hap0                       unshared kmer set of hap0.\n\
-        -m/--hap1                       unshared kmer set of hap1.\n\
-        -c/--hap2                       unshared kmer set of hap2.\n\
         -r/--read                       filial reads in fastq format. gzip file must be ended by \".gz\".\n\
+        -n/--num                        nmer\n\
         -t/--thread   (8 default)       thread number to used.\n\
-        -w/--weight0  (1.0 default)     weight of hap0.\n\
-        -u/--weight1  (1.0 default)     weight of hap1.\n\
-        -x/--weight2  (1.0 default)     weight of hap2.\n\
-        -f/--adaptor_f                  forward adaptor sequence.\n\
-                                        default \"CTGTCTCTTATACACATCTTAGGAAGACAAGCACTGACGACATGA\"\n\
-        -q/--adaptor_r                  reverse adaptor sequence.\n\
-                                        default \"TCTGCTGAGTCGAGAACGTCTCTGTGAGCCAAGGAGTTGCTCTGG\"\n\
-\n\
-Examples:\n\
-    ./classify --hap0 p.kmers --hap1 m.kmers --read input.fastq.gz\n\
-\n\
-    ./classify --hap0 p.kmers --hap1 m.kmers --read input.L01.fastq.gz --read input.L02.fastq.gz\n\
-\n\
-    ./classify --hap0 p.kmers --hap1 m.kmers --read input.L01.fastq.gz --read input.L02.fastq.gz -t 24 --weight1 1.04 -f CTGTCTCTTATACACATCTTAGGAAGACAA -q TCTGCTGAGTCGAGAACGTCTCTG\n\
-\n\
-Output format:\n\
-barcode\thaplotype(0/1/-1)\tkmer_count_hap0\tkmer_count_hap1\n\
-\n\
-Usage done.\n\
 ";
 }
 
