@@ -12,10 +12,10 @@ class MatrixLoader:
         self.M = np.loadtxt(self.mer2,dtype=float)
         if not self.debug :
             self.formula_predict = self.T[:,0]
-            self.X = np.hstack( (self.T[:,1:11] ,self.M ) )
+            self.X = np.hstack( (self.T[:,1:] ,self.M ) )
         else:
             self.formula_predict = self.T[:,1]
-            self.X = np.hstack( (self.T[:,2:12] ,self.M ) )
+            self.X = np.hstack( (self.T[:,2:] ,self.M ) )
             self.Y =  self.T[:,0]
 
 

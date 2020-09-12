@@ -36,6 +36,7 @@ if __name__ == '__main__':
 
     results.GenFinalResult()
     logger.log_meterics(data,results.hosts)
+    logger.log_hit(opts.loop_num,results.scores)
     print_result.print_result(results.hosts);
 
 print("ALL DONE ... ", file=sys.stderr)

@@ -17,7 +17,7 @@ def log_matrix(X):
     print("Info : the shape of matrix is %s " % str(X.shape) ,file=sys.stderr,flush = True)
 
 def log_pca_ration(ratio):
-    print("Info : the pca ration is %s "%str(ratio) , file=sys.stderr,,flush = True)
+    print("Info : the pca ration is %s "%str(ratio) , file=sys.stderr,flush = True)
 
 def log_bgm_result(i,finder):
     print("################################  Round %d"%i,file=sys.stderr,flush = True)
@@ -26,7 +26,7 @@ def log_bgm_result(i,finder):
     print("Info : formula_predict in cluster is\n%s\n"% str(finder.pf_counter),file=sys.stderr,flush = True)
     print("Info : best-hit is %d with smallest covariances %f "%(finder.best_hit ,finder.best_var),file=sys.stderr,flush = True)
 
-def log_cluster(data,predict_Y)
+def log_cluster(data,predict_Y):
     if not data.debug :
         print("Info : no Y in non-debug mode.",file=sys.stderr,flush = True)
     else :
@@ -37,7 +37,7 @@ def log_cluster(data,predict_Y)
             ll={}
             for i in range(5):
                 tt=np.sum(t1==i)
-                ll.append(tt)
+                ll[i]=tt
             print(ll,file=sys.stderr,flush = True)
 
 def log_meterics(data,new_Y):
@@ -46,3 +46,11 @@ def log_meterics(data,new_Y):
     else :
         print("Info : in debug mode now : ",file=sys.stderr,flush = True)
         print(classification_report(data.Y,new_Y),file=sys.stderr,flush = True)
+
+
+def log_hit(i,hits):
+    ll={}
+    for j in range(i):
+        tt=np.sum(hits==j)
+        ll[j]=tt
+    print("Info : hit frequency %s"% str(ll),file=sys.stderr,flush = True)
