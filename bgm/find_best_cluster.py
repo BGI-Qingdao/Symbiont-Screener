@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 import math
+import numpy as np
 
 def Counter(Y):
     d = {}
@@ -26,6 +27,7 @@ class BestHitFinder:
     def BestHit(self,predict_Y , formula_predict , covariances):
         self.covariances = covariances
         self.all_counter = Counter(predict_Y)
+        total_predict=np.sum(formula_predict==1)
         #print(self.all_counter)
         PY=predict_Y[formula_predict==1]
         self.pf_counter = Counter(PY)
@@ -34,7 +36,11 @@ class BestHitFinder:
         best_var = 0.0 ;
         best_hit = -1
         for i in range(3):
+            if i >= len(sorted_counters):
+                break
             cluster_id , counter = sorted_counters[i]
+            if counter <= total_predict / 10 :
+                break 
             if counter <= 0 :
                 break
             cov = covariances[cluster_id][0][0]
