@@ -50,7 +50,7 @@ Options :
         --help              print this usage message.
 ```
 
-#### step by step
+### step by step
 
 * 00.BuildTrioLib.sh
 * 11.GetTrioMatrix_tgs.sh or 12.GetTrioMatrix_stlfr.sh
