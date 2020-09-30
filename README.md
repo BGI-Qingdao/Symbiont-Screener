@@ -4,30 +4,15 @@ Filter contamination from filial tgs reads by parental kmer sets.
 
 ## USAGE
 
+### full pipeline 
+
+type ``` ./ConFilter.sh -h ``` and your get below :
+
 ```
-Usage    :
-    ./ConFilter.sh [OPTION]
+Usage   :
+    ./ConFilter.sh [options]
 
-Filter contamination from filial tgs reads by parental kmer sets.
-
-Options  :
-        --filial            filial TGS reads file in FASTA/Q format.
-                            file in gzip format can be accepted, but filename must end by .gz.
-
-        --format            fasta/fastq . set the format of --filial.
-                            [ optional, default fasta. ]
-
-        --thread            thread num.
-                            [ optional, default 8 threads. ]
-
-        --memory            x (GB) of memory to used by meryl.
-                            [ optional, default 50GB. ]
-
-        --mer               mer-size
-                            [ optional, default 21. ]
-
-        --use_existing_lib  on/off
-                            [ optional, default off]
+Options :
 
         --paternal          paternal NGS reads file in FASTQ format.
                             ( note : gzip format is NOT supported. )
@@ -37,42 +22,54 @@ Options  :
                             ( note : gzip format is NOT supported. )
                             [ optional, needed when --use_existing_libs off ]
 
-        --paternal_mer      existing paternal specific kmer lib file.
-                            [ optional, needed when --use_existing_libs on ]
+        --offspring         Offspring sequence file.
+                            gzip format file is supported but should end by '.gz'
 
-        --maternal_mer      existing maternal specific kmer lib file.
-                            [ optional, needed when --use_existing_libs on ]
+        --offspring_format  fasta/fastq (default fasta)
 
-        --common_mer        existing parental common kmer lib file.
-                            [ optional, needed when --use_existing_libs on ]
+        --threshold1        minimum density of parental kmer density (default 0.001)
 
-        --density_common    the minimum density of common_kmer
-                            [ optional, default 0.01]
+        --threshold2        minimum density of shared kmer density (default 0.1)
 
-        --density_specific  the minimum density of parental specific kmer
-                            [ optional, default 0.00005]
+        --kmer               kmer-size (default 21. ]
 
-        --count_specific    the minimum count of parental specific kmer
-                            [ optional, default 2]
+        --nmer              nmer for gc_nmer(default 2)
+
+        --sequence_platform tgs/stlfr (default tgs)
+
+        --loop              loop number of BGMM (default 30)
+
+        --thread            thread num.
+                            [ optional, default 8 threads. ]
+
+        --memory            x (GB) of memory to used by meryl.
+                            [ optional, default 50GB. ]
+
+        --python3           PATH to python3 file from anaconda3 ( default python3 )
 
         --help              print this usage message.
+```
 
-Examples :
+#### step by step
 
-    ./ConFilter.sh --filial son.fasta  --paternal father.fastq --maternal mater.fastq
+* 00.BuildTrioLib.sh
+* 11.GetTrioMatrix_tgs.sh or 12.GetTrioMatrix_stlfr.sh
+* 20.GetGCNmer.sh
+* bgm/main_logic.py
+* merge result by tools/merge_result.sh
 
-    # if the filial read file follow fastq format :
-    ./ConFilter.sh --paternal father.fastq --maternal mater.fastq --filial son.fastq --format fastq
+## Get reads from result & raw reads
 
-    # if there are more than one filial read files :
-    ./ConFilter.sh --paternal father.fastq --maternal mater.fastq --filial son.L01.fasta --filial son.L02.fasta
-
-    # use existing libs
-    ./ConFilter.sh --filial son.fasta  --use_existing_lib on  --paternal_mer p.kmer\
-                                                              --maternal_mer m.kmer\
-                                                              --common_mer   c.kmer
+try tools/ExtractReads_tgs.sh or tools/ExtractReads_stlfr.sh 
 
 
+## Format of final.result.txt
+
+```
+column1 :   read-name/barcode-name.
+column2 :   priori. (prior-formula result) 1 means host and 0 means contamination.
+column3 :   host.   (final culster result) 1 means host and 0 means contamination.
+column4 :   hit-count   how many number that this read occurs in the best cluster.
 ```
 
 

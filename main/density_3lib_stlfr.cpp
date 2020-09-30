@@ -68,8 +68,9 @@ int getHapCount(const std::map<int,int> & data , int hap){
 }
 
 void printBarcodeInfos(const BarcodeCache& g_barcode_haps){
-    std::cout<<"barcode_name\t#total_kmer\t#kmer-1\t#kmer-2\t#kmer-3\tprob-1\t#prob-2\t#prob-3\n" ;
+    //std::cout<<"barcode_name\t#total_kmer\t#kmer-1\t#kmer-2\t#kmer-3\tprob-1\t#prob-2\t#prob-3\n" ;
     for(const auto & pair : g_barcode_haps.barcode_haps){
+        if( pair.first == "0_0_0" ) continue ;
         std::cout<<pair.first;
         const auto & data=pair.second;
         std::cout<<'\t'<<getHapCount(data,-1);

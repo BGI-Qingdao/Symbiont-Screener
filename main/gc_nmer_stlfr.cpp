@@ -15,6 +15,15 @@
 #include <cmath>
 #include <set>
 
+std::string get_name(const std::string & name ){
+    std::string ret ;
+    for( const char c : name ){
+        if( std::isblank(c) || c == '\n' ) break;
+        ret += c ;
+    }
+    return ret ;
+}
+
 int g_nmer=2;
 
 inline bool isA(char c) { return c == 'A' || c == 'a' ; }
@@ -200,6 +209,7 @@ struct BarcodeCache {
 
 void printBarcodeInfos(const BarcodeCache& fdata){
     for( const auto & pair : fdata.barcode_cache){
+        if( pair.first == "0_0_0" ) continue ;
         std::cout<<pair.first;
         std::cout<<'\t'<<pair.second.gc.GC_content();
         pair.second.nmer_freq.Print();
