@@ -91,6 +91,14 @@ do
             OFFSPRING_FORMAT=$2
             shift
             ;;
+        "--threshold1")
+            THRESHOLD1=$2
+            shift
+            ;;
+        "--threshold2")
+            THRESHOLD2=$2
+            shift
+            ;;
         *)
             echo "invalid params : \"$1\" . exit ... "
             exit
@@ -160,7 +168,7 @@ if [[ ! -e '11.step_2_done' ]]  ; then
                 priori=1 ;
             else
                 priori=0 ;
-            printf("%d\t%f\t%f\t%f\d",priori,$8,$9,$10);
+            printf("%d\t%f\t%f\t%f\n",priori,$8/1000,$9/1000,$10/1000);
          }'  T1=$THRESHOLD1 T2=$THRESHOLD2 trio_density.data.txt >trio.4r.matrix || exit 1
     date >>'11.step_2_done'
 else

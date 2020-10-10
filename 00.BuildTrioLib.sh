@@ -19,12 +19,8 @@ Options  :
                             [ optional, default 21. ]
 
         --paternal          paternal NGS reads file in FASTQ format.
-                            ( note : gzip format is NOT supported. )
-                            [ optional, needed when --use_existing_libs off ]
 
         --maternal          maternal NGS reads file in FASTQ format.
-                            ( note : gzip format is NOT supported. )
-                            [ optional, needed when --use_existing_libs off ]
 
         --help              print this usage message.
 

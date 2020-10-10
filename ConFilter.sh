@@ -8,12 +8,8 @@ Usage   :
 Options :
 
         --paternal          paternal NGS reads file in FASTQ format.
-                            ( note : gzip format is NOT supported. )
-                            [ optional, needed when --use_existing_libs off ]
 
         --maternal          maternal NGS reads file in FASTQ format.
-                            ( note : gzip format is NOT supported. )
-                            [ optional, needed when --use_existing_libs off ]
 
         --offspring         Offspring sequence file.
                             gzip format file is supported but should end by '.gz' 
@@ -44,8 +40,8 @@ Options :
 """
 }
 
-PAT_READS=
-MAT_READS=
+PATERNAL=
+MATERNAL=
 OFFSPRING=
 
 PYTHON3='python3'
@@ -127,6 +123,10 @@ do
             LOOP=$2
             shift
             ;;
+        "--python3")
+            PYTHON3=$2
+            shift
+            ;;
         *)
             echo "invalid params : \"$1\" . exit ... "
             exit
@@ -138,13 +138,13 @@ done
 ###############################################################################
 # main logic
 ###############################################################################
-$STEP0 --paternal "$PAT_READS" \
-    --maternal "$MAT_READS" \
-    --kmer $KMER \
+$STEP0 --paternal "$PATERNAL" \
+    --maternal "$MATERNAL" \
+    --mer $KMER \
     --thread $CPU \
     --memory $MEMORY  || exit 1 
 
-if [[ $PLAT == 'tgs' ]]
+if [[ $PLAT == 'tgs' ]] ; then 
     $STEP11 --paternal_mer paternal.mer \
         --maternal_mer maternal.mer \
         --shared_mer common.mer  \
@@ -153,7 +153,7 @@ if [[ $PLAT == 'tgs' ]]
         --threshold1 $THRESHOLD1 \
         --threshold2 $THRESHOLD2 \
         --thread $CPU || exit 1
-elif [[ $PLAT == 'stlfr' ]]
+elif [[ $PLAT == 'stlfr' ]] ; then
     $STEP12 --paternal_mer paternal.mer \
         --maternal_mer maternal.mer \
         --shared_mer common.mer  \
@@ -171,7 +171,7 @@ $STEP2 --nmer $NMER \
        --thread $CPU || exit 1
 
 
-PYTHON3  $BGM_MAIN -t trio.4r.matrix \
+$PYTHON3  $BGM_MAIN -t trio.4r.matrix \
                    -m  gc_nmer.matrix \
                    -l $LOOP >cluster_reuslt.txt 2>cluster.log || exit 1
 
