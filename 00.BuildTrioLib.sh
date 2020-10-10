@@ -135,16 +135,13 @@ else
     echo "skip meryl count paternal due to 00.step_2_done exist"
 fi
 
-MLOWER=`grep LOWER_INDEX maternal.bounds.txt| awk -F '=' '{print $2}'`
-MUPPER=`grep UPPER_INDEX maternal.bounds.txt| awk -F '=' '{print $2}'`
-PLOWER=`grep LOWER_INDEX paternal.bounds.txt| awk -F '=' '{print $2}'`
-PUPPER=`grep UPPER_INDEX paternal.bounds.txt| awk -F '=' '{print $2}'`
-echo "  the real used kmer-count bounds of maternal is [ $MLOWER , $MUPPER ] "
-echo "  the real used kmer-count bounds of paternal is [ $PLOWER , $PUPPER ] "
 
-MLOWER=$(($MLOWER-1))
-MUPPER=$(($MUPPER+1))
 if [[ ! -e '00.step_3_done' ]]  ; then
+    MLOWER=`grep LOWER_INDEX maternal.bounds.txt| awk -F '=' '{print $2}'`
+    MUPPER=`grep UPPER_INDEX maternal.bounds.txt| awk -F '=' '{print $2}'`
+    MLOWER=$(($MLOWER-1))
+    MUPPER=$(($MUPPER+1))
+    echo "  the real used kmer-count bounds of maternal is [ $MLOWER , $MUPPER ] "
     $MERYL difference output mat_only.meryl threads=$CPU memory=$MEMORY maternal.meryl paternal.meryl
     $MERYL greater-than $MLOWER  mat_only.meryl output 'mat_only.gt'$MLOWER'.meryl' || exit  1
     $MERYL less-than $MUPPER  'mat_only.gt'$MLOWER'.meryl' output 'mat_only.gt'$MLOWER'.lt'$MUPPER'.meryl' || exit 1
@@ -155,10 +152,12 @@ else
     echo "skip get maternal.mer due to 00.step_3_done exist"
 fi
 
-
-PLOWER=$(($PLOWER-1))
-PUPPER=$(($PUPPER+1))
 if [[ ! -e '00.step_4_done' ]]  ; then
+    PLOWER=`grep LOWER_INDEX paternal.bounds.txt| awk -F '=' '{print $2}'`
+    PUPPER=`grep UPPER_INDEX paternal.bounds.txt| awk -F '=' '{print $2}'`
+    PLOWER=$(($PLOWER-1))
+    PUPPER=$(($PUPPER+1))
+    echo "  the real used kmer-count bounds of paternal is [ $PLOWER , $PUPPER ] "
     $MERYL difference output pat_only.meryl threads=$CPU memory=$MEMORY paternal.meryl maternal.meryl || exit 1
     $MERYL greater-than $PLOWER  pat_only.meryl output 'pat_only.gt'$PLOWER'.meryl' || exit  1
     $MERYL less-than $PUPPER  'pat_only.gt'$PLOWER'.meryl' output 'pat_only.gt'$PLOWER'.lt'$PUPPER'.meryl' || exit 1

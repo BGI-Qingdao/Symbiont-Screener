@@ -115,7 +115,7 @@ echo "    offspring    input    : $OFFSPRING"
 echo "    pat-only-mer input    : $PATERNAL"
 echo "    mat-only-mer input    : $MATERNAL"
 echo "    shared-mer   input    : $SHARED_MER"
-echo "BuildTrioLib.sh in  : $SPATH"
+echo "11.GetTrioMatrix_tgs.sh in:  $SPATH"
 
 DENSITY_3LIB=$SPATH"/main/density_3lib"
 # sanity check

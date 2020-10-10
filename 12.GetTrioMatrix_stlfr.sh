@@ -113,7 +113,7 @@ echo "    offspring    input    : $OFFSPRING"
 echo "    pat-only-mer input    : $PATERNAL"
 echo "    mat-only-mer input    : $MATERNAL"
 echo "    shared-mer   input    : $SHARED_MER"
-echo "BuildTrioLib.sh in  : $SPATH"
+echo "12.GetTrioMatrix_stlfr.sh in  : $SPATH"
 
 DENSITY_3LIB=$SPATH"/main/density_3lib_stlfr"
 # sanity check
