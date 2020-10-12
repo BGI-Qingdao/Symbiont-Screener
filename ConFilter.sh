@@ -170,14 +170,23 @@ $STEP2 --nmer $NMER \
        --offspring_format $OFFSPRING_FORMAT  \
        --thread $CPU || exit 1
 
+if [[ ! -e '30.step_1_done' ]]  ; then
+    $PYTHON3  $BGM_MAIN -t trio.4r.matrix  \
+                        -m  gc_nmer.matrix \
+                        -l $LOOP >cluster_reuslt.txt 2>cluster.log || exit 1
+    date >>'30.step_1_done'
+else
+    echo "skip cluster by bgm due to 30.step_1_done exist!"
+fi
 
-$PYTHON3  $BGM_MAIN -t trio.4r.matrix \
-                   -m  gc_nmer.matrix \
-                   -l $LOOP >cluster_reuslt.txt 2>cluster.log || exit 1
+if [[ ! -e '30.step_2_done' ]]  ; then
+    cut -f 1 trio_density.data.txt >name.txt
+    paste name.txt cluster_reuslt.txt >final.result.txt 
 
-cut -f 1 trio_density.data.txt >name.txt
-paste name.txt cluster_reuslt.txt >final.result.txt 
-
-echo "Result in final.result.txt"
-echo "  Format are \"name priori host hit-counts\""
+    echo "Result in final.result.txt"
+    echo "  Format are \"name priori host hit-counts\""
+    date >>'30.step_2_done'
+else
+    echo "skip get final result due to 30.step_2_done exist!"
+fi
 echo "__ALL DONE__"

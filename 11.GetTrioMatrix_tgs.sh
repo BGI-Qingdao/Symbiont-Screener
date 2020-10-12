@@ -112,9 +112,11 @@ echo "ContamFilter.sh log : "
 echo "    thread                : $CPU "
 echo "    offspring format      : $OFFSPRING_FORMAT"
 echo "    offspring    input    : $OFFSPRING"
-echo "    pat-only-mer input    : $PATERNAL"
-echo "    mat-only-mer input    : $MATERNAL"
+echo "    pat-only-mer input    : $PATERNAL_MER"
+echo "    mat-only-mer input    : $MATERNAL_MER"
 echo "    shared-mer   input    : $SHARED_MER"
+echo "    threshold1            : $THRESHOLD1"
+echo "    threshold2            : $THRESHOLD2"
 echo "11.GetTrioMatrix_tgs.sh in:  $SPATH"
 
 DENSITY_3LIB=$SPATH"/main/density_3lib"
@@ -160,11 +162,11 @@ else
 fi
 
 if [[ ! -e '11.step_2_done' ]]  ; then
-    # $8    density of pat-only
-    # $9    density of mat-only
-    # $10   density of shared
+    # $8    density*1000 of pat-only
+    # $9    density*1000 of mat-only
+    # $10   density*1000 of shared
     awk '{
-            if($8+$9>=T1 && $10>T2) 
+            if($8+$9>=T1*1000 && $10>T2*1000) 
                 priori=1 ;
             else
                 priori=0 ;
