@@ -151,7 +151,7 @@ fi
 
 if [[ ! -e '20.step_2_done' ]]  ; then
     LAST=$((4**$NMER))
-    LAST=$(($LAST+1))
+    LAST=$(($LAST+2))
     fild="2-$LAST"
     cut -f $fild gc_nmer.data.txt >gc_nmer.matrix
     date >>'20.step_2_done'
