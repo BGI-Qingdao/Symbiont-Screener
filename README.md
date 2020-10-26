@@ -1,4 +1,4 @@
-# ConFilter
+# Symbiont-Screener
 Filter contamination from filial tgs long reads or stlfr co-barcode-reads by parental kmer sets and unsupervised clustering.
 
 
@@ -6,11 +6,11 @@ Filter contamination from filial tgs long reads or stlfr co-barcode-reads by par
 
 ### full pipeline 
 
-type ``` ./ConFilter.sh -h ``` and your get below :
+type ``` ./Symbiont-Screener.sh -h ``` and your get below :
 
 ```
 Usage   :
-    ./ConFilter.sh [options]
+    ./Symbiont-Screener.sh [options]
 
 Options :
 

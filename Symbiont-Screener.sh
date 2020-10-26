@@ -3,7 +3,7 @@
 function usage(){
 echo """
 Usage   :
-    ./ConFilter.sh [options]
+    ./Symbiont-Screener.sh [options]
 
 Options :
 
