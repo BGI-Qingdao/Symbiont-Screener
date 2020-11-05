@@ -8,7 +8,7 @@ def doPCA(X):
     X2=pca.fit_transform(X)
     return X2 , pca.explained_variance_ratio_
 
-def doBGM(X2):
-    dpgmm = mixture.BayesianGaussianMixture(n_components=5,covariance_type='full').fit(X2)
+def doBGM(X2 , n_components=5):
+    dpgmm = mixture.BayesianGaussianMixture(n_components=n_components,covariance_type='full').fit(X2)
     predict_Y=dpgmm.predict(X2)
     return predict_Y , dpgmm.covariances_

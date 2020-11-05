@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     results = consensus_result.ConsensusResult(X.shape[0],opts.loop_num)
     for i in range(opts.loop_num):
-        predict_Y , covariances = machine_learning.doBGM(X)
+        predict_Y , covariances = machine_learning.doBGM(X,opts.clusters_number)
         logger.log_cluster(data,predict_Y)
         best_hit_finder = find_best_cluster.BestHitFinder()
         valid , best_hit = best_hit_finder.BestHit(predict_Y,data.formula_predict,covariances)
