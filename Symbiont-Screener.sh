@@ -180,7 +180,8 @@ else
 fi
 
 if [[ ! -e '30.step_2_done' ]]  ; then
-    cut -f 1 trio_density.data.txt >name.txt
+    echo "read_name" >name.txt
+	cut -f 2 trio_density.data.txt >>name.txt
     paste name.txt cluster_reuslt.txt >final.result.txt 
 
     echo "Result in final.result.txt"
