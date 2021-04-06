@@ -60,7 +60,17 @@ std::string reverse_complement(const std::string & kmer)
         ret[kmer.size()-i-1] = g_oppo[kmer[i]];
     return ret ;
 }
-
+std::set<std::string> RCMer(const std::set<std::string> & input){
+    std::set<std::string> ret ;
+    for( const auto & str : input){
+        std::string rcstr = reverse_complement(str);
+        if( str < rcstr )
+            ret.insert(str);
+        else
+            ret.insert(rcstr);
+    }
+    return ret ;
+}
 std::set<std::string> GetAllMer(int n ) 
 {
     std::set<std::string> ret ;
@@ -118,7 +128,8 @@ struct NmerFreq
 
     static void GenAll(int n) {
         NmerFreq::n = n ;
-        allmer = GetAllMer(n);
+        std::set<std::string> true_allmer = GetAllMer(n);
+        allmer = RCMer(true_allmer);
     }
 
     void Print() const{
