@@ -69,4 +69,5 @@ class strobemer {
 }; // class strobemer
 
 
+void reverse_complete( const char * seq , int len, char * buff );
 #endif //__MINSTROBE_H_

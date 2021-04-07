@@ -19,10 +19,10 @@ density_3lib_stlfr : density_3lib_stlfr.cpp gzstream/gzstream.C gzstream/gzstrea
 	g++ -c -g  gzstream/gzstream.C -I./gzstream -lz -o gzstream.o
 	g++ -g -std=c++11  density_3lib_stlfr.cpp gzstream.o -lz -lpthread -o density_3lib_stlfr
 
-kmer2strobemer:
+kmer2strobemer: kmer2strobemer.cpp strobemer/strobemer.cpp strobemer/strobemer.h
 	g++ -c -g strobemer/strobemer.cpp -I./strobemer -o strobemer.o
 	g++ -g kmer2strobemer.cpp strobemer.o -o kmer2strobemer
 
 clean :
-	rm -f density_3lib density_3lib_stlfr gc_nmer gc_nmer_stlfr
-	rm -f *.o gzstream/*.o
+	rm -f density_3lib density_3lib_stlfr gc_nmer gc_nmer_stlfr kmer2strobemer 
+	rm -f *.o gzstream/*.o strobemer/*.o
