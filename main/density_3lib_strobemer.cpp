@@ -59,6 +59,7 @@ void load_kmers(const std::string & file,int index){
     }
     total_kmers[index] = total_kmer ;
     std::cerr<<"Recorded "<<total_kmer<<" haplotype "<<index<<" specific "<<g_K<<"-mers\n"; 
+	std::cerr<<"unique strobemer "<<g_kmers[index].size()<<'\n';
 }
 
 struct MeanCalc
