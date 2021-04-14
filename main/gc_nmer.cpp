@@ -353,7 +353,7 @@ void processFasta(const std::string & file,int t_num){
 }
 
 void printUsage(){
-    std::cerr<<"Uasge :\n\tgc_nmer  --read read.fa [--kmer k(default 4)] [--read read_2.fa] [--thread t_num (8 default) ] [--format fasta/fastq (default fasta)]"<<std::endl;
+    std::cerr<<"Uasge :\n\tgc_nmer  --read read.fa [--kmer k(default 2)] [--read read_2.fa] [--thread t_num (8 default) ] [--format fasta/fastq (default fasta)]"<<std::endl;
     std::cerr<<"notice : --read accept file in gzip format , but file must end by \".gz\""<<std::endl;
     std::cerr<<"warn   : --read default only accept fasta read."<<std::endl;
     std::cerr<<"         add --format fastq if --read refer to fastq file."<<std::endl;

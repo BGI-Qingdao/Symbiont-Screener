@@ -20,14 +20,14 @@ Options :
 
         --threshold2        minimum density of shared kmer density (default 0.1)
 
-        --kmer               kmer-size (default 21. ]
+        --kmer              kmer-size (default 21. ]
 
         --nmer              nmer for gc_nmer(default 2)
 
         --sequence_platform tgs/stlfr (default tgs)
 
         --loop              loop number of BGMM (default 30) 
-
+		
         --thread            thread num.
                             [ optional, default 8 threads. ]
 
@@ -91,7 +91,7 @@ do
             CPU=$2
             shift
             ;;
-        "--mer")
+        "--kmer")
             KMER=$2
             shift
             ;;
@@ -125,6 +125,14 @@ do
             ;;
         "--python3")
             PYTHON3=$2
+            shift
+            ;;
+		"--threshold1")
+            THRESHOLD1=$2
+            shift
+            ;;
+        "--threshold2")
+            THRESHOLD2=$2
             shift
             ;;
         *)

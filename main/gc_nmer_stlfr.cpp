@@ -380,7 +380,7 @@ Uasge :\n\
 Options:\n\
         -h/--help                       print this uasge and exit.\n\
         -r/--read                       filial reads in fastq format. gzip file must be ended by \".gz\".\n\
-        -n/--num                        nmer\n\
+        -n/--num      (2 default)       nmer\n\
         -t/--thread   (8 default)       thread number to used.\n\
 ";
 }

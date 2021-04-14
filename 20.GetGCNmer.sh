@@ -142,6 +142,7 @@ if [[ ! -e '20.step_1_done' ]]  ; then
         READ_ARG="--read $x ""$READ_ARG"
     done
     $GC_NMER_EXE  $READ_ARG \
+	              --kmer   $NMER \
                   --format $OFFSPRING_FORMAT \
                   --thread $CPU >gc_nmer.data.txt 2>gc_nmer.log || exit 1
     date >>'20.step_1_done'
