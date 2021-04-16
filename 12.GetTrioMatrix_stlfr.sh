@@ -167,7 +167,7 @@ if [[ ! -e '12.step_2_done' ]]  ; then
     # $4    count of mat-only
     # $5    count of shared
     awk '{
-            if(($3/$2+$4/$2)>=T1 && $5/$2>T2) 
+            if( ( ($3/$2) >=T1 || ($4/$2) >=T1 ) && $5/$2>T2 ) 
                 priori=1 ;
             else
                 priori=0 ;
