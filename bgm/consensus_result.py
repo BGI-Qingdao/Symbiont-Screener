@@ -12,18 +12,26 @@ class ConsensusResult:
         self.min_threshold = int(min_hit_fac*self.loop_num)
         self.results = []
         self.best_hits = []
+        self.second_best_hits = []
 
-    def PushOneResult(self , result, best_hit):
+    def PushOneResult(self , result, best_hit, second_best_hit):
         self.results.append(result);
         self.best_hits.append(best_hit)
+        self.second_best_hits.append(second_best_hit);
 
     def GenFinalResult(self):
         self.scores= np.zeros(self.total)
+        self.second_scores= np.zeros(self.total)
         self.hosts= np.zeros(self.total)
         for i,result in enumerate(self.results):
             hit=np.where(result==self.best_hits[i])
             for index in hit :
                 self.scores[index] +=1;
+
+            hit=np.where(result==self.second_best_hits[i])
+            for index in hit :
+                self.second_scores[index] +=1;
+
         for i,score in enumerate(self.scores) : 
             if score >= self.min_threshold:
                 self.hosts[i] = 1

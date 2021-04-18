@@ -35,6 +35,8 @@ Options :
                             [ optional, default 50GB. ]
 
         --python3           PATH to python3 file from anaconda3 ( default python3 )
+      
+        --seed              random seed ( default 42 )
 
         --help              print this usage message.
 """
@@ -55,6 +57,7 @@ CPU='8'
 MEMORY=50
 MEMORY=100
 LOOP=30
+RSEED=42
 #LOW_HIT=0.2
 
 SPATH=`dirname $0`
@@ -85,6 +88,10 @@ do
             ;;
         "--memory")
             MEMORY=$2
+            shift
+            ;;
+        "--seed")
+            RSEED=$2
             shift
             ;;
         "--thread")
@@ -127,7 +134,7 @@ do
             PYTHON3=$2
             shift
             ;;
-		"--threshold1")
+        "--threshold1")
             THRESHOLD1=$2
             shift
             ;;
@@ -181,6 +188,7 @@ $STEP2 --nmer $NMER \
 if [[ ! -e '30.step_1_done' ]]  ; then
     $PYTHON3  $BGM_MAIN -t trio.4r.matrix  \
                         -m  gc_nmer.matrix \
+                        -r  $RSEED \
                         -l $LOOP >cluster_reuslt.txt 2>cluster.log || exit 1
     date >>'30.step_1_done'
 else
@@ -189,7 +197,7 @@ fi
 
 if [[ ! -e '30.step_2_done' ]]  ; then
     echo "read_name" >name.txt
-	cut -f 2 trio_density.data.txt >>name.txt
+    cut -f 2 trio_density.data.txt >>name.txt
     paste name.txt cluster_reuslt.txt >final.result.txt 
 
     echo "Result in final.result.txt"

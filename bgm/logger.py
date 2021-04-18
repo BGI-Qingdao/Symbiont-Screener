@@ -25,6 +25,7 @@ def log_bgm_result(i,finder):
     print("Info : cluster size is\n%s\n"% str(finder.all_counter),file=sys.stderr,flush = True)
     print("Info : formula_predict in cluster is\n%s\n"% str(finder.pf_counter),file=sys.stderr,flush = True)
     print("Info : best-hit is %d with smallest covariances %f "%(finder.best_hit ,finder.best_var),file=sys.stderr,flush = True)
+    print("Info : second-best-hit is %d "%(finder.second_best_hit),file=sys.stderr,flush = True)
 
 def log_cluster(data,predict_Y):
     if not data.debug :

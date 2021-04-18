@@ -7,21 +7,24 @@ class OPTs:
         self.trio_file=""
         self.mer2_file=""
         self.loop_num =30
+        self.rseed=42
         self.clusters_number=5
         self.debug = False
 
     def Usage(self):
-        print("usage: main_logic.py -t <trio_file> -m <2mer2_file> [-l loop number (default 30)] [-c cluters number (default 5)]");
+        print("usage: main_logic.py -t <trio_file> -m <2mer2_file> [-l loop number (default 30)] [-c cluters number (default 5)] [-r random seed(default(42)");
 
     def Parse(self,argv):
         print("Info : argv = %s " % str(argv), file=sys.stderr)
         try:
-            opts, args = getopt.getopt(argv,"hdt:m:l:c:",["help","debug","trio=","2mer=","loop=","cluters="])
+            opts, args = getopt.getopt(argv,"hdt:m:l:c:r:",["help","debug","trio=","2mer=","loop=","cluters=","rseed="])
         except getopt.GetoptError:
             self.Usage()
             sys.exit(2)
         #print(opts)
         for opt, arg in opts:
+            if opt in ('-r' , "--rseed"):
+                self.rseed=int(arg)
             if opt in ('-d' , "--debug"):
                 self.debug=True
             elif opt in ('-h' , "--help"):
