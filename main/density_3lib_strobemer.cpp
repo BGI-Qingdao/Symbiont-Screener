@@ -358,7 +358,7 @@ void processFasta(const std::string & file,int t_num){
 }
 
 void printUsage(){
-    std::cerr<<"Uasge :\n\tclassify_read --hap hap0.kmer --hap hap1.kmer --read read.fa -nkmer nkmer --ksize ksize --wsize wize [--minstrobe ] [--read read_2.fa] [--thread t_num (8 default) ] [--format fasta/fastq (default fasta)] [--bin_size binsize (1000 default)] [--sd_fac sd-factor (default 3.0) ]"<<std::endl;
+    std::cerr<<"Uasge :\n\tclassify_read --hap hap0.kmer --hap hap1.kmer --read read.fa --nkmer nkmer --ksize ksize --wsize wize [--minstrobe ] [--read read_2.fa] [--thread t_num (8 default) ] [--format fasta/fastq (default fasta)] [--bin_size binsize (1000 default)] [--sd_fac sd-factor (default 3.0) ]"<<std::endl;
     std::cerr<<"notice : --read accept file in gzip format , but file must end by \".gz\""<<std::endl;
     std::cerr<<"warn   : --read default only accept fasta read."<<std::endl;
     std::cerr<<"         add --format fastq if --read refer to fastq file."<<std::endl;
