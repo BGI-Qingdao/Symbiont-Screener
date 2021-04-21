@@ -29,7 +29,7 @@ Options :
         --thread            thread num.
                             [ optional, default 8 threads. ]
 
-        --memory            x (GB) of memory to used by meryl.
+        --memory            x (GB) of memory to used by jellyfish.
                             [ optional, default 100GB. ]
 
         --python3           PATH to python3 file from anaconda3 ( default python3 )
