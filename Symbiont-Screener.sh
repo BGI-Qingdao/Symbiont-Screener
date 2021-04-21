@@ -16,15 +16,13 @@ Options :
 
         --offspring_format  fasta/fastq (default fasta)
 
-        --threshold1        minimum density of parental kmer density (default 0.001)
+        --threshold1        minimum density of parental kmer density (default 0.02)
 
         --threshold2        minimum density of shared kmer density (default 0.1)
 
-        --kmer              kmer-size (default 21. ]
+        --kmer              kmer-size (default 40->randstrobe(2,10,30). ]
 
-        --nmer              nmer for gc_nmer(default 2)
-
-        --sequence_platform tgs/stlfr (default tgs)
+        --nmer              nmer for gc_nmer(default 3)
 
         --loop              loop number of BGMM (default 30) 
 		
@@ -32,7 +30,7 @@ Options :
                             [ optional, default 8 threads. ]
 
         --memory            x (GB) of memory to used by meryl.
-                            [ optional, default 50GB. ]
+                            [ optional, default 100GB. ]
 
         --python3           PATH to python3 file from anaconda3 ( default python3 )
       
@@ -47,23 +45,21 @@ MATERNAL=
 OFFSPRING=
 
 PYTHON3='python3'
-THRESHOLD1=0.001
+THRESHOLD1=0.02
 THRESHOLD2=0.1
 OFFSPRING_FORMAT='fasta'
-PLAT='tgs'
-KMER=21
-NMER=2
+KMER=40
+NMER=3
 CPU='8'
-MEMORY=50
 MEMORY=100
 LOOP=30
 RSEED=42
 #LOW_HIT=0.2
 
 SPATH=`dirname $0`
-STEP0=$SPATH/00.BuildTrioLib.sh
-STEP11=$SPATH/11.GetTrioMatrix_tgs.sh
-STEP12=$SPATH/12.GetTrioMatrix_stlfr.sh
+STEP0=$SPATH/00.BuildTrioLib/build_trio_kmer.sh
+K2S=$SPATH/main/kmer2strobemer
+STEP1=$SPATH/11.GetTrioMatrix_tgs.sh
 STEP2=$SPATH/20.GetGCNmer.sh
 BGM_MAIN=$SPATH/bgm/main_logic.py
 
@@ -122,10 +118,6 @@ do
             NMER=$2
             shift
             ;;
-        "--sequence_platform")
-            PLAT=$2
-            shift
-            ;;
         "--loop")
             LOOP=$2
             shift
@@ -159,25 +151,24 @@ $STEP0 --paternal "$PATERNAL" \
     --thread $CPU \
     --memory $MEMORY  || exit 1 
 
-if [[ $PLAT == 'tgs' ]] ; then 
-    $STEP11 --paternal_mer paternal.mer \
-        --maternal_mer maternal.mer \
-        --shared_mer common.mer  \
-        --offspring "$OFFSPRING" \
-        --offspring_format $OFFSPRING_FORMAT  \
-        --threshold1 $THRESHOLD1 \
-        --threshold2 $THRESHOLD2 \
-        --thread $CPU || exit 1
-elif [[ $PLAT == 'stlfr' ]] ; then
-    $STEP12 --paternal_mer paternal.mer \
-        --maternal_mer maternal.mer \
-        --shared_mer common.mer  \
-        --offspring "$OFFSPRING" \
-        --offspring_format $OFFSPRING_FORMAT  \
-        --threshold1 $THRESHOLD1 \
-        --threshold2 $THRESHOLD2 \
-        --thread $CPU || exit 1
+if [[ ! -e '00.kmer2strobemer_done' ]]  ; then
+    $K2S --nkmer 2 --ksize 10 --wsize 30 <paternal.mer >paternal.strobemer || exit 1
+	$K2S --nkmer 2 --ksize 10 --wsize 30 <maternal.mer >maternal.strobemer || exit 1
+	$K2S --nkmer 2 --ksize 10 --wsize 30 <common.mer >common.strobemer || exit 1
+    date >>'00.kmer2strobemer_done'
+else
+    echo "skip kmer2strobemer due to 00.kmer2strobemer_done exist!"
 fi
+
+$STEP1 --paternal_mer paternal.strobemer \
+    --maternal_mer maternal.strobemer \
+    --shared_mer common.strobemer  \
+    --offspring "$OFFSPRING" \
+    --offspring_format $OFFSPRING_FORMAT  \
+    --threshold1 $THRESHOLD1 \
+    --threshold2 $THRESHOLD2 \
+    --thread $CPU || exit 1
+
 
 $STEP2 --nmer $NMER \
        --sequence_platform $PLAT \

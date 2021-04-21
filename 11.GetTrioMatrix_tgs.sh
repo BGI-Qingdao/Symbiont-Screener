@@ -42,7 +42,7 @@ CPU=8
 PATERNAL_MER=""
 MATERNAL_MER=""
 SHARED_MER=""
-THRESHOLD1=0.001
+THRESHOLD1=0.02
 THRESHOLD2=0.1
 OFFSPRING=""
 OFFSPRING_FORMAT="fasta"
@@ -119,7 +119,7 @@ echo "    threshold1            : $THRESHOLD1"
 echo "    threshold2            : $THRESHOLD2"
 echo "11.GetTrioMatrix_tgs.sh in:  $SPATH"
 
-DENSITY_3LIB=$SPATH"/main/density_3lib"
+DENSITY_3LIB=$SPATH"/main/density_3lib_strobemer"
 # sanity check
 if [[  $CPU -lt 1 || -z $PATERNAL_MER || -z $MATERNAL_MER || -z $SHARED_MER || -z "$OFFSPRING" ]] ; then
     echo "ERROR : arguments invalid ... exit!!! "
@@ -154,6 +154,9 @@ if [[ ! -e '11.step_1_done' ]]  ; then
     $DENSITY_3LIB --hap $PATERNAL_MER \
                   --hap $MATERNAL_MER \
                   --hap $SHARED_MER $READ_ARG \
+				  --nkmer 2 \
+				  --ksize 10 \
+				  --wsize 30 \
                   --format $OFFSPRING_FORMAT \
                   --thread $CPU >trio_density.data.txt 2>trio_density.log || exit 1
     date >>'11.step_1_done'

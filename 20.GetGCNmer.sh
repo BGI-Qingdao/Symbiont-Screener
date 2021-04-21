@@ -31,7 +31,7 @@ Examples :
 # basic variables 
 ###############################################################################
 CPU=8
-NMER=2
+NMER=3
 OFFSPRING_FORMAT="fasta"
 PLAT="tgs"
 OFFSPRING=""
