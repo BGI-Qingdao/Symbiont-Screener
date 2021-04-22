@@ -17,7 +17,6 @@ Options  :
         --offspring_format  fasta/fastq (default fasta)
 
         --nmer              nmer for gc_nmer(default 2)
-        --sequence_platform tgs/stlfr (default tgs)
         --help              print this usage message.
 Examples :
 
@@ -33,7 +32,6 @@ Examples :
 CPU=8
 NMER=3
 OFFSPRING_FORMAT="fasta"
-PLAT="tgs"
 OFFSPRING=""
 
 SPATH=`dirname $0`
@@ -68,10 +66,6 @@ do
             NMER=$2
             shift
             ;;
-        "--sequence_platform")
-            PLAT=$2
-            shift
-            ;;
         "--offspring_format")
             OFFSPRING_FORMAT=$2
             shift
@@ -93,7 +87,6 @@ echo "    offspring    input    : $OFFSPRING"
 echo "BuildTrioLib.sh in  : $SPATH"
 
 GC_NMER=$SPATH"/main/gc_nmer"
-GC_NMER_STLFR=$SPATH"/main/gc_nmer_stlfr"
 # sanity check
 if [[  $CPU -lt 1 || $NMER <2  || -z "$OFFSPRING" ]] ; then
     echo "ERROR : arguments invalid ... exit!!! "
@@ -112,8 +105,8 @@ do
    fi
 done
 
-if [[ ! -e $GC_NMER || ! -e $GC_NMER_STLFR ]] ; then 
-    echo "ERROR : $GC_NMER or $GC_NMER_STLFR is not exist! please run make first . exit ..."
+if [[ ! -e $GC_NMER ]] ; then 
+    echo "ERROR : $GC_NMER is not exist! please run make first . exit ..."
     exit 1
 fi
 if [[ $OFFSPRING_FORMAT != 'fastq' && $OFFSPRING_FORMAT != "fasta" ]] ; then 
@@ -121,19 +114,9 @@ if [[ $OFFSPRING_FORMAT != 'fastq' && $OFFSPRING_FORMAT != "fasta" ]] ; then
     exit 1
 fi
 
-if [[ $PLAT != "tgs"  && $PLAT != "stlfr" ]] ; then 
-    echo "invalid sequencing platform $PLAT ! exit ..."
-    exit 1
-fi
-
-
 date
 echo "__START__"
-if [[ $PLAT == 'tgs' ]] ; then 
-    GC_NMER_EXE=$GC_NMER
-elif [[ $PLAT == 'stlfr' ]] ; then 
-    GC_NMER_EXE=$GC_NMER_STLFR
-fi
+GC_NMER_EXE=$GC_NMER
 
 if [[ ! -e '20.step_1_done' ]]  ; then
     READ_ARG=""

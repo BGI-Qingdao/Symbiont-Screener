@@ -149,12 +149,13 @@ $STEP0 --paternal "$PATERNAL" \
     --maternal "$MATERNAL" \
     --mer $KMER \
     --thread $CPU \
+    --auto_bounds \
     --memory $MEMORY  || exit 1 
 
 if [[ ! -e '00.kmer2strobemer_done' ]]  ; then
-    $K2S --nkmer 2 --ksize 10 --wsize 30 <paternal.mer >paternal.strobemer || exit 1
-	$K2S --nkmer 2 --ksize 10 --wsize 30 <maternal.mer >maternal.strobemer || exit 1
-	$K2S --nkmer 2 --ksize 10 --wsize 30 <common.mer >common.strobemer || exit 1
+    $K2S --nkmer 2 --ksize 10 --wsize 30 <paternal.unique.filter.mer >paternal.strobemer || exit 1
+    $K2S --nkmer 2 --ksize 10 --wsize 30 <maternal.unique.filter.mer >maternal.strobemer || exit 1
+    $K2S --nkmer 2 --ksize 10 --wsize 30 <common.mer >common.strobemer || exit 1
     date >>'00.kmer2strobemer_done'
 else
     echo "skip kmer2strobemer due to 00.kmer2strobemer_done exist!"
@@ -171,7 +172,6 @@ $STEP1 --paternal_mer paternal.strobemer \
 
 
 $STEP2 --nmer $NMER \
-       --sequence_platform $PLAT \
        --offspring "$OFFSPRING" \
        --offspring_format $OFFSPRING_FORMAT  \
        --thread $CPU || exit 1
