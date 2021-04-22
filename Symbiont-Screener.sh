@@ -20,10 +20,6 @@ Options :
 
         --threshold2        minimum density of shared kmer density (default 0.1)
 
-        --kmer              kmer-size (default 40->randstrobe(2,10,30). ]
-
-        --nmer              nmer for gc_nmer(default 3)
-
         --loop              loop number of BGMM (default 30) 
 		
         --thread            thread num.
@@ -94,10 +90,6 @@ do
             CPU=$2
             shift
             ;;
-        "--kmer")
-            KMER=$2
-            shift
-            ;;
         "--paternal")
             PATERNAL=$2" "$PATERNAL
             shift
@@ -112,10 +104,6 @@ do
             ;;
         "--offspring_format")
             OFFSPRING_FORMAT=$2
-            shift
-            ;;
-        "--nmer")
-            NMER=$2
             shift
             ;;
         "--loop")
