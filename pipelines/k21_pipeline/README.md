@@ -56,20 +56,19 @@ Options :
 * 11.GetTrioMatrix_tgs.sh or 12.GetTrioMatrix_stlfr.sh
 * 20.GetGCNmer.sh
 * bgm/main_logic.py
-* merge result by tools/merge_result.sh
-
-## Get reads from result & raw reads
-
-try tools/ExtractReads_tgs.sh or tools/ExtractReads_stlfr.sh 
+* get final.result.txt by tools/merge_result.sh
 
 
 ## Format of final.result.txt
 
 ```
 column1 :   read-name/barcode-name.
-column2 :   priori. (prior-formula result) 1 means host and 0 means contamination.
-column3 :   host.   (final culster result) 1 means host and 0 means contamination.
-column4 :   hit-count   how many number that this read occurs in the best cluster.
+column2 :   priori.             (prior-formula result) 1 means host and 0 means contamination.
+column3 :   host.               (suggested culster result by hit-count>5) 1 means host and 0 means contamination; normally we recommand you to ignore this.
+column4 :   hit-count           how many number that this read occurs in the best cluster.
+column5 :   second-hit-count    how many number that this read occurs in the second-best cluster.
 ```
 
+### fish final target fastq
 
+use tools/fishSeq.sh
