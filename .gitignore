@@ -1,1 +1,8 @@
- bgm/__pycache__/
+bgm/__pycache__/
+main/density_3lib
+main/density_3lib_stlfr
+main/density_3lib_strobemer
+main/gc_nmer
+main/gc_nmer_stlfr
+main/kmer2strobemer
+main/*.o
