@@ -10,7 +10,11 @@ Options :
         --paternal          paternal NGS reads file in FASTQ format.
 
         --maternal          maternal NGS reads file in FASTQ format.
+        
+	--low_depth         predict low_depth
 
+        --high_depth        predict high_depth
+  
         --offspring         Offspring sequence file.
                             gzip format file is supported but should end by '.gz' 
 
@@ -51,7 +55,8 @@ MEMORY=100
 LOOP=30
 RSEED=42
 #LOW_HIT=0.2
-
+L_DEPTH=0
+H_DEPTH=0
 SPATH=`dirname $0`
 STEP0=$SPATH/00.BuildTrioLib/build_trio_kmer.sh
 K2S=$SPATH/main/kmer2strobemer
@@ -102,6 +107,14 @@ do
             OFFSPRING="$2"" ""$OFFSPRING"
             shift
             ;;
+        "--high_depth")
+            H_DEPTH=$2
+            shift
+            ;;
+        "--low_depth")
+            L_DEPTH=$2
+            shift
+            ;;
         "--offspring_format")
             OFFSPRING_FORMAT=$2
             shift
@@ -133,12 +146,28 @@ done
 ###############################################################################
 # main logic
 ###############################################################################
-$STEP0 --paternal "$PATERNAL" \
-    --maternal "$MATERNAL" \
-    --mer $KMER \
-    --thread $CPU \
-    --auto_bounds \
-    --memory $MEMORY  || exit 1 
+if [[ $L_DEPTH == 0 && $HIGH_DEPTH == 0 ]] ; then
+       $STEP0 --paternal "$PATERNAL" \
+               --maternal "$MATERNAL" \
+               --mer $KMER \
+               --thread $CPU \
+               --auto_bounds \
+               --memory $MEMORY  || exit 1
+else
+       if [[  $L_DEPTH -lt 1 || $H_DEPTH -lt 1 || $L_DEPTH -gt $H_DEPTH ]] ; then
+               echo "L_DEPTH or H_DEPTH error ... exit !"
+               exit 1
+       fi
+       $STEP0 --paternal "$PATERNAL" \
+               --maternal "$MATERNAL" \
+               --mer $KMER \
+               --thread $CPU \
+               --m-lower $L_DEPTH \
+               --p-lower $L_DEPTH \
+               --m-upper $H_DEPTH \
+               --p-upper $H_DEPTH \
+               --memory $MEMORY  || exit 1
+fi
 
 if [[ ! -e '00.kmer2strobemer_done' ]]  ; then
     $K2S --nkmer 2 --ksize 10 --wsize 30 <paternal.unique.filter.mer >paternal.strobemer || exit 1
