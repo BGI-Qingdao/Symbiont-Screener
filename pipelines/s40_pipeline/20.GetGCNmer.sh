@@ -15,7 +15,7 @@ Options  :
         --offspring         Offspring sequence file.
                             gzip format file is supported but should end by '.gz' 
         --offspring_format  fasta/fastq (default fasta)
-
+        --shortest          shortest for cluster (default 5000)
         --nmer              nmer for gc_nmer(default 2)
         --help              print this usage message.
 Examples :
@@ -33,7 +33,7 @@ CPU=8
 NMER=3
 OFFSPRING_FORMAT="fasta"
 OFFSPRING=""
-
+L_SHORTEST=5000
 SPATH=`dirname $0`
 ###############################################################################
 # parse arguments
@@ -66,6 +66,10 @@ do
             NMER=$2
             shift
             ;;
+        "--shortest")
+            L_SHORTEST=$2
+            shift
+            ;;
         "--offspring_format")
             OFFSPRING_FORMAT=$2
             shift
@@ -84,6 +88,7 @@ echo "    thread                : $CPU "
 echo "    nmer                  : $NMER"
 echo "    offspring format      : $OFFSPRING_FORMAT"
 echo "    offspring    input    : $OFFSPRING"
+echo "    shortest              : $L_SHORTEST"
 echo "BuildTrioLib.sh in  : $SPATH"
 
 GC_NMER=$SPATH"/main/gc_nmer"
@@ -137,7 +142,8 @@ if [[ ! -e '20.step_2_done' ]]  ; then
     LAST=$((4**$NMER))
     LAST=$(($LAST+2))
     fild="2-$LAST"
-    cut -f $fild gc_nmer.data.txt >gc_nmer.matrix
+    cut -f $fild gc_nmer.data.txt >gc_nmer.all.matrix ||exit 1
+    #TODO add shortest support here
     date >>'20.step_2_done'
 else
     echo "skip extract gc_nmer.matrix due to 20.step_2_done exist"
