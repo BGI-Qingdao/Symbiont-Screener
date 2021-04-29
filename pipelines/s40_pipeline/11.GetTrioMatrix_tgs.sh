@@ -19,7 +19,7 @@ Options  :
         --offspring         Offspring sequence file.
                             gzip format file is supported but should end by '.gz' 
         --offspring_format  fasta/fastq (default fasta)
-
+        --shortest          shortest for cluster (default 5000)
         --threshold1        minimum density of parental kmer density
         --threshold2        minimum density of shared kmer density
 
@@ -46,7 +46,7 @@ THRESHOLD1=0.02
 THRESHOLD2=0.1
 OFFSPRING=""
 OFFSPRING_FORMAT="fasta"
-
+L_SHORTEST=5000
 SPATH=`dirname $0`
 ###############################################################################
 # parse arguments
@@ -97,6 +97,10 @@ do
             ;;
         "--threshold2")
             THRESHOLD2=$2
+            shift
+            ;;
+	"--shortest")
+            L_SHORTEST=$2
             shift
             ;;
         *)
@@ -165,16 +169,31 @@ else
 fi
 
 if [[ ! -e '11.step_2_done' ]]  ; then
+    # in trio_density.data.txt
+    # $2    read name
+    # $4    read length
     # $8    density*1000 of pat-only
     # $9    density*1000 of mat-only
     # $10   density*1000 of shared
-    awk '{
-            if(($8>=T1*1000|| $9>=T1*1000) && $10>T2*1000) 
-                priori=1 ;
-            else
-                priori=0 ;
-            printf("%d\t%f\t%f\t%f\n",priori,$8/1000,$9/1000,$10/1000);
-         }'  T1=$THRESHOLD1 T2=$THRESHOLD2 trio_density.data.txt >trio.4r.matrix || exit 1
+    
+    # trio-only result here
+    awk -v T1=$THRESHOLD1 -v T2=$THRESHOLD2 -v '{
+        if(($8>=T1*1000|| $9>=T1*1000) && $10>T2*1000) 
+            priori=1 ;
+        else
+            priori=0 ;
+        printf("%s\t%d\t%f\t%f\t%f\n",$2,priori,$8/1000,$9/1000,$10/1000);
+    }'   trio_density.data.txt >trio.4r.matrix || exit 1
+    # for cluster : 
+    awk -v T1=$THRESHOLD1 -v T2=$THRESHOLD2 -v short=$L_SHRTEST '{
+            if($4>short){
+	        if(($8>=T1*1000|| $9>=T1*1000) && $10>T2*1000) 
+                    priori=1 ;
+                else
+                    priori=0 ;
+                printf("%d\t%f\t%f\t%f\n",priori,$8/1000,$9/1000,$10/1000);
+            }
+	 }'   trio_density.data.txt >trio.4r.matrix || exit 1
     date >>'11.step_2_done'
 else
     echo "skip extract trio.4r.matrix  paternal due to 11.step_2_done exist"
