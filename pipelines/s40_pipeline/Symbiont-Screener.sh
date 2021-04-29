@@ -7,30 +7,46 @@ Usage   :
 
 Options :
 
+   Basic parameters:
         --paternal          paternal NGS reads file in FASTQ format.
 
         --maternal          maternal NGS reads file in FASTQ format.
-        
-	--low_depth         predict low_depth
-
-        --high_depth        predict high_depth
-  
+	
         --offspring         Offspring sequence file.
                             gzip format file is supported but should end by '.gz' 
 
         --offspring_format  fasta/fastq (default fasta)
-
-        --threshold1        minimum density of parental kmer density (default 0.02)
-
-        --threshold2        minimum density of shared kmer density (default 0.1)
-
-        --loop              loop number of BGMM (default 30) 
-		
+				
         --thread            thread num.
                             [ optional, default 8 threads. ]
 
         --memory            x (GB) of memory to used by jellyfish.
                             [ optional, default 100GB. ]
+
+  For marker generation:
+	--low_depth         predict low_depth            ( default 0 )
+
+        --high_depth        predict high_depth           ( default 0 )  
+	                    program will automatic choose low and high depth threashold when --low_depth and --high_depth are not setted.
+			    if user can predict the depth of host sequences as x , please set like low_depth=x/4 and  high_depth=x*[3 or 5]
+
+  For Trio-formula detection:
+  
+        --threshold1        minimum density of parental kmer density (default 0.001)
+	                    for Pacbio reads, we recommand to use 0.002.
+
+        --threshold2        minimum density of shared kmer density (default 0.01)
+	                    this default value is very steady.
+  
+  For BGMM cluster:
+  
+        --cluster           (1/0) use cluster or not. default(0)
+	
+	--shortest          length threshold for cluster ( default 5000 )
+	                    only reads with lengh>shortest can be used for cluster.
+			    short reads ( 1k-5k ) normally create noise points and hamper the cluster result.
+        
+	--loop              loop number of BGMM (default 10) 
 
         --python3           PATH to python3 file from anaconda3 ( default python3 )
       
@@ -45,15 +61,17 @@ MATERNAL=
 OFFSPRING=
 
 PYTHON3='python3'
-THRESHOLD1=0.02
-THRESHOLD2=0.1
+THRESHOLD1=0.001
+THRESHOLD2=0.01
 OFFSPRING_FORMAT='fasta'
 KMER=40
 NMER=3
 CPU='8'
 MEMORY=100
-LOOP=30
+L_SHORTEST=5000
+LOOP=10
 RSEED=42
+CLUSTER=0
 #LOW_HIT=0.2
 L_DEPTH=0
 H_DEPTH=0
@@ -111,6 +129,10 @@ do
             H_DEPTH=$2
             shift
             ;;
+	"--shortest")
+            L_SHORTEST=$2
+            shift
+            ;;
         "--low_depth")
             L_DEPTH=$2
             shift
@@ -133,6 +155,10 @@ do
             ;;
         "--threshold2")
             THRESHOLD2=$2
+            shift
+            ;;
+	 "--cluster")
+            CLUSTER=$2
             shift
             ;;
         *)
@@ -191,33 +217,36 @@ $STEP1 --paternal_mer paternal_only.strobemer \
     --offspring_format $OFFSPRING_FORMAT  \
     --threshold1 $THRESHOLD1 \
     --threshold2 $THRESHOLD2 \
+    --shortest $L_SHORTEST \
     --thread $CPU || exit 1
 
+if [[ $CLUSTER == 1 ]] ; then 
+    $STEP2 --nmer $NMER \
+           --offspring "$OFFSPRING" \
+           --offspring_format $OFFSPRING_FORMAT  \
+           --thread $CPU || exit 1
 
-$STEP2 --nmer $NMER \
-       --offspring "$OFFSPRING" \
-       --offspring_format $OFFSPRING_FORMAT  \
-       --thread $CPU || exit 1
-
-if [[ ! -e '30.step_1_done' ]]  ; then
-    $PYTHON3  $BGM_MAIN -t trio.4r.matrix  \
+    if [[ ! -e '30.step_1_done' ]]  ; then
+        $PYTHON3  $BGM_MAIN -t trio.4r.matrix  \
                         -m  gc_nmer.matrix \
                         -r  $RSEED \
                         -l $LOOP >cluster_reuslt.txt 2>cluster.log || exit 1
-    date >>'30.step_1_done'
-else
-    echo "skip cluster by bgm due to 30.step_1_done exist!"
-fi
+        date >>'30.step_1_done'
+    else
+        echo "skip cluster by bgm due to 30.step_1_done exist!"
+    fi
 
-if [[ ! -e '30.step_2_done' ]]  ; then
-    echo "read_name" >name.txt
-    cut -f 2 trio_density.data.txt >>name.txt
-    paste name.txt cluster_reuslt.txt >final.result.txt 
-
-    echo "Result in final.result.txt"
-    echo "  Format are \"name priori host hit-counts\""
-    date >>'30.step_2_done'
-else
-    echo "skip get final result due to 30.step_2_done exist!"
+    if [[ ! -e '30.step_2_done' ]]  ; then
+        echo "read_name" >name.txt
+        awk -v short=$L_SHORTEST '{if($4>short)print $2;}' trio_density.data.txt >>name.txt
+        paste name.txt cluster_reuslt.txt >final.result.txt 
+ 
+        echo "Result in final.result.txt"
+        echo "  Format are \"name priori host best-hit-counts second best-hit-counts\""
+        echo "NOTICE : reads length not great than $L_SHORTEST had beed excluded from final.result.txt"
+        date >>'30.step_2_done'
+    else
+        echo "skip get final result due to 30.step_2_done exist!"
+    fi
 fi
 echo "__ALL DONE__"
