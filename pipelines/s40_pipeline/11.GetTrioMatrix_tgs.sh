@@ -121,6 +121,7 @@ echo "    mat-only-mer input    : $MATERNAL_MER"
 echo "    shared-mer   input    : $SHARED_MER"
 echo "    threshold1            : $THRESHOLD1"
 echo "    threshold2            : $THRESHOLD2"
+echo "    shortest              : $L_SHORTEST"
 echo "11.GetTrioMatrix_tgs.sh in:  $SPATH"
 
 DENSITY_3LIB=$SPATH"/main/density_3lib_strobemer"
