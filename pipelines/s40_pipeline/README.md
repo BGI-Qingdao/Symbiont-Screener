@@ -177,7 +177,7 @@ First of all, with 10 loop in cluster, use ```-t 8``` or ```-t 9``` always can e
 
 To recurit more reads ( outliers far from the center of host points ), we will set a lower t by observe the histgram of reads-hits.
 
-Try ```awk '{if(NR>1) print $4+$5;}' final.result.txt | sort -n | uniq -c``` and you got the data of read-hits histogram.
+Try ```awk '{if(NR>1) print $4+$5;}' final.result.txt | sort -k2n | uniq -c``` and you got the data of read-hits histogram.
 
 Assume your got
 ```
