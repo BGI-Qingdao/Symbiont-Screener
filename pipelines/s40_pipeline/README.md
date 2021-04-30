@@ -41,7 +41,7 @@ Options :
 
         --threshold1        minimum density of parental kmer density (default 0.001)
                             for ONT reads(error rate~=15%), we recommand to use 0.001.
-                            for Pacbio reads(error rate<5%), we recommand to use 0.002.
+                            for Pacbio reads(error rate<5%), we recommand to use 0.002-0.05.
 
         --threshold2        minimum density of shared kmer density (default 0.01)
                             this default value is very steady.
