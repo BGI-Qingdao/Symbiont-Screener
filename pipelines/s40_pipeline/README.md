@@ -181,7 +181,7 @@ Try ```awk '{if(NR>1) print $4+$5;}' final.result.txt | sort -n | uniq -c``` and
 
 Assume your got
 ```
->awk '{if(NR>1) print $4+$5;}' final.result.txt | sort -n | uniq -c
+>awk '{if(NR>1) print $4+$5;}' final.result.txt | sort -k2n | uniq -c
 10000 0
  8000 1
  1000 2
