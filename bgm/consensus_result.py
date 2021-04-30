@@ -10,6 +10,8 @@ class ConsensusResult:
         self.loop_num = int(loop_num)
         self.min_hit_fac = float(min_hit_fac)
         self.min_threshold = int(min_hit_fac*self.loop_num)
+        if self.min_threshold < 1:
+            self.min_threshold = 1;
         self.results = []
         self.best_hits = []
         self.second_best_hits = []
@@ -37,5 +39,3 @@ class ConsensusResult:
                 self.hosts[i] = 1
             else :
                 self.hosts[i] = 0
-
-

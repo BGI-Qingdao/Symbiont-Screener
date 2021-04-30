@@ -176,7 +176,6 @@ if [[ ! -e '11.step_2_done' ]]  ; then
     # $8    density*1000 of pat-only
     # $9    density*1000 of mat-only
     # $10   density*1000 of shared
-    
     # trio-only result here
     awk -v T1=$THRESHOLD1 -v T2=$THRESHOLD2 -v '{
         if(($8>=T1*1000|| $9>=T1*1000) && $10>T2*1000) 
@@ -184,17 +183,18 @@ if [[ ! -e '11.step_2_done' ]]  ; then
         else
             priori=0 ;
         printf("%s\t%d\t%f\t%f\t%f\n",$2,priori,$8/1000,$9/1000,$10/1000);
-    }'   trio_density.data.txt >trio.4r.matrix || exit 1
-    # for cluster : 
+    }'   trio_density.data.txt >trio_only.result.txt || exit 1
+    awk '{if($2==1)print $1;}' trio_only.result.txt >trio_only.filtered_readname.txt
+    # for cluster :
     awk -v T1=$THRESHOLD1 -v T2=$THRESHOLD2 -v short=$L_SHRTEST '{
             if($4>short){
-	        if(($8>=T1*1000|| $9>=T1*1000) && $10>T2*1000) 
+                if(($8>=T1*1000|| $9>=T1*1000) && $10>T2*1000) 
                     priori=1 ;
                 else
                     priori=0 ;
                 printf("%d\t%f\t%f\t%f\n",priori,$8/1000,$9/1000,$10/1000);
             }
-	 }'   trio_density.data.txt >trio.4r.matrix || exit 1
+    }'   trio_density.data.txt >trio.4r.matrix || exit 1
     date >>'11.step_2_done'
 else
     echo "skip extract trio.4r.matrix  paternal due to 11.step_2_done exist"

@@ -4,6 +4,7 @@ SEQKIT=seqkit
 
 if [[ ! -e $SEQKIT ]] ; then
     echo "please assign SEQKIT path first by edit this script."
+    echo "try conda install seqkit"
     exit 1
 fi
 

@@ -139,11 +139,8 @@ else
 fi
 
 if [[ ! -e '20.step_2_done' ]]  ; then
-    LAST=$((4**$NMER))
-    LAST=$(($LAST+2))
-    fild="2-$LAST"
-    cut -f $fild gc_nmer.data.txt >gc_nmer.all.matrix ||exit 1
-    #TODO add shortest support here
+    awk -v short=$L_SHORTEST '{if($2>short)print $0 ;}' gc_nmer.data.txt >gc_nmer.cut.data.txt
+    cut -f 3- gc_nmer.cut.data.txt > gc_nmer.matrix ||exit 1
     date >>'20.step_2_done'
 else
     echo "skip extract gc_nmer.matrix due to 20.step_2_done exist"

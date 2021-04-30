@@ -6,13 +6,13 @@ class OPTs:
     def __init__(self):
         self.trio_file=""
         self.mer2_file=""
-        self.loop_num =30
+        self.loop_num =10
         self.rseed=42
         self.clusters_number=5
         self.debug = False
 
     def Usage(self):
-        print("usage: main_logic.py -t <trio_file> -m <2mer2_file> [-l loop number (default 30)] [-c cluters number (default 5)] [-r random seed(default(42)");
+        print("usage: main_logic.py -t <trio_matrix> -m <3mer_matrix> [-l loop number (default 10)] [-c cluters number (default 5)] [-r random seed(default(42)");
 
     def Parse(self,argv):
         print("Info : argv = %s " % str(argv), file=sys.stderr)
@@ -21,7 +21,6 @@ class OPTs:
         except getopt.GetoptError:
             self.Usage()
             sys.exit(2)
-        #print(opts)
         for opt, arg in opts:
             if opt in ('-r' , "--rseed"):
                 self.rseed=int(arg)
@@ -38,16 +37,9 @@ class OPTs:
                 self.mer2_file=arg
             elif opt in ("-l", "--loop"):
                 self.loop_num=int(arg)
-        if( self.clusters_number < 2 ) :
-            print("Error: -c must greater than 1")
+        if( self.clusters_number < 1 ) :
+            print("Error: -c must greater than 0")
             sys.exit(3)
         if( self.trio_file == '' or self.mer2_file == '' ):
             print("Error: -t and -m are necessary !!! exit ..." ,file=sys.stderr)
             sys.exit(2)
-
-        if ( self.loop_num>=5 and self.loop_num < 20 ):
-            print("WARN : loop_num is %d but >=20 is recommand."%self.loop_num ,file=sys.stderr)
-
-        if (  self.loop_num<5 ):
-            print("Error: loop_num is %d less than 5 !!! exit ..."%self.loop_num ,file=sys.stderr)
-            sys.exit(4)

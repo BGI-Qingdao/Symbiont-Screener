@@ -8,15 +8,16 @@ Usage   :
 Options :
 
    Basic parameters:
+
         --paternal          paternal NGS reads file in FASTQ format.
 
         --maternal          maternal NGS reads file in FASTQ format.
-	
+
         --offspring         Offspring sequence file.
                             gzip format file is supported but should end by '.gz' 
 
         --offspring_format  fasta/fastq (default fasta)
-				
+
         --thread            thread num.
                             [ optional, default 8 threads. ]
 
@@ -24,32 +25,34 @@ Options :
                             [ optional, default 100GB. ]
 
   For marker generation:
-	--low_depth         predict low_depth            ( default 0 )
+
+        -low_depth          predict low_depth            ( default 0 )
 
         --high_depth        predict high_depth           ( default 0 )  
-	                    program will automatic choose low and high depth threashold when --low_depth and --high_depth are not setted.
-			    if user can predict the depth of host sequences as x , please set like low_depth=x/4 and  high_depth=x*[3 or 5]
+                            program will automatic choose low and high depth threashold when both --low_depth and --high_depth are not setted.
+                            if user can predict the depth of host sequences as x , please set like low_depth=x/4 and  high_depth=x*[3 or 5]
 
   For Trio-formula detection:
-  
+
         --threshold1        minimum density of parental kmer density (default 0.001)
-	                    for Pacbio reads, we recommand to use 0.002.
+                            for ONT reads(error rate~=15%), we recommand to use 0.001.
+                            for Pacbio reads(error rate<5%), we recommand to use 0.002.
 
         --threshold2        minimum density of shared kmer density (default 0.01)
-	                    this default value is very steady.
-  
+                            this default value is very steady.
+
   For BGMM cluster:
-  
+
         --cluster           (1/0) use cluster or not. default(0)
-	
-	--shortest          length threshold for cluster ( default 5000 )
-	                    only reads with lengh>shortest can be used for cluster.
-			    short reads ( 1k-5k ) normally create noise points and hamper the cluster result.
-        
-	--loop              loop number of BGMM (default 10) 
+
+        --shortest          length threshold for cluster ( default 5000 )
+                            only reads with lengh>shortest can be used for cluster.
+                            short reads ( <=5k ) normally create noise points and hamper the cluster result.
+
+        --loop              loop number of BGMM (default 10) 
 
         --python3           PATH to python3 file from anaconda3 ( default python3 )
-      
+
         --seed              random seed ( default 42 )
 
         --help              print this usage message.
@@ -72,7 +75,6 @@ L_SHORTEST=5000
 LOOP=10
 RSEED=42
 CLUSTER=0
-#LOW_HIT=0.2
 L_DEPTH=0
 H_DEPTH=0
 SPATH=`dirname $0`
@@ -224,6 +226,7 @@ if [[ $CLUSTER == 1 ]] ; then
     $STEP2 --nmer $NMER \
            --offspring "$OFFSPRING" \
            --offspring_format $OFFSPRING_FORMAT  \
+           --shortest $L_SHORTEST \
            --thread $CPU || exit 1
 
     if [[ ! -e '30.step_1_done' ]]  ; then
@@ -248,5 +251,7 @@ if [[ $CLUSTER == 1 ]] ; then
     else
         echo "skip get final result due to 30.step_2_done exist!"
     fi
+    echo "__ALL DONE__"
+else
+    echo "__DONE__ without cluster"
 fi
-echo "__ALL DONE__"

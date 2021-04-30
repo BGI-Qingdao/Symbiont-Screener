@@ -184,6 +184,7 @@ struct OutputCache {
         for( const auto & pair : output_cache) {
             const auto & data = pair.second;
             std::cout<<data.name;
+            std::cout<<'\t'<<data.read_length;
             std::cout<<'\t'<<data.gc_content;
             data.nmer_freq.Print();
             std::cout<<'\n';
