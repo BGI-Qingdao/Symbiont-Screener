@@ -151,10 +151,7 @@ else
 fi
 
 if [[ ! -e '20.step_2_done' ]]  ; then
-    LAST=$((4**$NMER))
-    LAST=$(($LAST+2))
-    fild="2-$LAST"
-    cut -f $fild gc_nmer.data.txt >gc_nmer.matrix
+    cut -f 3- gc_nmer.data.txt >gc_nmer.matrix
     date >>'20.step_2_done'
 else
     echo "skip extract gc_nmer.matrix due to 20.step_2_done exist"
