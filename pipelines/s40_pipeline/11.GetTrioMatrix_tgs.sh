@@ -186,7 +186,7 @@ if [[ ! -e '11.step_2_done' ]]  ; then
     }'   trio_density.data.txt >trio_only.result.txt || exit 1
     awk '{if($2==1)print $1;}' trio_only.result.txt >trio_only.filtered_readname.txt
     # for cluster :
-    awk -v T1=$THRESHOLD1 -v T2=$THRESHOLD2 -v short=$L_SHRTEST '{
+    awk -v T1=$THRESHOLD1 -v T2=$THRESHOLD2 -v short=$L_SHORTEST '{
             if($4>short){
                 if(($8>=T1*1000|| $9>=T1*1000) && $10>T2*1000) 
                     priori=1 ;
