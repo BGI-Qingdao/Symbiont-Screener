@@ -177,7 +177,7 @@ if [[ ! -e '11.step_2_done' ]]  ; then
     # $9    density*1000 of mat-only
     # $10   density*1000 of shared
     # trio-only result here
-    awk -v T1=$THRESHOLD1 -v T2=$THRESHOLD2 -v '{
+    awk -v T1=$THRESHOLD1 -v T2=$THRESHOLD2  '{
         if(($8>=T1*1000|| $9>=T1*1000) && $10>T2*1000) 
             priori=1 ;
         else
