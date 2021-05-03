@@ -31,9 +31,9 @@ Options :
 
   For marker generation:
 
-        -low_depth          estimated lower depth for k-mer histogram           ( default 0 )
+        -low_depth          estimated lower depth for k-mer histogram (default 0)
 
-        --high_depth        estimated higher depth for k-mer histogram       ( default 0 )
+        --high_depth        estimated higher depth for k-mer histogram (default 0)
                             this pipeline will automatically choose lower and higher depth threasholds when both --low_depth and --high_depth are not set.
                             if the user estimates that sequencing coverage or depth of the host is around x , then please set low_depth=x/4 and high_depth=x*[3 or 5]
 
