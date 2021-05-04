@@ -16,9 +16,8 @@ function usage(){
     echo "                      file in gzip format can be accepted, but filename must end by \".gz\"."
     echo "        --thread      thread number."
     echo "                      [ optional, default 8 threads. ]"
-    echo "        --memory      x (GB) of memory to initial hash table by jellyfish."
-    echo "                      ( note: real memory used may be greater than this. )"
-    echo "                      [ optional, default 20GB. ]"
+    echo "        --size        initial hash table by jellyfish."
+    echo "                      [ optional, default 10GB. ]"
     echo "        --mer         mer-size"
     echo "                      [ optional, default 21. ]"
     echo "        --m-lower     maternal kmer frequency table will ignore kmers with count < m-lower."
@@ -41,7 +40,7 @@ function usage(){
 ###############################################################################
 MER=40
 CPU=30
-MEMORY=100
+SIZE='10G'
 PLOWER=9
 PUPPER=33
 MLOWER=9
@@ -70,8 +69,8 @@ do
             usage
             exit 0
             ;;
-        "--memory")
-            MEMORY=$2
+        "--size")
+            SIZE=$2
             shift
             ;;
         "--thread")
@@ -120,7 +119,7 @@ done
 echo "HAST starting with : "
 echo "    paternal input : $PATERNAL"
 echo "    maternal input : $MATERNAL"
-echo "    memory         : $MEMORY GB"
+echo "    size           : $SIZE"
 echo "    thread         : $CPU "
 echo "    mer            : $MER "
 echo "    lower(maternal): $MLOWER"
@@ -185,9 +184,9 @@ if [[ ! -e "00.step_01_done" ]] ; then
         fi
     done
     if [[ $gz == 2 ]] ; then
-        zcat $MATERNAL | $JELLY count -m $MER -s $MEMORY"G" -t $CPU -C -o  maternal_mer_counts.jf /dev/fd/0 || exit 1
+        zcat $MATERNAL | $JELLY count -m $MER -s $SIZE -t $CPU -C -o  maternal_mer_counts.jf /dev/fd/0 || exit 1
     else
-        $JELLY count -m $MER -s $MEMORY"G" -t $CPU -C -o  maternal_mer_counts.jf  $MATERNAL || exit 1
+        $JELLY count -m $MER -s $SIZE -t $CPU -C -o  maternal_mer_counts.jf  $MATERNAL || exit 1
     fi
     date >>"00.step_01_done"
 else
@@ -215,9 +214,9 @@ if [[ ! -e "00.step_02_done" ]] ; then
         fi
     done
     if [[ $gz == 2 ]] ; then
-        zcat $PATERNAL | $JELLY count -m $MER -s $MEMORY"G" -t $CPU -C -o  paternal_mer_counts.jf /dev/fd/0  || exit 1
+        zcat $PATERNAL | $JELLY count -m $MER -s $SIZE  -t $CPU -C -o  paternal_mer_counts.jf /dev/fd/0  || exit 1
     else
-        $JELLY count -m $MER -s $MEMORY"G" -t $CPU -C -o  paternal_mer_counts.jf $PATERNAL || exit 1
+        $JELLY count -m $MER -s $SIZE -t $CPU -C -o  paternal_mer_counts.jf $PATERNAL || exit 1
     fi
     date >>"00.step_02_done"
 else
@@ -270,7 +269,7 @@ fi
 rm -f maternal_mer_counts.jf paternal_mer_counts.jf
 if [[ ! -e "00.step_07_done" ]] ; then
     # mix 1 copy of paternal mers and 2 copy of maternal mers and count p/maternal mixed mers
-    $JELLY count -m $MER -s $MEMORY"G" -t $CPU -C -o mixed_mer_counts.js  maternal.mer.fa maternal.mer.fa paternal.mer.fa  || exit 1
+    $JELLY count -m $MER -s $SIZE -t $CPU -C -o mixed_mer_counts.js  maternal.mer.fa maternal.mer.fa paternal.mer.fa  || exit 1
     # count==1 refer to paternal unique mers
     $JELLY dump -U 1 mixed_mer_counts.js          >paternal.mer.unique.fa  || exit 1
     # count==2 refer to maternal unique mers 
@@ -284,8 +283,8 @@ fi
 
 if [[ ! -e "00.step_08_done" ]] ; then
     # count unique and filer mers
-    $JELLY count -m $MER -s $MEMORY"G" -t $CPU -C -o paternal_mixed_mer_counts.js paternal.mer.unique.fa paternal.mer.filter.fa || exit 1
-    $JELLY count -m $MER -s $MEMORY"G" -t $CPU -C -o maternal_mixed_mer_counts.js maternal.mer.unique.fa maternal.mer.filter.fa || exit 1
+    $JELLY count -m $MER -s $SIZE -t $CPU -C -o paternal_mixed_mer_counts.js paternal.mer.unique.fa paternal.mer.filter.fa || exit 1
+    $JELLY count -m $MER -s $SIZE -t $CPU -C -o maternal_mixed_mer_counts.js maternal.mer.unique.fa maternal.mer.filter.fa || exit 1
     # extrat both unique and filter mers
     $JELLY dump -t -c -L 2 -U 2 paternal_mixed_mer_counts.js | awk '{print $1}' >paternal.unique.filter.mer || exit 1
     $JELLY dump -t -c -L 2 -U 2 maternal_mixed_mer_counts.js | awk '{print $1}' >maternal.unique.filter.mer || exit 1
@@ -298,7 +297,7 @@ else
 fi
 if [[ ! -e "00.step_09_done" ]] ; then
     # count common mers
-    $JELLY count -m $MER -s $MEMORY"G" -t $CPU -C -o pm.js  paternal.mer.filter.fa maternal.mer.filter.fa   || exit 1
+    $JELLY count -m $MER -s $SIZE -t $CPU -C -o pm.js  paternal.mer.filter.fa maternal.mer.filter.fa   || exit 1
     # extrat common mers
     $JELLY dump -t -c -L 2 -U 2 pm.js | awk '{print $1}' >common.mer || exit 1
     # rm temporary files
