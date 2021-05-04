@@ -21,11 +21,11 @@ Options :
         --thread            thread num.
                             [ optional, default 8 threads. ]
 
-        --memory            x (GB) of memory used by jellyfish.
-                            [ optional, default 100GB. ]
-
   For marker generation:
-
+  
+        --size              initial hash size for jellyfish 
+                            [ optional, default 10GB. ]
+			    
         --low_depth          estimated lower depth for k-mer histogram (default 0)
 
         --high_depth        estimated higher depth for k-mer histogram (default 0)
@@ -69,7 +69,7 @@ OFFSPRING_FORMAT='fasta'
 KMER=40
 NMER=3
 CPU='8'
-MEMORY=100
+SIZE='10G'
 L_SHORTEST=5000
 LOOP=10
 RSEED=42
@@ -102,8 +102,8 @@ do
             usage
             exit 0
             ;;
-        "--memory")
-            MEMORY=$2
+        "--size")
+            SIZE=$2
             shift
             ;;
         "--seed")
@@ -179,7 +179,7 @@ if [[ $L_DEPTH == 0 && $H_DEPTH == 0 ]] ; then
                --mer $KMER \
                --thread $CPU \
                --auto_bounds \
-               --memory $MEMORY  || exit 1
+               --size $SIZE  || exit 1
 else
        if [[  $L_DEPTH -lt 1 || $H_DEPTH -lt 1 || $L_DEPTH -gt $H_DEPTH ]] ; then
                echo "L_DEPTH or H_DEPTH error ... exit !"
@@ -193,7 +193,7 @@ else
                --p-lower $L_DEPTH \
                --m-upper $H_DEPTH \
                --p-upper $H_DEPTH \
-               --memory $MEMORY  || exit 1
+               --size $SIZE  || exit 1
 fi
 
 if [[ ! -e '00.kmer2strobemer_done' ]]  ; then
