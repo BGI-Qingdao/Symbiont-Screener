@@ -4,7 +4,7 @@
 Usage    :
     ./build_trio_kmers.sh [OPTION]
 
-Build parental unshared-kmers based on paternal and maternal NGS reads by jellyfish.
+Build trio-binning-kmers based on paternal and maternal NGS reads by jellyfish.
 
 Options  :
         --paternal    paternal NGS reads file in FASTA/FASTQ format.

@@ -22,11 +22,11 @@ Options :
                             [ optional, default 8 threads. ]
 
   For marker generation:
-  
+
         --size              initial hash size for jellyfish 
                             [ optional, default 10GB. ]
-			    
-        --low_depth          estimated lower depth for k-mer histogram (default 0)
+
+        --low_depth         estimated lower depth for k-mer histogram (default 0)
 
         --high_depth        estimated higher depth for k-mer histogram (default 0)
                             this pipeline will automatically choose lower and higher depth threasholds when both --low_depth and --high_depth are not set.
@@ -126,20 +126,20 @@ do
             OFFSPRING="$2"" ""$OFFSPRING"
             shift
             ;;
+        "--offspring_format")
+            OFFSPRING_FORMAT=$2
+            shift
+            ;;
         "--high_depth")
             H_DEPTH=$2
             shift
             ;;
-	"--shortest")
+        "--shortest")
             L_SHORTEST=$2
             shift
             ;;
         "--low_depth")
             L_DEPTH=$2
-            shift
-            ;;
-        "--offspring_format")
-            OFFSPRING_FORMAT=$2
             shift
             ;;
         "--loop")
@@ -158,7 +158,7 @@ do
             THRESHOLD2=$2
             shift
             ;;
-	 "--cluster")
+        "--cluster")
             CLUSTER=$2
             shift
             ;;

@@ -7,7 +7,7 @@ function usage(){
     echo "Usage    :"
     echo "    ./build_trio_kmers.sh [OPTION]" 
     echo ""
-    echo "Build parental unshared-kmers based on paternal and maternal NGS reads by jellyfish."
+    echo "Build trio-binning-kmers based on paternal and maternal NGS reads by jellyfish."
     echo ""
     echo "Options  :"
     echo "        --paternal    paternal NGS reads file in FASTA/FASTQ format."
