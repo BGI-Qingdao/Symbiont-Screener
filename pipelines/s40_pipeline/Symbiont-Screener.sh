@@ -9,49 +9,48 @@ Options :
 
    Basic parameters:
 
-        --paternal          paternal NGS reads file in FASTQ format.
+        --paternal          contaminated paternal NGS read file in FASTQ format.
 
-        --maternal          maternal NGS reads file in FASTQ format.
+        --maternal          contaminated maternal NGS read file in FASTQ format.
 
-        --offspring         Offspring sequence file.
-                            gzip format file is supported but should end by '.gz' 
+        --offspring         contaminated offspring's TGS read file.
+                            gzip format file is supported but should end by '.gz'
 
         --offspring_format  fasta/fastq (default fasta)
 
         --thread            thread num.
                             [ optional, default 8 threads. ]
 
-        --memory            x (GB) of memory to used by jellyfish.
+        --memory            x (GB) of memory used by jellyfish.
                             [ optional, default 100GB. ]
 
   For marker generation:
 
-        --low_depth          predict low_depth            ( default 0 )
+        --low_depth          estimated lower depth for k-mer histogram (default 0)
 
-        --high_depth        predict high_depth           ( default 0 )  
-                            program will automatic choose low and high depth threashold when both --low_depth and --high_depth are not setted.
-                            if user can predict the depth of host sequences as x , please set like low_depth=x/4 and  high_depth=x*[3 or 5]
+        --high_depth        estimated higher depth for k-mer histogram (default 0)
+                            this pipeline will automatically choose lower and higher depth threasholds when both --low_depth and --high_depth are not set.
+                            if the user estimates that sequencing coverage or depth of the host is around x , then please set low_depth=x/4 and high_depth=x*[3 or 5]
 
-  For Trio-formula detection:
+  For trio-binning-based detection:
 
-        --threshold1        minimum density of parental kmer density (default 0.001)
-                            for ONT reads(error rate~=15%), we recommand to use 0.001.
-                            for Pacbio reads(error rate<5%), we recommand to use 0.002-0.005.
+        --threshold1        minimum of parental-specific kmer density (default 0.001)
+                            for ONT reads(error rate~=15%), we recommand 0.001.
+                            for PacBio reads(error rate<5%), we recommand 0.002-0.005.
 
-        --threshold2        minimum density of shared kmer density (default 0.1)
-                            this default value is very steady.
+        --threshold2        minimum of shared kmer density (default 0.1)
 
-  For BGMM cluster:
+  For BGMM-clustering-based detection:
 
-        --cluster           (1/0) use cluster or not. default(0)
+        --cluster           (1/0) use clustering or not. default(0)
 
-        --shortest          length threshold for cluster ( default 5000 )
-                            only reads with lengh>shortest can be used for cluster.
-                            short reads ( <=5k ) normally create noise points and hamper the cluster result.
+        --shortest          length threshold for clustering ( default 5000 )
+                            only reads with lenghs > the shortest will be used for clustering.
+                            shorter reads ( <=5k ) often create noisy points and hamper accurate clustering.
 
-        --loop              loop number of BGMM (default 10) 
+        --loop              number of BGMM clustering for consensus (default 10)
 
-        --python3           PATH to python3 file from anaconda3 ( default python3 )
+        --python3           python3 path ( default python3 )
 
         --seed              random seed ( default 42 )
 
