@@ -26,7 +26,7 @@ Options :
 
   For marker generation:
 
-        -low_depth          predict low_depth            ( default 0 )
+        --low_depth          predict low_depth            ( default 0 )
 
         --high_depth        predict high_depth           ( default 0 )  
                             program will automatic choose low and high depth threashold when both --low_depth and --high_depth are not setted.
@@ -38,7 +38,7 @@ Options :
                             for ONT reads(error rate~=15%), we recommand to use 0.001.
                             for Pacbio reads(error rate<5%), we recommand to use 0.002-0.005.
 
-        --threshold2        minimum density of shared kmer density (default 0.01)
+        --threshold2        minimum density of shared kmer density (default 0.1)
                             this default value is very steady.
 
   For BGMM cluster:
@@ -65,7 +65,7 @@ OFFSPRING=
 
 PYTHON3='python3'
 THRESHOLD1=0.001
-THRESHOLD2=0.01
+THRESHOLD2=0.1
 OFFSPRING_FORMAT='fasta'
 KMER=40
 NMER=3
