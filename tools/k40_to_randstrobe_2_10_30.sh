@@ -1,5 +1,14 @@
 #!/bin/bash
 
+SPATH=`realpath $0`
+SPATH=`dirname $SPATH`
+K2S="$SPATH""/../main/kmer2strobemer"
+
+if [[ ! -e  paternal.unique.filter.mer || ! -e maternal.unique.filter.mer  || ! -e common.mer ]] ; then 
+    echo "input file not exist. please link paternal.unique.filter.mer  maternal.unique.filter.mer common.mer in current folder"
+    exit 1
+fi
+
 if [[ ! -e '00.kmer2strobemer_done' ]]  ; then
     $K2S --nkmer 2 --ksize 10 --wsize 30 <paternal.unique.filter.mer >paternal.strobemer || exit 1
     $K2S --nkmer 2 --ksize 10 --wsize 30 <maternal.unique.filter.mer >maternal.strobemer || exit 1
