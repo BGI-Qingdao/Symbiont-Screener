@@ -31,7 +31,7 @@ Options :
 
   For marker generation:
 
-        -low_depth          estimated lower depth for k-mer histogram (default 0)
+        --low_depth          estimated lower depth for k-mer histogram (default 0)
 
         --high_depth        estimated higher depth for k-mer histogram (default 0)
                             this pipeline will automatically choose lower and higher depth threasholds when both --low_depth and --high_depth are not set.
@@ -43,7 +43,7 @@ Options :
                             for ONT reads(error rate~=15%), we recommand 0.001.
                             for PacBio reads(error rate<5%), we recommand 0.002-0.005.
 
-        --threshold2        minimum of shared kmer density (default 0.01)
+        --threshold2        minimum of shared kmer density (default 0.1)
 
   For BGMM-clustering-based detection:
 
