@@ -26,12 +26,12 @@ Options :
         --thread            thread num.
                             [ optional, default 8 threads. ]
 
-        --memory            x (GB) of memory used by jellyfish.
-                            [ optional, default 100GB. ]
-
   For marker generation:
+  
+        --size              initial hash size for jellyfish 
+                            [ optional, default 10GB. ]
 
-        --low_depth          estimated lower depth for k-mer histogram (default 0)
+        --low_depth         estimated lower depth for k-mer histogram (default 0)
 
         --high_depth        estimated higher depth for k-mer histogram (default 0)
                             this pipeline will automatically choose lower and higher depth threasholds when both --low_depth and --high_depth are not set.
