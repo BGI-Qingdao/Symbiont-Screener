@@ -19,19 +19,17 @@ function usage(){
     echo "        --size        initial hash table by jellyfish."
     echo "                      [ optional, default 10GB. ]"
     echo "        --mer         mer-size"
-    echo "                      [ optional, default 21. ]"
+    echo "                      [ optional, default 40. ]"
     echo "        --m-lower     maternal kmer frequency table will ignore kmers with count < m-lower."
-    echo "                      [ optional, default 9. ]"
+    echo "                      [ optional, default 0. ]"
     echo "        --m-upper     maternal kmer frequency table will ignore kmers with count > m-upper."
-    echo "                      [ optional, default 33. ]"
+    echo "                      [ optional, default 0. ]"
     echo "        --p-lower     paternal kmer frequency table will ignore kmers with count < p-lower."
-    echo "                      [ optional, default 9. ]"
+    echo "                      [ optional, default 0. ]"
     echo "        --p-upper     paternal kmer frequency table will ignore kmers with count > p-upper."
-    echo "                      [ optional, default 33. ]"
-    echo "        --auto_bounds automatically calcuate lower and upper bounds based on kmer analysis."
-    echo "                      [ optional, default not trigger; no parameter. ]"
-    echo "                      ( note : if auto_bounds is on, it will overwrite --*-lower and --*-upper  ]"
-    echo "                      ( !!! WARN : default bounds is seted for 30X WGS reads , if your data is not close to 30X, please use your own bounds or simply open auto_bounds !!! ) "
+    echo "                      [ optional, default 0. ]"
+    echo "        --auto_bounds (0/1) automatically calcuate lower and upper bounds based on kmer analysis."
+    echo "                      [ optional, default 1; ]"
     echo "        --help        print this usage message."
 }
 
@@ -39,17 +37,16 @@ function usage(){
 # basic variables
 ###############################################################################
 MER=40
-CPU=30
+CPU=8
 SIZE='10G'
-PLOWER=9
-PUPPER=33
-MLOWER=9
-MUPPER=33
+PLOWER=0
+PUPPER=0
+MLOWER=0
+MUPPER=0
 PATERNAL=""
 MATERNAL=""
-AUTO_BOUNDS=0
+AUTO_BOUNDS=1
 SPATH=`dirname $0`
-
 ###############################################################################
 # parse arguments
 ###############################################################################
@@ -98,7 +95,8 @@ do
             shift
             ;;
         "--auto_bounds")
-            AUTO_BOUNDS=1
+            AUTO_BOUNDS=$2
+            shift
             ;;
         "--paternal")
             PATERNAL=$2" "$PATERNAL

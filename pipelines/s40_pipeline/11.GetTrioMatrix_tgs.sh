@@ -99,7 +99,7 @@ do
             THRESHOLD2=$2
             shift
             ;;
-	"--shortest")
+        "--shortest")
             L_SHORTEST=$2
             shift
             ;;

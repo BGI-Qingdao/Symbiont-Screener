@@ -58,6 +58,9 @@ Options :
 """
 }
 
+echo ".............................................."
+echo "... strobemer version of Symbiont-Screener ..."
+echo ".............................................."
 PATERNAL=
 MATERNAL=
 OFFSPRING=

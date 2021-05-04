@@ -16,14 +16,9 @@ Options  :
                             gzip format file is supported but should end by '.gz' 
         --offspring_format  fasta/fastq (default fasta)
         --shortest          shortest for cluster (default 5000)
-        --nmer              nmer for gc_nmer(default 2)
+        --nmer              nmer for gc_nmer(default 3)
         --help              print this usage message.
-Examples :
-
-    ./11.GetTrioMatrix.sh   --paternal_mer paternal.mer  --maternal_mer maternal.mer --shared_mer common.mer
-
 """
-
 }
 
 ###############################################################################
@@ -130,7 +125,7 @@ if [[ ! -e '20.step_1_done' ]]  ; then
         READ_ARG="--read $x ""$READ_ARG"
     done
     $GC_NMER_EXE  $READ_ARG \
-	              --kmer   $NMER \
+                  --kmer   $NMER \
                   --format $OFFSPRING_FORMAT \
                   --thread $CPU >gc_nmer.data.txt 2>gc_nmer.log || exit 1
     date >>'20.step_1_done'
