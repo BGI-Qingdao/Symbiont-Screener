@@ -15,27 +15,20 @@ Options  :
         --offspring         Offspring sequence file.
                             gzip format file is supported but should end by '.gz' 
         --offspring_format  fasta/fastq (default fasta)
-
-        --nmer              nmer for gc_nmer(default 2)
-        --sequence_platform tgs/stlfr (default tgs)
+        --shortest          shortest for cluster (default 5000)
+        --nmer              nmer for gc_nmer(default 3)
         --help              print this usage message.
-Examples :
-
-    ./11.GetTrioMatrix.sh   --paternal_mer paternal.mer  --maternal_mer maternal.mer --shared_mer common.mer
-
 """
-
 }
 
 ###############################################################################
 # basic variables 
 ###############################################################################
 CPU=8
-NMER=2
+NMER=3
 OFFSPRING_FORMAT="fasta"
-PLAT="tgs"
 OFFSPRING=""
-
+L_SHORTEST=5000
 SPATH=`dirname $0`
 ###############################################################################
 # parse arguments
@@ -68,8 +61,8 @@ do
             NMER=$2
             shift
             ;;
-        "--sequence_platform")
-            PLAT=$2
+        "--shortest")
+            L_SHORTEST=$2
             shift
             ;;
         "--offspring_format")
@@ -90,10 +83,10 @@ echo "    thread                : $CPU "
 echo "    nmer                  : $NMER"
 echo "    offspring format      : $OFFSPRING_FORMAT"
 echo "    offspring    input    : $OFFSPRING"
+echo "    shortest              : $L_SHORTEST"
 echo "BuildTrioLib.sh in  : $SPATH"
 
 GC_NMER=$SPATH"/main/gc_nmer"
-GC_NMER_STLFR=$SPATH"/main/gc_nmer_stlfr"
 # sanity check
 if [[  $CPU -lt 1 || $NMER <2  || -z "$OFFSPRING" ]] ; then
     echo "ERROR : arguments invalid ... exit!!! "
@@ -112,8 +105,8 @@ do
    fi
 done
 
-if [[ ! -e $GC_NMER || ! -e $GC_NMER_STLFR ]] ; then 
-    echo "ERROR : $GC_NMER or $GC_NMER_STLFR is not exist! please run make first . exit ..."
+if [[ ! -e $GC_NMER ]] ; then 
+    echo "ERROR : $GC_NMER is not exist! please run make first . exit ..."
     exit 1
 fi
 if [[ $OFFSPRING_FORMAT != 'fastq' && $OFFSPRING_FORMAT != "fasta" ]] ; then 
@@ -121,19 +114,9 @@ if [[ $OFFSPRING_FORMAT != 'fastq' && $OFFSPRING_FORMAT != "fasta" ]] ; then
     exit 1
 fi
 
-if [[ $PLAT != "tgs"  && $PLAT != "stlfr" ]] ; then 
-    echo "invalid sequencing platform $PLAT ! exit ..."
-    exit 1
-fi
-
-
 date
 echo "__START__"
-if [[ $PLAT == 'tgs' ]] ; then 
-    GC_NMER_EXE=$GC_NMER
-elif [[ $PLAT == 'stlfr' ]] ; then 
-    GC_NMER_EXE=$GC_NMER_STLFR
-fi
+GC_NMER_EXE=$GC_NMER
 
 if [[ ! -e '20.step_1_done' ]]  ; then
     READ_ARG=""
@@ -142,7 +125,7 @@ if [[ ! -e '20.step_1_done' ]]  ; then
         READ_ARG="--read $x ""$READ_ARG"
     done
     $GC_NMER_EXE  $READ_ARG \
-	              --kmer   $NMER \
+                  --kmer   $NMER \
                   --format $OFFSPRING_FORMAT \
                   --thread $CPU >gc_nmer.data.txt 2>gc_nmer.log || exit 1
     date >>'20.step_1_done'
@@ -151,7 +134,8 @@ else
 fi
 
 if [[ ! -e '20.step_2_done' ]]  ; then
-    cut -f 3- gc_nmer.data.txt >gc_nmer.matrix
+    awk -v short=$L_SHORTEST '{if($2>short)print $0 ;}' gc_nmer.data.txt >gc_nmer.cut.data.txt
+    cut -f 3- gc_nmer.cut.data.txt > gc_nmer.matrix ||exit 1
     date >>'20.step_2_done'
 else
     echo "skip extract gc_nmer.matrix due to 20.step_2_done exist"

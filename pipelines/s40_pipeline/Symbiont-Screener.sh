@@ -181,7 +181,7 @@ if [[ $L_DEPTH == 0 && $H_DEPTH == 0 ]] ; then
                --maternal "$MATERNAL" \
                --mer $KMER \
                --thread $CPU \
-               --auto_bounds \
+               --auto_bounds 1 \
                --size $SIZE  || exit 1
 else
        if [[  $L_DEPTH -lt 1 || $H_DEPTH -lt 1 || $L_DEPTH -gt $H_DEPTH ]] ; then

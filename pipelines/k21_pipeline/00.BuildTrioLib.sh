@@ -22,14 +22,22 @@ Options  :
 
         --maternal          maternal NGS reads file in FASTQ format.
 
+        --m-lower           maternal kmer frequency table will ignore kmers with count < m-lower.
+                            [ optional, default 0. ]
+        --m-upper           maternal kmer frequency table will ignore kmers with count > m-upper.
+                            [ optional, default 0. ]
+        --p-lower           paternal kmer frequency table will ignore kmers with count < p-lower.
+                            [ optional, default 0. ]
+        --p-upper           paternal kmer frequency table will ignore kmers with count > p-upper.
+                            [ optional, default 0. ]
+        --auto_bounds       (0/1) automatically calcuate lower and upper bounds based on kmer analysis.
+                            [ optional, default 1; ]
         --help              print this usage message.
 
 Examples :
 
     ./00.BuildTrioLib.sh   --paternal father.fastq --maternal mater.fastq 
-
 """
-
 }
 
 ###############################################################################
@@ -38,8 +46,13 @@ Examples :
 MER=21
 CPU=8
 MEMORY=50
+PLOWER=0
+PUPPER=0
+MLOWER=0
+MUPPER=0
 PATERNAL=""
 MATERNAL=""
+AUTO_BOUNDS=1
 SPATH=`dirname $0`
 ###############################################################################
 # parse arguments
@@ -68,16 +81,36 @@ do
             CPU=$2
             shift
             ;;
+        "--m-lower")
+            MLOWER=$2
+            shift
+            ;;
+        "--m-upper")
+            MUPPER=$2
+            shift
+            ;;
+        "--p-lower")
+            PLOWER=$2
+            shift
+            ;;
+        "--p-upper")
+            PUPPER=$2
+            shift
+            ;;
         "--mer")
             MER=$2
             shift
             ;;
+        "--auto_bounds")
+            AUTO_BOUNDS=$2
+            shift
+            ;;
         "--paternal")
-            PATERNAL=$2" "$PATERNAL
+            PATERNAL=$2" ""$PATERNAL"
             shift
             ;;
         "--maternal")
-            MATERNAL=$2" "$MATERNAL
+            MATERNAL=$2" ""$MATERNAL"
             shift
             ;;
         *)
@@ -95,6 +128,11 @@ echo "    thread          : $CPU "
 echo "    mer             : $MER "
 echo "    paternal input  : $PATERNAL"
 echo "    maternal input  : $MATERNAL"
+echo "    lower(maternal) : $MLOWER"
+echo "    upper(maternal) : $MUPPER"
+echo "    lower(paternal) : $PLOWER"
+echo "    upper(paternal) : $PUPPER"
+echo "    auto_bounds     : $AUTO_BOUNDS"
 echo "BuildTrioLib.sh in  : $SPATH"
 
 MERYL=$SPATH"/merylbin/meryl"
@@ -137,10 +175,12 @@ fi
 
 
 if [[ ! -e '00.step_3_done' ]]  ; then
-    MLOWER=`grep LOWER_INDEX maternal.bounds.txt| awk -F '=' '{print $2}'`
-    MUPPER=`grep UPPER_INDEX maternal.bounds.txt| awk -F '=' '{print $2}'`
-    MLOWER=$(($MLOWER-1))
-    MUPPER=$(($MUPPER+1))
+    if [[ $AUTO_BOUNDS == 1 ]] ; then 
+        MLOWER=`grep LOWER_INDEX maternal.bounds.txt| awk -F '=' '{print $2}'`
+        MUPPER=`grep UPPER_INDEX maternal.bounds.txt| awk -F '=' '{print $2}'`
+        MLOWER=$(($MLOWER-1))
+        MUPPER=$(($MUPPER+1))
+    fi
     echo "  the real used kmer-count bounds of maternal is [ $MLOWER , $MUPPER ] "
     $MERYL difference output mat_only.meryl threads=$CPU memory=$MEMORY maternal.meryl paternal.meryl
     $MERYL greater-than $MLOWER  mat_only.meryl output 'mat_only.gt'$MLOWER'.meryl' || exit  1
@@ -153,10 +193,12 @@ else
 fi
 
 if [[ ! -e '00.step_4_done' ]]  ; then
-    PLOWER=`grep LOWER_INDEX paternal.bounds.txt| awk -F '=' '{print $2}'`
-    PUPPER=`grep UPPER_INDEX paternal.bounds.txt| awk -F '=' '{print $2}'`
-    PLOWER=$(($PLOWER-1))
-    PUPPER=$(($PUPPER+1))
+    if [[ $AUTO_BOUNDS == 1 ]] ; then 
+        PLOWER=`grep LOWER_INDEX paternal.bounds.txt| awk -F '=' '{print $2}'`
+        PUPPER=`grep UPPER_INDEX paternal.bounds.txt| awk -F '=' '{print $2}'`
+        PLOWER=$(($PLOWER-1))
+        PUPPER=$(($PUPPER+1))
+    fi
     echo "  the real used kmer-count bounds of paternal is [ $PLOWER , $PUPPER ] "
     $MERYL difference output pat_only.meryl threads=$CPU memory=$MEMORY paternal.meryl maternal.meryl || exit 1
     $MERYL greater-than $PLOWER  pat_only.meryl output 'pat_only.gt'$PLOWER'.meryl' || exit  1
