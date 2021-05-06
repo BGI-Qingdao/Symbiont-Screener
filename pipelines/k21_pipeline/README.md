@@ -25,11 +25,11 @@ Options :
 
         --thread            thread num.
                             [ optional, default 8 threads. ]
+                            
+        --memory            x (GB) memory used for meryl
+                            [ optional, default 50GB. ]
 
   For marker generation:
-  
-        --size              initial hash size for jellyfish 
-                            [ optional, default 10GB. ]
 
         --low_depth         estimated lower depth for k-mer histogram (default 0)
 
