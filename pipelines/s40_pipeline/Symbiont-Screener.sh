@@ -86,6 +86,10 @@ STEP1=$SPATH/11.GetTrioMatrix_tgs.sh
 STEP2=$SPATH/20.GetGCNmer.sh
 BGM_MAIN=$SPATH/bgm/main_logic.py
 
+if [[ ! -e $K2S ]] ; then
+    echo "ERROR : please run make in main !!! exit ..."
+    exit 1
+fi
 ###############################################################################
 # parse arguments
 ###############################################################################
@@ -200,15 +204,14 @@ else
 fi
 
 if [[ ! -e '00.kmer2strobemer_done' ]]  ; then
-    $K2S --nkmer 2 --ksize 10 --wsize 30 <paternal.unique.filter.mer >paternal.strobemer || exit 1
-    $K2S --nkmer 2 --ksize 10 --wsize 30 <maternal.unique.filter.mer >maternal.strobemer || exit 1
-    $K2S --nkmer 2 --ksize 10 --wsize 30 <common.mer >common.strobemer || exit 1
-    awk '{if(FILENAME==ARGV[1]) {m[$1]=1;} else {if($1 in m) m[$1]=0;} }END{for( x in m ) { if(m[x]==1)  print x>"paternal_only.strobemer" ; else print x>"pc.mer";}}' paternal.strobemer maternal.strobemer common.strobemer &
-    awk '{if(FILENAME==ARGV[1]) {m[$1]=1;} else {if($1 in m) m[$1]=0;} }END{for( x in m ) { if(m[x]==1)  print x>"maternal_only.strobemer" ; else print x>"mc.mer";}}' maternal.strobemer paternal.strobemer common.strobemer &
+    $K2S --nkmer 2 --ksize 10 --wsize 30 <paternal.unique.filter.mer >paternal.strobemer &
+    $K2S --nkmer 2 --ksize 10 --wsize 30 <maternal.unique.filter.mer >maternal.strobemer &
+    $K2S --nkmer 2 --ksize 10 --wsize 30 <common.mer >common.strobemer &
     wait
-
-    cat common.strobemer pc.mer mc.mer >common.all.strobemer || exit 1
-    awk '{m[$1]=1;}END{for(x in m) print x;}' common.all.strobemer > common_uniq.strobemer ||exit 1
+    awk '{if(FILENAME==ARGV[1]) {m[$1]=1;} else {if($1 in m) m[$1]=0;} }END{for( x in m ) { if(m[x]==1)  print x>"paternal_only.strobemer" }}' paternal.strobemer maternal.strobemer common.strobemer &
+    awk '{if(FILENAME==ARGV[1]) {m[$1]=1;} else {if($1 in m) m[$1]=0;} }END{for( x in m ) { if(m[x]==1)  print x>"maternal_only.strobemer" }}' maternal.strobemer paternal.strobemer common.strobemer &
+    awk '{if(FILENAME==ARGV[1]) {m[$1]=1;} else {if($1 in m) m[$1]=0;} }END{for( x in m ) { if(m[x]==1)  print x>"common_only.strobemer" }}' common.strobemer maternal.strobemer paternal.strobemer  &
+    wait
     date >>'00.kmer2strobemer_done'
 else
     echo "skip kmer2strobemer due to 00.kmer2strobemer_done exist!"
@@ -216,7 +219,7 @@ fi
 
 $STEP1 --paternal_mer paternal_only.strobemer \
     --maternal_mer maternal_only.strobemer \
-    --shared_mer common_uniq.strobemer  \
+    --shared_mer common_only.strobemer  \
     --offspring "$OFFSPRING" \
     --offspring_format $OFFSPRING_FORMAT  \
     --threshold1 $THRESHOLD1 \
