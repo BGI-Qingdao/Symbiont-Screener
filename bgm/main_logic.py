@@ -10,10 +10,12 @@ import machine_learning
 import find_best_cluster
 import print_result
 import logger
+import mkl
 
 if __name__ == '__main__':
     opts = parse_opts.OPTs()
     opts.Parse(sys.argv[1:])
+    mkl.set_num_threads(opts.threads)
     np.random.seed(opts.rseed)
     data = load_matrix.MatrixLoader(trio_file=opts.trio_file
             ,mer2_file=opts.mer2_file,debug=opts.debug)

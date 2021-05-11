@@ -84,8 +84,7 @@ H_DEPTH=0
 
 SPATH=`dirname $0`
 STEP0=$SPATH/00.BuildTrioLib.sh
-STEP11=$SPATH/11.GetTrioMatrix_tgs.sh
-STEP12=$SPATH/12.GetTrioMatrix_stlfr.sh
+STEP1=$SPATH/11.GetTrioMatrix_tgs.sh
 STEP2=$SPATH/20.GetGCNmer.sh
 BGM_MAIN=$SPATH/bgm/main_logic.py
 
