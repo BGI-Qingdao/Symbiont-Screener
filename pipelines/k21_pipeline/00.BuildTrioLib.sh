@@ -156,8 +156,8 @@ echo "__START__"
 # extract paternal.mer & maternal.mer & common.mer
 ###############################################################################
 if [[ ! -e '00.step_1_done' ]]  ; then
-    $MERYL count k=$MER output maternal.meryl threads=$CPU memory=$MEMORY $MATERNAL || exit 1
-    $MERYL histogram maternal.meryl >maternal.hist || exit 1
+    $MERYL  threads=$CPU memory=$MEMORY count k=$MER output maternal.meryl $MATERNAL || exit 1
+    $MERYL  threads=$CPU memory=$MEMORY histogram maternal.meryl >maternal.hist || exit 1
     awk -f $SPATH"/find_bounds.awk" maternal.hist > maternal.bounds.txt || exit 1
     date >>'00.step_1_done'
 else
@@ -165,8 +165,8 @@ else
 fi
 
 if [[ ! -e '00.step_2_done' ]]  ; then
-    $MERYL count k=$MER output paternal.meryl threads=$CPU memory=$MEMORY $PATERNAL || exit 1
-    $MERYL histogram paternal.meryl >paternal.hist  || exit 1
+    $MERYL threads=$CPU memory=$MEMORY count k=$MER output paternal.meryl $PATERNAL || exit 1
+    $MERYL threads=$CPU memory=$MEMORY histogram paternal.meryl >paternal.hist  || exit 1
     awk -f $SPATH"/find_bounds.awk" paternal.hist > paternal.bounds.txt || exit 1
     date >>'00.step_2_done'
 else
@@ -182,11 +182,11 @@ if [[ ! -e '00.step_3_done' ]]  ; then
         MUPPER=$(($MUPPER+1))
     fi
     echo "  the real used kmer-count bounds of maternal is [ $MLOWER , $MUPPER ] "
-    $MERYL difference output mat_only.meryl threads=$CPU memory=$MEMORY maternal.meryl paternal.meryl
-    $MERYL greater-than $MLOWER  mat_only.meryl output 'mat_only.gt'$MLOWER'.meryl' || exit  1
-    $MERYL less-than $MUPPER  'mat_only.gt'$MLOWER'.meryl' output 'mat_only.gt'$MLOWER'.lt'$MUPPER'.meryl' || exit 1
+    $MERYL threads=$CPU memory=$MEMORY difference output mat_only.meryl maternal.meryl paternal.meryl
+    $MERYL threads=$CPU memory=$MEMORY greater-than $MLOWER  mat_only.meryl output 'mat_only.gt'$MLOWER'.meryl' || exit  1
+    $MERYL threads=$CPU memory=$MEMORY less-than $MUPPER  'mat_only.gt'$MLOWER'.meryl' output 'mat_only.gt'$MLOWER'.lt'$MUPPER'.meryl' || exit 1
     ln -s  'mat_only.gt'$MLOWER'.lt'$MUPPER'.meryl' mat_only.filtered.meryl
-    $MERYL print mat_only.filtered.meryl | awk '{print $1}' >maternal.mer || exit  1
+    $MERYL threads=$CPU memory=$MEMORY print mat_only.filtered.meryl | awk '{print $1}' >maternal.mer || exit  1
     date >>'00.step_3_done'
 else
     echo "skip get maternal.mer due to 00.step_3_done exist"
@@ -200,23 +200,23 @@ if [[ ! -e '00.step_4_done' ]]  ; then
         PUPPER=$(($PUPPER+1))
     fi
     echo "  the real used kmer-count bounds of paternal is [ $PLOWER , $PUPPER ] "
-    $MERYL difference output pat_only.meryl threads=$CPU memory=$MEMORY paternal.meryl maternal.meryl || exit 1
-    $MERYL greater-than $PLOWER  pat_only.meryl output 'pat_only.gt'$PLOWER'.meryl' || exit  1
-    $MERYL less-than $PUPPER  'pat_only.gt'$PLOWER'.meryl' output 'pat_only.gt'$PLOWER'.lt'$PUPPER'.meryl' || exit 1
+    $MERYL threads=$CPU memory=$MEMORY difference output pat_only.meryl paternal.meryl maternal.meryl || exit 1
+    $MERYL threads=$CPU memory=$MEMORY greater-than $PLOWER  pat_only.meryl output 'pat_only.gt'$PLOWER'.meryl' || exit  1
+    $MERYL threads=$CPU memory=$MEMORY less-than $PUPPER  'pat_only.gt'$PLOWER'.meryl' output 'pat_only.gt'$PLOWER'.lt'$PUPPER'.meryl' || exit 1
 
     ln -s  'pat_only.gt'$PLOWER'.lt'$PUPPER'.meryl' pat_only.filtered.meryl
-    $MERYL print pat_only.filtered.meryl | awk '{print $1}' >paternal.mer || exit 1
+    $MERYL threads=$CPU memory=$MEMORY print pat_only.filtered.meryl | awk '{print $1}' >paternal.mer || exit 1
     date >>'00.step_4_done'
 else
     echo "skip get paternal.mer due to 00.step_4_done exist"
 fi
 
 if [[ ! -e '00.step_5_done' ]]  ; then
-    $MERYL intersect-sum output common.meryl threads=$CPU memory=$MEMORY paternal.meryl maternal.meryl  || exit 1
+    $MERYL threads=$CPU memory=$MEMORY intersect-sum output common.meryl paternal.meryl maternal.meryl  || exit 1
     CLOW=$((($PLOWER+$MLOWER)/2-1))
-    $MERYL greater-than $CLOW output 'common.gt'$CLOW'.meryl' common.meryl || exit 1
+    $MERYL threads=$CPU memory=$MEMORY greater-than $CLOW output 'common.gt'$CLOW'.meryl' common.meryl || exit 1
     ln -s 'common.gt'$CLOW'.meryl' 'common.filtered.meryl'
-    $MERYL print 'common.filtered.meryl'  | awk '{print $1}' >common.mer || exit 1
+    $MERYL threads=$CPU memory=$MEMORY print 'common.filtered.meryl'  | awk '{print $1}' >common.mer || exit 1
     date >>'00.step_5_done'
 else
     echo "skip get common.mer due to 00.step_5_done exist"

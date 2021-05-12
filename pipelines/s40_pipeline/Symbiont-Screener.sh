@@ -200,6 +200,7 @@ else
                --p-lower $L_DEPTH \
                --m-upper $H_DEPTH \
                --p-upper $H_DEPTH \
+               --auto_bounds 0 \
                --size $SIZE  || exit 1
 fi
 

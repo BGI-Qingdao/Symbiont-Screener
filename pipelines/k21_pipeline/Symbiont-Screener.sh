@@ -203,6 +203,7 @@ else
                --p-lower $L_DEPTH \
                --m-upper $H_DEPTH \
                --p-upper $H_DEPTH \
+               --auto_bounds 0  \
                --memory $MEMORY || exit 1
 fi
 
