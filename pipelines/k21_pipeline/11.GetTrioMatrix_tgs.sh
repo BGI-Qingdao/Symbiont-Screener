@@ -175,7 +175,7 @@ if [[ ! -e '11.step_2_done' ]]  ; then
     # $10   density*1000 of shared
     # trio-only result here
     awk -v T1=$THRESHOLD1 -v T2=$THRESHOLD2  '{
-        if(($8>=T1*1000|| $9>=T1*1000) && $10>T2*1000) 
+        if(($8>T1*1000|| $9>T1*1000) && $10>T2*1000) 
             priori=1 ;
         else
             priori=0 ;
@@ -185,7 +185,7 @@ if [[ ! -e '11.step_2_done' ]]  ; then
     # for cluster :
     awk -v T1=$THRESHOLD1 -v T2=$THRESHOLD2 -v short=$L_SHORTEST '{
             if($4>short){
-                if(($8>=T1*1000|| $9>=T1*1000) && $10>T2*1000) 
+                if(($8>T1*1000|| $9>T1*1000) && $10>T2*1000) 
                     priori=1 ;
                 else
                     priori=0 ;
