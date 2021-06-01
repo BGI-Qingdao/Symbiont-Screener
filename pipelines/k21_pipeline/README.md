@@ -34,7 +34,7 @@ Options :
         --low_depth         estimated lower depth for k-mer histogram (default 0)
 
         --high_depth        estimated higher depth for k-mer histogram (default 0)
-                            this pipeline will automatically choose lower and higher depth threasholds when both --low_depth and --high_depth are not set.
+                            this pipeline will automatically choose lower and higher depth thresholds when both --low_depth and --high_depth are not set.
                             if the user estimates that sequencing coverage or depth of the host is around x , then please set low_depth=x/4 and high_depth=x*[3 or 5]
 
   For trio-binning-based detection:
@@ -73,9 +73,16 @@ column4 :   density of maternal specific markers
 column5 :   density of shared  markers
 ```
 
-all read names filtered by trio-binning results are recorded in ```trio_only.filtered_readname.txt```
+All read names filtered by trio-binning use pipeline's threshold1 and threshold2 parameteres are recorded in ```trio_only.filtered_readname.txt```
 
-use ```seqkit grep -f trio_only.filtered_readname.txt input.fasta >output.fasta``` to extract corresponding host's sequences.
+Use "./tools/tune_t1_t2.sh to test new parameters."¬
+
+**There is no need to re-run the pipeline if you want to tune the threshold1 and threshold2 parameters**
+
+I use ```seqkit grep -f trio_only.filtered_readname.txt input.fasta >output.fasta``` to extract corresponding host's sequences.
+```seqkit``` can be installed by ```conda install -c bioconda seqkit```.·
+
+Fell free to use any sequence fishing tools that you preferred to do the same thing.
 
 ### clustering result is recorded in final.result.txt
 
@@ -154,10 +161,78 @@ The pipeline supports automatic detection of those two thresholds by analysing t
    * maybe the genome sizes are huge for some contaminants.
 
 -----------------------------------------
-
 The ```threshold1``` and ```threshold2``` are used for trio-binning-based filtration.
 
-Please follow the usage's setting.
+The density graph ( either parent-specific marker densities (threshold1) or shared marker densities (threshold2) ) consisted by 2 part : 
+
+1. Some (maybe sharp) noise peaks in the left ( close to zero )
+2. Some gentle and wide peaks after the noise peaks.
+
+We need to set the threshold1/2 after the just after those shark noise peaks.
+
+To achive that, I usually check the density velocity information by :
+
+```
+# to get threshold2
+>awk '{print int($10)}' trio_density.data.txt | sort -n | uniq -c | awk '{if(NR>1) print t prev/$1; t=$2;prev=$1;}'
+
+0 0.00114416
+1 0.0752022
+2 0.654466
+3 2.14107
+4 2.1881
+5 1.88301
+6 1.5913
+7 1.68106
+8 1.94696
+9 1.59053
+10 0.947368 <------ the velocity trend to close to 1 now , so we set threshold2 as 10
+11 0.747813
+12 0.745652
+13 0.788346
+14 0.88142
+15 0.937013  
+16 1.05134
+17 1.07006
+18 0.900358
+19 0.93
+20 0.934579
+21 0.957066
+22 0.983001
+23 0.965478
+24 0.975704
+25 1.09957
+26 0.993366
+27 1.12636
+28 1.06744
+29 1.13779
+30 1.10584
+31 1.17345
+32 1.22251
+33 1.10564
+34 1.22954
+35 1.2086
+36 1.04027
+37 1.24167
+38 1.17264
+39 1.00987
+40 1.09353
+41 1.02583
+42 1
+43 0.860317
+44 0.813953
+45 0.830472
+46 0.889313
+47 0.86755
+48 0.963317
+49 0.880618
+50 0.87362
+51 0.934633
+52 0.924708
+# to get threshod1
+>awk '{if($8>$9) print int($8);else print int($9)}' trio_density.data.txt | sort -n | uniq -c | awk '{if(NR>1) print t prev/$1; t=$2;prev=$1;}'
+```
+
 
 ### parameters for generating clustering result
 

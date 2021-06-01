@@ -11,10 +11,10 @@ fi
 function usage(){
     echo """
     Usage :
-    fish_target <-f final.result.txt> <-t threashold> <-i input.fa> <-o output.fa>
+    fish_target <-f final.result.txt> <-t threshold> <-i input.fa> <-o output.fa>
 
     Brief :
-    filter the target sequences ( \"hit-count\"+\"second-hit-count\">\"threashold\" )
+    filter the target sequences ( \"hit-count\"+\"second-hit-count\">\"threshold\" )
     """
 }
 

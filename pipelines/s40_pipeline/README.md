@@ -34,7 +34,7 @@ Options :
         --low_depth         estimated lower depth for k-mer histogram (default 0)
 
         --high_depth        estimated higher depth for k-mer histogram (default 0)
-                            this pipeline will automatically choose lower and higher depth threasholds when both --low_depth and --high_depth are not set.
+                            this pipeline will automatically choose lower and higher depth thresholds when both --low_depth and --high_depth are not set.
                             if the user estimates that sequencing coverage or depth of the host is around x , then please set low_depth=x/4 and high_depth=x*[3 or 5]
 
   For trio-binning-based detection:
@@ -73,10 +73,10 @@ column4 :   density of maternal specific markers
 column5 :   density of shared  markers
 ```
 
-All read names filtered by trio-binning use pipeline's threshold1 and threashold2 parameteres are recorded in ```trio_only.filtered_readname.txt```
+All read names filtered by trio-binning use pipeline's threshold1 and threshold2 parameteres are recorded in ```trio_only.filtered_readname.txt```
 Use "./tools/tune_t1_t2.sh to test new parameters."
 
-**There is no need to re-run the pipeline if you want to tune the threshold1 and threashold2 parameters**
+**There is no need to re-run the pipeline if you want to tune the threshold1 and threshold2 parameters**
 
 I use ```seqkit grep -f trio_only.filtered_readname.txt input.fasta >output.fasta``` to extract corresponding host's sequences.
 ```seqkit``` can be installed by ```conda install -c bioconda seqkit```. 
