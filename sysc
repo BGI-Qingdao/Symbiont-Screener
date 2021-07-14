@@ -1,0 +1,173 @@
+#!/bin/bash
+
+###########################################################
+# installation path
+###########################################################
+SSPATH=`dirname $0`
+SSPATH=`realpath $SSPATH`
+
+###########################################################
+# software version and basic logs
+###########################################################
+VERSION='0.5-0-2'
+RELEASE_DATE='2021/06/30'
+echo "#----------------------------------------"
+echo "LOG : version           -- $VERSION"
+echo "LOG : release date      -- $RELEASE_DATE"
+echo "LOG : installation path -- $SSPATH "
+echo "#----------------------------------------"
+
+###########################################################
+# top level usage
+###########################################################
+function TopUsage() {
+    echo "Usage : sysc <action> [options]"
+    echo ""
+    echo "Actions:"
+    echo "  +---------+-----------------------+-----------------------+"
+    echo "  |stage    | s40 action name       | k21 action name       |"
+    echo "  +---------+-----------------------+-----------------------+"
+    echo "  |step01   | build_s40             | build_k21             |"
+    echo "  +---------+-----------------------+-----------------------+"
+    echo "  |step02.1 | density_s40           | density_k21           |"
+    echo "  |step02.2 | trio_result_s40       | trio_result_k21       |"
+    echo "  +---------+-----------------------+-----------------------+"
+    echo "  |step03.1 | cluster_s40           | cluster_k21           |"
+    echo "  |step03.2 | consensus_cluster_s40  | consensus_result_k21  |"
+    echo "  +---------+-----------------------+-----------------------+"
+    echo "  please run those actions step by step"
+}
+
+if [[ $# -lt 1 || $1 == "-h" || $1 == "--help" ]] ; then
+    TopUsage
+    exit 0
+fi
+
+echo "CMD : $0 $*"
+###########################################################
+# sanity checking of installation
+###########################################################
+# thirdparty
+JELLY=$SSPATH"/thirdparty/jellyfishbin/jellyfish-linux"
+MERYL=$SSPATH"/thirdparty/merybin/meryl"
+SEQKT==$SSPATH"/thirdparty/seqkitbin/seqkit"
+# in house
+D3L=$SSPATH"/bin/density_3lib"
+D3LS=$SSPATH"/bin/density_3lib_strobemer"
+K2S=$SSPATH"/bin/kmer2strobemer"
+GCNMER=$SSPATH"/bin/gc_nmer"
+BGM_MAIN=$SSPATH"/scripts/bayes_gaussian_cluster/main_logic.py"
+
+# sanity check
+if [[ ! -e $K2S
+   || ! -e $D3LS
+   || ! -e $D3L
+   || ! -e $GCNMER ]] ; then
+
+   echo "#----------------------------------------"
+   echo "WARN : not compile yet, run make now ..."
+   cd $SSPATH"/sources" || exit 100
+   make || exit 101
+   cd - || exit 102
+   echo "LOG  : make succ ..."
+   echo "#----------------------------------------"
+fi
+
+###########################################################
+# runing actions
+###########################################################
+case $1 in
+    'build_s40')
+        build_s40_sh=$SSPATH"/scripts/s40_pipeline/build_s40.sh"
+        shift
+        if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
+            $build_s40_sh $* \
+                      --js  $JELLY \
+                      --k2s $K2S || exit 201
+        else
+            $build_s40_sh -h
+        fi
+        exit 0
+        ;;
+    'density_s40')
+        density_s40_sh=$SSPATH"/scripts/s40_pipeline/density_s40.sh"
+        shift
+        if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
+            pom='step01.s40/paternal_only.strobemer'
+            mom='step01.s40/maternal_only.strobemer'
+            com='step01.s40/common_only.strobemer'
+            if [[ ! -e $pom || ! -e $mom || ! -e $com ]] ; then
+                echo "ERROR: please run build_s40 action first ! exit ..."
+                exit 301
+            fi
+            $density_s40_sh $* \
+                     --d3l $D3LS \
+                     --paternal_mer $pom \
+                     --maternal_mer $mom \
+                     --shared_mer   $com || exit 302
+        else
+            $density_s40_sh -h
+        fi
+        exit 0
+        ;;
+    'trio_result_s40')
+        trio_result_s40_sh=$SSPATH"/scripts/s40_pipeline/trio_result_s40.sh"
+        shift
+        if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
+            trio_data='step02.1.s40/trio_density.data.txt'
+            if [[ ! -e $trio_data ]] ; then 
+                echo "ERROR: please run density_s40 action first ! exit ..."
+                exit 401
+            fi
+            $trio_result_s40_sh $* \
+                      --input $trio_data || exit 402
+        else
+            $trio_result_s40_sh -h
+        fi
+        exit 0
+        ;;
+    'cluster_s40')
+        cluster_s40_sh=$SSPATH"/scripts/s40_pipeline/cluster_s40.sh"
+        shift
+        if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
+            trio_data='step02.1.s40/trio_density.data.txt'
+            if [[ ! -e $trio_data ]] ; then 
+                echo "ERROR: please run density_s40 action first ! exit ..."
+                exit 501
+            fi
+            $cluster_s40_sh $* \
+                      --trio_data $trio_data \
+                      --gc_nmer $GCNMER \
+                      --bgmm $BGM_MAIN || exit 502
+        else
+            $cluster_s40_sh -h
+        fi
+        exit 0
+        ;;
+    'consensus_cluster_s40')
+        consensus_cluster_s40_sh=$SSPATH"/scripts/s40_pipeline/consensus_cluster_s40.sh"
+        shift
+        if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
+            cluster_result='step03.1.s40/final.result.txt'
+            if [[ ! -e $cluster_result ]] ; then 
+                echo "ERROR: please run cluster_s40 action first ! exit ..."
+                exit 601
+            fi
+            $consensus_cluster_s40_sh $* \
+                      --cluster_result $cluster_result || exit 602
+        else
+            $consensus_cluster_s40_sh -h
+        fi
+        exit 0
+        ;;
+    'build_k21')
+        shift
+        build_k21_sh=$SSPATH"/scripts/s21_pipeline/build_21.sh"
+        $build_k21_sh $* || exit 201
+        exit 0
+        ;;
+    *)
+        TopUsage
+        exit 1
+        ;;
+esac

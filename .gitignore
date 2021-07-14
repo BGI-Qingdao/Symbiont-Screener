@@ -1,4 +1,5 @@
-bgm/__pycache__/
+bin
+scripts/bayes_gaussian_cluster/__pycache__/
 main/density_3lib
 main/density_3lib_stlfr
 main/density_3lib_strobemer
@@ -6,3 +7,4 @@ main/gc_nmer
 main/gc_nmer_stlfr
 main/kmer2strobemer
 main/*.o
+
