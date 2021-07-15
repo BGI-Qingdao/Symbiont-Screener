@@ -83,7 +83,7 @@ if [[ ! -e '11.step_2_done' ]]  ; then
             priori=0 ;
         printf("%s\t%d\t%f\t%f\t%f\n",$2,priori,$8/1000,$9/1000,$10/1000);
     }'   $input >trio_only.result.txt || exit 1
-    awk '{if($2==1)print $1;}' $input >trio_only.filtered_readname.txt
+    awk '{if($2==1)print $1;}' trio_only.result.txt  >trio_only.filtered_readname.txt
     date >>'11.step_2_done'
 else
     echo "skip get trio_only.result.txt due to 11.step_2_done exist"

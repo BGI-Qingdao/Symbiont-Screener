@@ -43,7 +43,7 @@ do
             CPU=$2
             shift
             ;;
-        "-d3s")
+        "--d3l")
             DENSITY_3LIB=$2
             shift
             ;;

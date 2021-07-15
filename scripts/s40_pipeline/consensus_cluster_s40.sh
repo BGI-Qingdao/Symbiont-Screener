@@ -46,7 +46,7 @@ do
             MIN_HIT=$2
             shift
             ;;
-        "--cluster_reuslt")
+        "--cluster_result")
             CLUSTER_DATA=` realpath $2`
             shift
             ;;

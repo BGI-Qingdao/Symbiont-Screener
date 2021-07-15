@@ -33,7 +33,7 @@ function TopUsage() {
     echo "  |step02.2 | trio_result_s40       | trio_result_k21       |"
     echo "  +---------+-----------------------+-----------------------+"
     echo "  |step03.1 | cluster_s40           | cluster_k21           |"
-    echo "  |step03.2 | consensus_cluster_s40  | consensus_result_k21  |"
+    echo "  |step03.2 | consensus_cluster_s40 | consensus_cluster_k21 |"
     echo "  +---------+-----------------------+-----------------------+"
     echo "  please run those actions step by step"
 }
@@ -82,7 +82,7 @@ case $1 in
         shift
         if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
             $build_s40_sh $* \
-                      --js  $JELLY \
+                      --jf  $JELLY \
                       --k2s $K2S || exit 201
         else
             $build_s40_sh -h

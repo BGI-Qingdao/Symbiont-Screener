@@ -227,12 +227,19 @@ else
     echo "skip dump fa of paternal because 00.step_04_done file already exist ..."
 fi
 
+if [[ ! -e "00.step_04.0_done" ]] ; then
+    # calculate kmercount-count table and ordered print it for maternal mers
+    $JELLY histo -o maternal.histo maternal_mer_counts.jf || exit 1
+    # calculate kmercount-count table and ordered print it for paternal mers
+    $JELLY histo -o paternal.histo paternal_mer_counts.jf || exit 1
+    $DRAW_HIST -p paternal.histo -m maternal.histo -o pm_histo.html
+    date >>"00.step_04.0_done"
+else
+    echo "skip gen histo because 00.step_04.0_done file already exist ..."
+fi
+
 if [[ $AUTO_BOUNDS == 1 ]] ; then
     if  [[ ! -e "00.step_04.1_done" ]] ; then
-        # calculate kmercount-count table and ordered print it for maternal mers
-        $JELLY histo -o maternal.histo maternal_mer_counts.jf
-        # calculate kmercount-count table and ordered print it for paternal mers
-        $JELLY histo -o paternal.histo paternal_mer_counts.jf
         awk 'BEGIN{MIN=0;MIN_INDEX=0;MAX=0;MAX_INDEX=0;STATE=0;}{i=0+$1;c=0+$2;if(S==0 ) {if(MIN==0 || c<MIN) {MIN=c ;MIN_INDEX=i;}else {S=1;} }else{ if(MAX==0 || c>MAX) { MAX=c; MAX_INDEX=i;}}}END{up_bounds=0+3*MAX_INDEX-2*MIN_INDEX;LOWER_INDEX=MIN_INDEX+1;UPPER_INDEX=up_bounds-1;printf("MIN_INDEX=%d\nMAX_INDEX=%d\nLOWER_INDEX=%d\nUPPER_INDEX=%d\n",MIN_INDEX,MAX_INDEX,LOWER_INDEX,UPPER_INDEX);}' maternal.histo > maternal.bounds.txt
         awk 'BEGIN{MIN=0;MIN_INDEX=0;MAX=0;MAX_INDEX=0;STATE=0;}{i=0+$1;c=0+$2;if(S==0 ) {if(MIN==0 || c<MIN) {MIN=c ;MIN_INDEX=i;}else {S=1;} }else{ if(MAX==0 || c>MAX) { MAX=c; MAX_INDEX=i;}}}END{up_bounds=0+3*MAX_INDEX-2*MIN_INDEX;LOWER_INDEX=MIN_INDEX+1;UPPER_INDEX=up_bounds-1;printf("MIN_INDEX=%d\nMAX_INDEX=%d\nLOWER_INDEX=%d\nUPPER_INDEX=%d\n",MIN_INDEX,MAX_INDEX,LOWER_INDEX,UPPER_INDEX);}' paternal.histo > paternal.bounds.txt
         date >>"00.step_04.1_done"
@@ -244,6 +251,7 @@ if [[ $AUTO_BOUNDS == 1 ]] ; then
     PLOWER=`grep LOWER_INDEX paternal.bounds.txt| awk -F '=' '{print $2}'`
     PUPPER=`grep UPPER_INDEX paternal.bounds.txt| awk -F '=' '{print $2}'`
 fi
+
 echo "  the real used kmer-count bounds of maternal is [ $MLOWER , $MUPPER ] "
 echo "  the real used kmer-count bounds of paternal is [ $PLOWER , $PUPPER ] "
 # dump filter mers

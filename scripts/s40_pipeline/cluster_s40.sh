@@ -19,8 +19,6 @@ Options  :
 
         --thread            thread num.
                             [ optional, default 8 threads. ]
-        --python3           path to python3
-                            [ optional default python3 ]
         --help              print this usage message.
 """
 }
@@ -41,7 +39,6 @@ L_SHORTEST=5000
 
 CPU=8
 NMER=3
-PYTHON3=python3
 
 ###############################################################################
 # parse arguments
@@ -81,7 +78,8 @@ do
             shift
             ;;
         "--offspring")
-            OFFSPRING="$2"" ""$OFFSPRING"
+            offspring_file=`realpath $2`
+            OFFSPRING="$offspring_file"" ""$OFFSPRING"
             shift
             ;;
         "--gc_nmer")
@@ -114,7 +112,6 @@ echo "    offspring format      : $OFFSPRING_FORMAT"
 echo "    offspring input       : $OFFSPRING"
 echo "    threshold1            : $THRESHOLD1"
 echo "    threshold2            : $THRESHOLD2"
-echo "    python3 in            : $PYTHON3"
 echo "    shortest              : $L_SHORTEST"
 echo "    thread                : $CPU "
 
@@ -163,9 +160,9 @@ if [[ ! -e '30.step_0_done' ]]  ; then
                 priori=1 ;
             else
                 priori=0 ;
-            printf("%s\t%d\t%f\t%f\t%f\n",$2,priori,$8/1000,$9/1000,$10/1000);
+            printf("%d\t%f\t%f\t%f\n",priori,$8/1000,$9/1000,$10/1000);
         }
-    }' $TRIODATA >trio.matrix || exit 1
+    }' $TRIODATA >trio.4r.matrix || exit 1
     echo "read_name" >name.txt
     awk -v short=$L_SHORTEST '{if($4>short)print $2;}' $TRIODATA >>name.txt
     date >>'30.step_0_done'
@@ -197,7 +194,7 @@ else
 fi
 
 if [[ ! -e '30.step_3_done' ]]  ; then
-    $PYTHON3  $BGM_MAIN -t trio.4r.matrix  \
+    $BGM_MAIN -t trio.4r.matrix  \
         -m  gc_nmer.matrix \
         -r  42 \
         -l  10 >cluster_reuslt.txt 2>cluster.log || exit 1
