@@ -73,6 +73,10 @@ do
             TRIODATA=`realpath $2`
             shift
             ;;
+        "--dcl")
+            DRAW_CL=`realpath $2`
+            shift
+            ;;
         "--thread")
             CPU=$2
             shift
@@ -200,6 +204,8 @@ if [[ ! -e '30.step_3_done' ]]  ; then
         -l  10 >cluster_reuslt.txt 2>cluster.log || exit 1
 
     paste name.txt cluster_reuslt.txt >final.result.txt
+
+    $DRAW_CL || exit 1
     echo "Result in final.result.txt"
     echo "  Format are \"name priori host best-hit-counts second best-hit-counts\""
     echo "NOTICE : reads length not great than $L_SHORTEST had beed excluded from final.result.txt"

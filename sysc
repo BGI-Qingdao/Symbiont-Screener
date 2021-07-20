@@ -25,7 +25,7 @@ function TopUsage() {
     echo ""
     echo "Actions:"
     echo "  +---------+-----------------------+-----------------------+"
-    echo "  |stage    | s40 action name       | k21 action name       |"
+    echo "  |stage    | strobemer mode (s40)  | kmer mode (k21)       |"
     echo "  +---------+-----------------------+-----------------------+"
     echo "  |step01   | build_s40             | build_k21             |"
     echo "  +---------+-----------------------+-----------------------+"
@@ -57,6 +57,10 @@ D3LS=$SSPATH"/bin/density_3lib_strobemer"
 K2S=$SSPATH"/bin/kmer2strobemer"
 GCNMER=$SSPATH"/bin/gc_nmer"
 BGM_MAIN=$SSPATH"/scripts/bayes_gaussian_cluster/main_logic.py"
+# visualize script
+DRAW_KF=$SSPATH"/scripts/draw/draw_kmer_frequency.py"
+DRAW_CL=$SSPATH"/scripts/draw/draw_cluster.py"
+DRAW_TD=$SSPATH"/scripts/draw/draw_trio_density.py"
 
 # sanity check
 if [[ ! -e $K2S
@@ -83,6 +87,7 @@ case $1 in
         if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
             $build_s40_sh $* \
                       --jf  $JELLY \
+                      --dkf $DRAW_KF \
                       --k2s $K2S || exit 201
         else
             $build_s40_sh -h

@@ -19,6 +19,7 @@ Options  :
 ###############################################################################
 THRESHOLD1=0.003
 THRESHOLD2=0.1
+DRAW_TD=""
 prefix="output"
 input=""
 ###############################################################################
@@ -44,7 +45,10 @@ do
             input=`realpath $2`
             shift
             ;;
-
+        "--dtd")
+            DRAW_TD=`realpath $2`
+            shift
+            ;;
         *)
             echo "invalid params : \"$1\" . exit ... "
             exit
@@ -53,7 +57,7 @@ do
     shift
 done
 
-if [[ $input == "" || ! -e $input ]] ; then
+if [[ $input == "" || ! -e $input || ! -e $DRAW_TD ]] ; then
     echo "please do this action by sysc main pipeline ! exit ..."
     exit
 fi
@@ -84,6 +88,7 @@ if [[ ! -e '11.step_2_done' ]]  ; then
         printf("%s\t%d\t%f\t%f\t%f\n",$2,priori,$8/1000,$9/1000,$10/1000);
     }'   $input >trio_only.result.txt || exit 1
     awk '{if($2==1)print $1;}' trio_only.result.txt  >trio_only.filtered_readname.txt
+    $DRAW_TD || exit 1
     date >>'11.step_2_done'
 else
     echo "skip get trio_only.result.txt due to 11.step_2_done exist"

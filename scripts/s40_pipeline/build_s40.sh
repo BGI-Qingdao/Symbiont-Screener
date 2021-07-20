@@ -46,6 +46,9 @@ MUPPER=0
 PATERNAL=""
 MATERNAL=""
 AUTO_BOUNDS=1
+K2S=""
+DRAW_KF=""
+JELLY=""
 ###############################################################################
 # parse arguments
 ###############################################################################
@@ -67,6 +70,10 @@ do
             ;;
         "--k2s")
             K2S=$2
+            shift
+            ;;
+        "--dkf")
+            DRAW_KF=$2
             shift
             ;;
         "--jf")
@@ -127,11 +134,19 @@ if [[ ! -e $JELLY ]] ; then
     echo "ERROR : jellyfish \"$JELLY\"  is missing.  exit..."
     exit 1
 fi
+
+# sanity check
+if [[ ! -e $DRAW_KF ]] ; then
+    echo "ERROR : draw_kmer_frequency.py \"$DRAW_KF\"  is missing.  exit..."
+    exit 1
+fi
+
 # sanity check
 if [[ ! -e $K2S ]] ; then
     echo "ERROR : kmer2strobmer \"$K2S\"  is missing.  exit..."
     exit 1
 fi
+
 # sanity check
 if [[ $CPU -lt 1 || -z $PATERNAL || -z $MATERNAL  || $MER -lt 11   ]] ; then
     echo "ERROR : arguments invalid ... exit!!! "
@@ -250,6 +265,8 @@ if [[ $AUTO_BOUNDS == 1 ]] ; then
     MUPPER=`grep UPPER_INDEX maternal.bounds.txt| awk -F '=' '{print $2}'`
     PLOWER=`grep LOWER_INDEX paternal.bounds.txt| awk -F '=' '{print $2}'`
     PUPPER=`grep UPPER_INDEX paternal.bounds.txt| awk -F '=' '{print $2}'`
+
+    $DRAW_KF || exit 1
 fi
 
 echo "  the real used kmer-count bounds of maternal is [ $MLOWER , $MUPPER ] "
