@@ -63,11 +63,24 @@ The four available workflows of sysc :
 
 ### test01 : run sysc in strobemer mode with cluster
 
+```
+#TODO
+```
 ### test02 : run sysc in strobemer mode without cluster
 
+```
+#TODO
+```
 ### test03 : run sysc in kmer mode without cluster
 
-### test02 : run sysc in kmer mode without cluster
+```
+#TODO
+```
+### test04 : run sysc in kmer mode without cluster
+
+```
+#TODO
+```
 
 ## What is strobemer?
 
