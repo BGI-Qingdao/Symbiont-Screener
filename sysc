@@ -35,7 +35,21 @@ function TopUsage() {
     echo "  |step03.1 | cluster_s40           | cluster_k21           |"
     echo "  |step03.2 | consensus_cluster_s40 | consensus_cluster_k21 |"
     echo "  +---------+-----------------------+-----------------------+"
-    echo "  please run those actions step by step"
+echo """
+
+The four available workflows of sysc :
+  +-------+-----------------------------------------------------------------------------+------+
+  |       | --> build_s40 --> density_s40 --> cluster_s40 --> consensus_cluster_s40 --> |      |
+  |       |                      |                                                      |      |
+  |       |                      +--------------------------> trio_result_s40 --------> |      |
+  | START |                                                                             | END  |
+  |       | --> build_k21 --> density_k21 --> cluster_k21 --> consensus_cluster_k21 --> |      |
+  |       |                      |                                                      |      |
+  |       |                      +--------------------------> trio_result_k21 --------> |      |
+  +-------+-----------------------------------------------------------------------------+------+
+
+"""
+
 }
 
 if [[ $# -lt 1 || $1 == "-h" || $1 == "--help" ]] ; then
@@ -107,6 +121,7 @@ case $1 in
             fi
             $density_s40_sh $* \
                      --d3l $D3LS \
+                     --dtd $DRAW_TD \
                      --paternal_mer $pom \
                      --maternal_mer $mom \
                      --shared_mer   $com || exit 302
@@ -166,9 +181,87 @@ case $1 in
         exit 0
         ;;
     'build_k21')
+        build_k21_sh=$SSPATH"/scripts/k21_pipeline/build_k21.sh"
         shift
-        build_k21_sh=$SSPATH"/scripts/s21_pipeline/build_21.sh"
-        $build_k21_sh $* || exit 201
+        if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
+            $build_k21_sh $* \
+                      --meryl $MERYL \
+                      --dkf $DRAW_KF  exit 201
+        else
+            $build_k21_sh -h
+        fi
+        exit 0
+        ;;
+    'density_k21')
+        density_k21_sh=$SSPATH"/scripts/k21_pipeline/density_k21.sh"
+        shift
+        if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
+            pom='step01.k21/paternal.mer'
+            mom='step01.k21/maternal.mer'
+            com='step01.k21/common.mer'
+            if [[ ! -e $pom || ! -e $mom || ! -e $com ]] ; then
+                echo "ERROR: please run build_k21 action first ! exit ..."
+                exit 301
+            fi
+            $density_k21_sh $* \
+                     --d3l $D3L \
+                     --dtd $DRAW_TD \
+                     --paternal_mer $pom \
+                     --maternal_mer $mom \
+                     --shared_mer   $com || exit 302
+        else
+            $density_k21_sh -h
+        fi
+        exit 0
+        ;;
+     'trio_result_k21')
+        trio_result_k21_sh=$SSPATH"/scripts/k21_pipeline/trio_result_k21.sh"
+        shift
+        if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
+            trio_data='step02.1.k21/trio_density.data.txt'
+            if [[ ! -e $trio_data ]] ; then 
+                echo "ERROR: please run density_k21 action first ! exit ..."
+                exit 401
+            fi
+            $trio_result_k21_sh $* \
+                      --input $trio_data || exit 402
+        else
+            $trio_result_k21_sh -h
+        fi
+        exit 0
+        ;;
+    'cluster_k21')
+        cluster_k21_sh=$SSPATH"/scripts/k21_pipeline/cluster_k21.sh"
+        shift
+        if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
+            trio_data='step02.1.k21/trio_density.data.txt'
+            if [[ ! -e $trio_data ]] ; then 
+                echo "ERROR: please run density_k21 action first ! exit ..."
+                exit 501
+            fi
+            $cluster_k21_sh $* \
+                      --trio_data $trio_data \
+                      --gc_nmer $GCNMER \
+                      --bgmm $BGM_MAIN || exit 502
+        else
+            $cluster_k21_sh -h
+        fi
+        exit 0
+        ;;
+    'consensus_cluster_k21')
+        consensus_cluster_k21_sh=$SSPATH"/scripts/k21_pipeline/consensus_cluster_k21.sh"
+        shift
+        if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
+            cluster_result='step03.1.k21/final.result.txt'
+            if [[ ! -e $cluster_result ]] ; then 
+                echo "ERROR: please run cluster_k21 action first ! exit ..."
+                exit 601
+            fi
+            $consensus_cluster_k21_sh $* \
+                      --cluster_result $cluster_result || exit 602
+        else
+            $consensus_cluster_k21_sh -h
+        fi
         exit 0
         ;;
     *)

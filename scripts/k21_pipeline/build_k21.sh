@@ -6,7 +6,7 @@
 function usage(){
 echo """
 Usage    :
-    ./00.BuildTrioLib.sh [OPTION]
+    ./sysc build_k21  [OPTION]
 
 Options  :
         --thread            thread num.
@@ -36,7 +36,7 @@ Options  :
 
 Examples :
 
-    ./00.BuildTrioLib.sh   --paternal father.fastq --maternal mater.fastq 
+    ./sysc build_k21   --paternal father.fastq --maternal mater.fastq 
 """
 }
 
@@ -53,7 +53,9 @@ MUPPER=0
 PATERNAL=""
 MATERNAL=""
 AUTO_BOUNDS=1
-SPATH=`dirname $0`
+
+MERYL=''
+DRAW_KF=''
 ###############################################################################
 # parse arguments
 ###############################################################################
@@ -72,6 +74,14 @@ do
         "--help")
             usage
             exit 0
+            ;;
+        "--meryl")
+            MERYL=$2
+            shift
+            ;;
+        "--dkf")
+            DRAW_KF=$2
+            shift
             ;;
         "--memory")
             MEMORY=$2
@@ -122,7 +132,7 @@ do
 done
 
 # print arguments
-echo "ContamFilter.sh log : "
+echo "build_k21.sh log : "
 echo "    memory          : $MEMORY GB"
 echo "    thread          : $CPU "
 echo "    mer             : $MER "
@@ -133,9 +143,7 @@ echo "    upper(maternal) : $MUPPER"
 echo "    lower(paternal) : $PLOWER"
 echo "    upper(paternal) : $PUPPER"
 echo "    auto_bounds     : $AUTO_BOUNDS"
-echo "BuildTrioLib.sh in  : $SPATH"
 
-MERYL=$SPATH"/merylbin/meryl"
 # sanity check
 if [[ $MEMORY -lt 1  || $CPU -lt 1  ]] ; then
     echo "ERROR : arguments invalid ... exit!!! "
@@ -151,14 +159,15 @@ do
 done
 date
 echo "__START__"
-
+mkdir -p 'step01.k21' && cd 'step01.k21'
 ###############################################################################
 # extract paternal.mer & maternal.mer & common.mer
 ###############################################################################
 if [[ ! -e '00.step_1_done' ]]  ; then
     $MERYL  threads=$CPU memory=$MEMORY count k=$MER output maternal.meryl $MATERNAL || exit 1
-    $MERYL  threads=$CPU memory=$MEMORY histogram maternal.meryl >maternal.hist || exit 1
-    awk -f $SPATH"/find_bounds.awk" maternal.hist > maternal.bounds.txt || exit 1
+    $MERYL  threads=$CPU memory=$MEMORY histogram maternal.meryl >maternal.histo || exit 1
+    #awk -f $SPATH"/find_bounds.awk" maternal.histo > maternal.bounds.txt || exit 1
+    awk 'BEGIN{MIN=0;MIN_INDEX=0;MAX=0;MAX_INDEX=0;STATE=0;}{i=0+$1;c=0+$2;if(S==0 ) {if(MIN==0 || c<MIN) {MIN=c ;MIN_INDEX=i;}else {S=1;} }else{ if(MAX==0 || c>MAX) { MAX=c; MAX_INDEX=i;}}}END{up_bounds=0+3*MAX_INDEX-2*MIN_INDEX;LOWER_INDEX=MIN_INDEX+1;UPPER_INDEX=up_bounds-1;printf("MIN_INDEX=%d\nMAX_INDEX=%d\nLOWER_INDEX=%d\nUPPER_INDEX=%d\n",MIN_INDEX,MAX_INDEX,LOWER_INDEX,UPPER_INDEX);}' maternal.histo > maternal.bounds.txt || exit 1
     date >>'00.step_1_done'
 else
     echo "skip meryl count maternal due to 00.step_1_done exist"
@@ -166,13 +175,14 @@ fi
 
 if [[ ! -e '00.step_2_done' ]]  ; then
     $MERYL threads=$CPU memory=$MEMORY count k=$MER output paternal.meryl $PATERNAL || exit 1
-    $MERYL threads=$CPU memory=$MEMORY histogram paternal.meryl >paternal.hist  || exit 1
-    awk -f $SPATH"/find_bounds.awk" paternal.hist > paternal.bounds.txt || exit 1
+    $MERYL threads=$CPU memory=$MEMORY histogram paternal.meryl >paternal.histo  || exit 1
+    #awk -f $SPATH"/find_bounds.awk" paternal.histo > paternal.bounds.txt || exit 1
+    awk 'BEGIN{MIN=0;MIN_INDEX=0;MAX=0;MAX_INDEX=0;STATE=0;}{i=0+$1;c=0+$2;if(S==0 ) {if(MIN==0 || c<MIN) {MIN=c ;MIN_INDEX=i;}else {S=1;} }else{ if(MAX==0 || c>MAX) { MAX=c; MAX_INDEX=i;}}}END{up_bounds=0+3*MAX_INDEX-2*MIN_INDEX;LOWER_INDEX=MIN_INDEX+1;UPPER_INDEX=up_bounds-1;printf("MIN_INDEX=%d\nMAX_INDEX=%d\nLOWER_INDEX=%d\nUPPER_INDEX=%d\n",MIN_INDEX,MAX_INDEX,LOWER_INDEX,UPPER_INDEX);}' paternal.histo > paternal.bounds.txt || exit 1
+    $DRAW_KF || exit 1
     date >>'00.step_2_done'
 else
     echo "skip meryl count paternal due to 00.step_2_done exist"
 fi
-
 
 if [[ ! -e '00.step_3_done' ]]  ; then
     if [[ $AUTO_BOUNDS == 1 ]] ; then 
@@ -221,4 +231,5 @@ if [[ ! -e '00.step_5_done' ]]  ; then
 else
     echo "skip get common.mer due to 00.step_5_done exist"
 fi
+cd -
 echo "__END__"

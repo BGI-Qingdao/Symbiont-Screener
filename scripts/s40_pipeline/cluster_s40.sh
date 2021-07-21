@@ -6,7 +6,7 @@
 function usage(){
 echo """
 Usage    :
-    ./cluster_s40.sh [OPTION]
+    ./sysc cluster_s40  [OPTION]
 
 Options  :
         --offspring         Offspring sequence file.
@@ -111,7 +111,7 @@ do
 done
 
 # print arguments
-echo "ContamFilter.sh log : "
+echo "cluster_s40.sh log : "
 echo "    offspring format      : $OFFSPRING_FORMAT"
 echo "    offspring input       : $OFFSPRING"
 echo "    threshold1            : $THRESHOLD1"

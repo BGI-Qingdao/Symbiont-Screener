@@ -6,7 +6,7 @@
 function usage(){
 echo """
 Usage    :
-    ./density_s40.sh [OPTION]
+    ./sysc density_s40 [OPTION]
 
 Options  :
         --offspring         Offspring sequence file.
@@ -28,6 +28,7 @@ PATERNAL_MER=""
 MATERNAL_MER=""
 SHARED_MER=""
 DENSITY_3LIB=""
+DRAW_TD=""
 ###############################################################################
 # parse arguments
 ###############################################################################
@@ -68,6 +69,10 @@ do
             OFFSPRING_FORMAT=$2
             shift
             ;;
+        "--dtd")
+            DRAW_TD=`realpath $2`
+            shift
+            ;;
         *)
             echo "invalid params : \"$1\" . exit ... "
             exit
@@ -96,12 +101,14 @@ for x in $PATERNAL $MATERNAL $SHARED_MER $OFFSPRING
 do
    if [[ ! -e $x ]] ; then 
        echo "ERROR : input file \"$x\" is not exist ! exit ..."
+       echo "ERROR : please use the sysc main pipeline."
        exit 1
    fi
 done
 
 if [[ ! -e $DENSITY_3LIB ]] ; then 
     echo "ERROR : $DENSITY_3LIB is not exist! please run make first . exit ..."
+    echo "ERROR : please use the sysc main pipeline."
     exit 1
 fi
 if [[ $OFFSPRING_FORMAT != 'fastq' && $OFFSPRING_FORMAT != "fasta" ]] ; then 
@@ -125,6 +132,7 @@ if [[ ! -e '11.step_1_done' ]]  ; then
                   --wsize 30 \
                   --format $OFFSPRING_FORMAT \
                   --thread $CPU >trio_density.data.txt 2>trio_density.log || exit 1
+    $DRAW_TD || exit 1
     date >>'11.step_1_done'
 else
     echo "skip density_3lib due to 11.step_1_done exist"

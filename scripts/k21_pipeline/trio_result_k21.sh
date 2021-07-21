@@ -6,7 +6,7 @@
 function usage(){
 echo """
 Usage    :
-    ./sysc trio_result_s40 [OPTION]
+    ./sysc trio_result_k21_sh [OPTION]
 
 Options  :
         --threshold1        minimum density of parental kmer density(default 0.003)
@@ -58,14 +58,14 @@ if [[ $input == "" || ! -e $input ]] ; then
 fi
 
 # print arguments
-echo "trio_result_s40.sh log : "
+echo "trio_result_k21.sh log : "
 echo "    threshold1            : $THRESHOLD1"
 echo "    threshold2            : $THRESHOLD2"
 
 date
 echo "__START__"
 
-mkdir -p 'step02.2.s40' && cd 'step02.2.s40'
+mkdir -p 'step02.2.k21' && cd 'step02.2.k21'
 
 if [[ ! -e '11.step_2_done' ]]  ; then
     # in trio_density.data.txt

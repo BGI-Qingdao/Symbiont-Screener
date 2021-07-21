@@ -5,7 +5,7 @@
 ###############################################################################
 function usage(){
     echo "Usage    :"
-    echo "    ./build_s40.sh [OPTION]" 
+    echo "  ./sysc build_s40 [OPTION]" 
     echo ""
     echo "Build randstrobe(2,10,30,30) based on paternal and maternal NGS reads by jellyfish."
     echo ""

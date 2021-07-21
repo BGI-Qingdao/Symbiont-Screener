@@ -6,7 +6,7 @@
 function usage(){
 echo """
 Usage    :
-    ./sysc consensus_cluster_s40 [OPTION]
+    ./sysc consensus_cluster_k21 [OPTION]
 
 Options  :
         --min_hit           minimum hit in best and second best cluster
@@ -59,7 +59,7 @@ do
 done
 
 # print arguments
-echo "consensus_cluster_s40.sh log : "
+echo "consensus_cluster_k21.sh log : "
 echo "    min_hit               : $MIN_HIT"
 
 # sanity check
@@ -71,7 +71,7 @@ fi
 date
 echo "__START__"
 
-mkdir -p 'step03.2.s40' && cd 'step03.2.s40'
+mkdir -p 'step03.2.k21' && cd 'step03.2.k21'
 if [[ ! -e '31.step_0_done' ]]  ; then
     # in final.result.txt
     # $1    name
