@@ -20,7 +20,6 @@ Options  :
 
 MIN_HIT=""
 CLUSTER_DATA=""
-
 ###############################################################################
 # parse arguments
 ###############################################################################
@@ -80,6 +79,7 @@ if [[ ! -e '31.step_0_done' ]]  ; then
     # $4    best-hit-counts 
     # $5    second best-hit-counts
     awk -v T=$MIN_HIT  '{if($4+$5>=T){print $1;} }' $CLUSTER_DATA >readname.min-hit"$MIN_HIT".txt || exit 1
+    awk -v T=$MIN_HIT  '{if($4+$5<T){print $1;} }' $CLUSTER_DATA >readname.other.min-hit"$MIN_HIT".txt || exit 1
     date >>'31.step_0_done'
 else
     echo "skip get trio.matrix  due to 31.step_0_done exist"

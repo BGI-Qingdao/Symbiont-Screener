@@ -19,12 +19,11 @@ Options  :
 ###############################################################################
 THRESHOLD1=0.003
 THRESHOLD2=0.1
-prefix="output"
-input=""
+input="./step02.1.s40/trio_density.data.txt"
 ###############################################################################
 # parse arguments
 ###############################################################################
-if [[ $# == 0 || $1 == '-h' || $1 == "--help" ]] ; then 
+if [[  $1 == '-h' || $1 == "--help" ]] ; then 
     usage
     exit 0
 fi
@@ -40,7 +39,7 @@ do
             THRESHOLD2=$2
             shift
             ;;
-        "--input")
+        "--input"):
             input=`realpath $2`
             shift
             ;;
@@ -51,7 +50,6 @@ do
     esac
     shift
 done
-
 if [[ $input == "" || ! -e $input ]] ; then
     echo "please do this action by sysc main pipeline ! exit ..."
     exit

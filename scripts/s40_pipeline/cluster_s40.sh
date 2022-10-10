@@ -201,9 +201,9 @@ if [[ ! -e '30.step_3_done' ]]  ; then
     $BGM_MAIN -t trio.4r.matrix  \
         -m  gc_nmer.matrix \
         -r  42 \
-        -l  10 >cluster_reuslt.txt 2>cluster.log || exit 1
+        -l  10 >cluster_result.txt 2>cluster.log || exit 1
 
-    paste name.txt cluster_reuslt.txt >final.result.txt
+    paste name.txt cluster_result.txt >final.result.txt
 
     $DRAW_CL || exit 1
     echo "Result in final.result.txt"

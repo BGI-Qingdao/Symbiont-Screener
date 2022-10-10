@@ -64,7 +64,7 @@ echo "CMD : $0 $*"
 # thirdparty
 JELLY=$SSPATH"/thirdparty/jellyfishbin/jellyfish-linux"
 MERYL=$SSPATH"/thirdparty/merybin/meryl"
-SEQKT==$SSPATH"/thirdparty/seqkitbin/seqkit"
+SEQKIT=$SSPATH"/thirdparty/seqkitbin/seqkit"
 # in house
 D3L=$SSPATH"/bin/density_3lib"
 D3LS=$SSPATH"/bin/density_3lib_strobemer"
@@ -133,7 +133,7 @@ case $1 in
     'trio_result_s40')
         trio_result_s40_sh=$SSPATH"/scripts/s40_pipeline/trio_result_s40.sh"
         shift
-        if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
+        if [[ $# -eq 0 || ( $1 != '-h' && $1 != "--help" ) ]] ; then
             trio_data='step02.1.s40/trio_density.data.txt'
             if [[ ! -e $trio_data ]] ; then 
                 echo "ERROR: please run density_s40 action first ! exit ..."

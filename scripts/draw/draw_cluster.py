@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 
-pdata=pd.read_csv('cluster.result.txt',sep='\t')
+pdata=pd.read_csv('cluster_result.txt',sep='\t')
 #formula_predict consensus_result        best_count      second_best_count
 pdata['hit'] = pdata['best_count'] + pdata['second_best_count']
 
