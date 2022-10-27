@@ -52,7 +52,7 @@ The four available workflows of sysc :
   +-------+-----------------------------------------------------------------------------+------+
 
 ```
-<img src="https://user-images.githubusercontent.com/38022049/198184371-d9bc9d44-2bde-45ba-ac87-58e5bc03896f.png" width="800">
+<img src="https://user-images.githubusercontent.com/38022049/198184371-d9bc9d44-2bde-45ba-ac87-58e5bc03896f.png" width="600">
 
 
 ## How to run the example data
