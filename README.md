@@ -38,7 +38,6 @@ Actions:
   |step03.1 | cluster_s40           | cluster_k21           |
   |step03.2 | consensus_cluster_s40 | consensus_cluster_k21 |
   +---------+-----------------------+-----------------------+
-![image](https://user-images.githubusercontent.com/38022049/198184371-d9bc9d44-2bde-45ba-ac87-58e5bc03896f.png)
 
 
 The four available workflows of sysc :
@@ -52,9 +51,9 @@ The four available workflows of sysc :
   |       |                      +--------------------------> trio_result_k21 --------> |      |
   +-------+-----------------------------------------------------------------------------+------+
 
-![image](https://user-images.githubusercontent.com/38022049/198184405-2155c480-b7ec-4bf0-a44f-b1b650084d16.png)
-
 ```
+![image](https://user-images.githubusercontent.com/38022049/198184371-d9bc9d44-2bde-45ba-ac87-58e5bc03896f.png)
+
 
 ## How to run the example data
 
