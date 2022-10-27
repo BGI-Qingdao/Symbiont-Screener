@@ -1,6 +1,7 @@
 # Symbiont-Screener
 
 Symbiont-Screener is a reference-free approach to identify high-confidence host’s long reads from symbionts and contaminants and overcome the low sequencing accuracy according to a trio-based screening model.
+![image](https://user-images.githubusercontent.com/38022049/198184294-45610387-79dc-4860-a3b8-4b82315f0b42.png)
 
 ## Depedences
 
@@ -37,6 +38,7 @@ Actions:
   |step03.1 | cluster_s40           | cluster_k21           |
   |step03.2 | consensus_cluster_s40 | consensus_cluster_k21 |
   +---------+-----------------------+-----------------------+
+![image](https://user-images.githubusercontent.com/38022049/198184371-d9bc9d44-2bde-45ba-ac87-58e5bc03896f.png)
 
 
 The four available workflows of sysc :
@@ -49,6 +51,8 @@ The four available workflows of sysc :
   |       |                      |                                                      |      |
   |       |                      +--------------------------> trio_result_k21 --------> |      |
   +-------+-----------------------------------------------------------------------------+------+
+
+![image](https://user-images.githubusercontent.com/38022049/198184405-2155c480-b7ec-4bf0-a44f-b1b650084d16.png)
 
 ```
 
