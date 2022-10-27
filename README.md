@@ -1,6 +1,6 @@
 # Symbiont-Screener
 
-Separate host's sequences from contamination for TGS long reads by trio-binning markers and unsupervised clustering.
+Symbiont-Screener is a reference-free approach to identify high-confidence host’s long reads from symbionts and contaminants and overcome the low sequencing accuracy according to a trio-based screening model. .
 
 ## Depedences
 
