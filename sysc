@@ -228,7 +228,7 @@ case $1 in
             $trio_result_k21_sh $* \
                       --input $trio_data || exit 402
         else
-            $trio_result_k21_sh --input $trio_data || exit 401
+            $trio_result_k21_sh $* --input $trio_data || exit 401
         fi
         exit 0
         ;;
