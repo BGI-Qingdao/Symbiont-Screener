@@ -67,9 +67,11 @@ mix_simpb.fasta.gz
 ### The software design of sysc
 <img src="https://user-images.githubusercontent.com/38022049/198184371-d9bc9d44-2bde-45ba-ac87-58e5bc03896f.png" width="600">
 
-### The sysc command
+### sysc : the main entry of Symbiont Screener.
 
-Each pipeline in eays-to-use_pipelines folder uses sysc commmand but has different workflow.
+#### sysc usage
+
+type ```./Symbioint-Screener/sysc -h``` and get:
 
 ```
 Usage : sysc <action> [options]
@@ -88,12 +90,49 @@ Actions:
   +---------+-----------------------+-----------------------+
 ```
 
+Each action has it's own usage, for example ```./Symbioint-Screener/sysc build_s40 -h``` get:
+
+```
+Usage    :
+  ./sysc build_s40 [OPTION]
+
+Build randstrobe(2,10,30,30) based on paternal and maternal NGS reads by jellyfish.
+
+Options  :
+  basic input:
+        --paternal    paternal NGS reads file in FASTA/FASTQ format.
+                      file in gzip format can be accepted, but filename must end by ".gz".
+        --maternal    maternal NGS reads file in FASTA/FASTQ format.
+                      file in gzip format can be accepted, but filename must end by ".gz".
+  resources:
+        --thread      thread number.
+                      [ optional, default 8 threads. ]
+        --size        initial hash table by jellyfish.
+                      [ optional, default 1GB. ]
+  detail configuration:
+        --auto_bounds (0/1) automatically calcuate lower and upper bounds based on kmer analysis.
+                      [ optional, default 1; ]
+        --m-lower     maternal kmer frequency table will ignore kmers with count < m-lower.
+                      [ optional, default 0. ]
+        --m-upper     maternal kmer frequency table will ignore kmers with count > m-upper.
+                      [ optional, default 0. ]
+        --p-lower     paternal kmer frequency table will ignore kmers with count < p-lower.
+                      [ optional, default 0. ]
+        --p-upper     paternal kmer frequency table will ignore kmers with count > p-upper.
+                      [ optional, default 0. ]
+```
+
+Please see details of all other actions by ```sysc <action> -h```
+
 ### The workflows of pipelines:
+
+Each pipeline in eays-to-use_pipelines folder uses sysc commmand but has different workflow.
+
 
 ```
 The four available workflows of sysc :
   +---------------------------------------------------------------------------------------+-------------------------------+
-  |                                       Workflows                                       |     Corresponding pipeline    |
+  |                                       Workflows                                       |     Example pipeline          |
   +-------+------------------------------------------------------------------------+------+-------------------------------+
   |       | -> build_s40 -> density_s40 -> trio_result_s40 ----------------------> |      |  sysc_strobmer_mode.sh        | 
   |       |                                      |                                 |      |                               |
@@ -107,6 +146,8 @@ The four available workflows of sysc :
 ```
 
 ## Finetune paremeters
+
+To to avoid redundant work, the pipelines in easy-to-use_pipelines folder only provide the required paremeters. Therefor, we recommend you create your own pipeline based on them add modify the default parameters as your wish.
 
 ### Depth thresholds for build markers
 
