@@ -232,4 +232,5 @@ else
     echo "skip get common.mer due to 00.step_5_done exist"
 fi
 cd -
+
 echo "__END__"

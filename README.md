@@ -145,15 +145,13 @@ The four available workflows of sysc :
 
 ```
 
-## Finetune paremeters
+## How to finetune paremeters ?
 
-To to avoid redundant work, the pipelines in easy-to-use_pipelines folder only provide the required paremeters. Therefor, we recommend you create your own pipeline based on them add modify the default parameters as your wish.
+To to avoid redundant work, the pipelines in easy-to-use_pipelines folder only provide the required paremeters. 
 
-### Depth thresholds for build markers
+However, sysc as the main entry, provide all detail parameters that you need.
 
-### Minimam number of best hits for clustering
-
-### Trio density thresholds for trio result
+Therefor, we recommend you create your own pipeline based on them add modify the parameters as your wish.
 
 ## What is strobemer?
 

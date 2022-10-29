@@ -65,7 +65,7 @@ echo "CMD : $0 $*"
 ###########################################################
 # thirdparty
 JELLY=$SSPATH"/thirdparty/jellyfishbin/jellyfish-linux"
-MERYL=$SSPATH"/thirdparty/merybin/meryl"
+MERYL=$SSPATH"/thirdparty/merylbin/meryl"
 SEQKIT=$SSPATH"/thirdparty/seqkitbin/seqkit"
 # in house
 D3L=$SSPATH"/bin/density_3lib"
@@ -188,7 +188,7 @@ case $1 in
         if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
             $build_k21_sh $* \
                       --meryl $MERYL \
-                      --dkf $DRAW_KF  exit 201
+                      --dkf $DRAW_KF || exit 201
         else
             $build_k21_sh -h
         fi
