@@ -9,8 +9,8 @@ SSPATH=`realpath $SSPATH`
 ###########################################################
 # software version and basic logs
 ###########################################################
-VERSION='0.5-0-2'
-RELEASE_DATE='2021/06/30'
+VERSION='0.5-0-3'
+RELEASE_DATE='2022/10/30'
 echo "#----------------------------------------"
 echo "LOG : version           -- $VERSION"
 echo "LOG : release date      -- $RELEASE_DATE"
@@ -38,15 +38,17 @@ function TopUsage() {
 echo """
 
 The four available workflows of sysc :
-  +-------+-----------------------------------------------------------------------------+------+
-  |       | --> build_s40 --> density_s40 --> cluster_s40 --> consensus_cluster_s40 --> |      |
-  |       |                      |                                                      |      |
-  |       |                      +--------------------------> trio_result_s40 --------> |      |
-  | START |                                                                             | END  |
-  |       | --> build_k21 --> density_k21 --> cluster_k21 --> consensus_cluster_k21 --> |      |
-  |       |                      |                                                      |      |
-  |       |                      +--------------------------> trio_result_k21 --------> |      |
-  +-------+-----------------------------------------------------------------------------+------+
+  +---------------------------------------------------------------------------------------+-------------------------------+
+  |                                       Workflows                                       |     Corresponding pipeline    |
+  +-------+------------------------------------------------------------------------+------+-------------------------------+
+  |       | -> build_s40 -> density_s40 -> trio_result_s40 ----------------------> |      |  sysc_strobmer_mode.sh        |
+  |       |                                      |                                 |      |                               |
+  |       |                                cluster_s40 -> consensus_cluster_s40 -> |      |  sysc_strobmercluster_mode.sh |
+  | START |                                                                        | END  |                               |
+  |       | -> build_k21 -> density_k21 -> trio_result_k21 ----------------------> |      |  sysc_kmer_mode.sh            |
+  |       |                                      |                                 |      |                               |
+  |       |                                cluster_k21 -> consensus_cluster_k21 -> |      |  sysc_kmercluster_mode.sh     |
+  +-------+------------------------------------------------------------------------+------+-------------------------------+
 
 """
 
