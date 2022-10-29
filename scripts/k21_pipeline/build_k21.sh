@@ -116,11 +116,13 @@ do
             shift
             ;;
         "--paternal")
-            PATERNAL=$2" ""$PATERNAL"
+            tmp=`realpath $2`
+            PATERNAL=$tmp" ""$PATERNAL"
             shift
             ;;
         "--maternal")
-            MATERNAL=$2" ""$MATERNAL"
+            tmp=`realpath $2`
+            MATERNAL=$tmp" ""$MATERNAL"
             shift
             ;;
         *)

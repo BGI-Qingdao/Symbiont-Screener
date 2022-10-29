@@ -39,7 +39,7 @@ echo """
 
 The four available workflows of sysc :
   +---------------------------------------------------------------------------------------+-------------------------------+
-  |                                       Workflows                                       |     Corresponding pipeline    |
+  |                                       Workflows                                       |     example pipeline          |
   +-------+------------------------------------------------------------------------+------+-------------------------------+
   |       | -> build_s40 -> density_s40 -> trio_result_s40 ----------------------> |      |  sysc_strobmer_mode.sh        |
   |       |                                      |                                 |      |                               |
@@ -228,7 +228,7 @@ case $1 in
             $trio_result_k21_sh $* \
                       --input $trio_data || exit 402
         else
-            $trio_result_k21_sh -h
+            $trio_result_k21_sh --input $trio_data || exit 401
         fi
         exit 0
         ;;

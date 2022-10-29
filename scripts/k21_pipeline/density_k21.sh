@@ -56,7 +56,8 @@ do
             shift
             ;;
         "--offspring")
-            OFFSPRING="$2"" ""$OFFSPRING"
+            tmp=`realpath $2`
+            OFFSPRING="$tmp"" ""$OFFSPRING"
             shift
             ;;
         "--paternal_mer")
