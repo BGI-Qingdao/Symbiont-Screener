@@ -33,28 +33,28 @@ paternal_mix_simngs.v2.fasta.gz
 mix_simpb.fasta.gz
 ```
 
-### example1: run sysc in strobemer mode with cluster. (recommend)
+* example1: run sysc in strobemer mode with cluster. (recommend)
 
 ```
 ./Symbiont-Screener/easy-to-use_pipelines/sysc_strobmercluster_mode.sh --maternal maternal_mix_simngs.v2.fasta.gz \
                                                                        --paternal paternal_mix_simngs.v2.fasta.gz \
                                                                        --offspring  mix_simpb.fasta.gz
 ```
-### example2: run sysc in strobemer only mode. (also recommend)
+* example2: run sysc in strobemer only mode. (also recommend)
 
 ```
 ./Symbiont-Screener/easy-to-use_pipelines/sysc_strobmer_mode.sh        --maternal maternal_mix_simngs.v2.fasta.gz \
                                                                        --paternal paternal_mix_simngs.v2.fasta.gz \
                                                                        --offspring  mix_simpb.fasta.gz
 ```
-### example3: run sysc in kmer mode with cluster.
+* example3: run sysc in kmer mode with cluster.
 
 ```
 ./Symbiont-Screener/easy-to-use_pipelines/sysc_kmercluster_mode.sh     --maternal maternal_mix_simngs.v2.fasta.gz \
                                                                        --paternal paternal_mix_simngs.v2.fasta.gz \
                                                                        --offspring  mix_simpb.fasta.gz
 ```
-### example4: run sysc in kmer only mode.
+* example4: run sysc in kmer only mode.
 
 ```
 ./Symbiont-Screener/easy-to-use_pipelines/sysc_kmer_mode.sh            --maternal maternal_mix_simngs.v2.fasta.gz \
@@ -147,11 +147,7 @@ The four available workflows of sysc :
 
 ## How to finetune paremeters ?
 
-To to avoid redundant work, the pipelines in easy-to-use_pipelines folder only provide the required paremeters. 
-
-However, sysc as the main entry, provide all detail parameters that you need.
-
-Therefor, we recommend you create your own pipeline based on them add modify the parameters as your wish.
+To to avoid redundant work, the pipelines in easy-to-use_pipelines folder only provide the required paremeters. However, sysc as the main entry, provide all detail parameters that you need. Therefor, we recommend you create your own pipeline based on them add modify the parameters as your wish.
 
 ## What is strobemer?
 
