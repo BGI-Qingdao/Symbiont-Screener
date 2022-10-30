@@ -202,6 +202,6 @@ See https://github.com/ksahlin/strobemers and https://github.com/BGI-Qingdao/str
 
 Raising an issue is always recommended.
 
-Email to xumengyang@genomics.com, guolidong@genomics.com, and qiyanwei1@genomics.cn
+Email to xumengyang@genomics.cn, guolidong@genomics.cn, and qiyanwei1@genomics.cn
 
 ## Enjoy
