@@ -124,7 +124,7 @@ Options  :
 
 Please see details of all other actions by ```sysc <action> -h```
 
-### The workflows of pipelines:
+#### The workflows in example pipelines:
 
 Each pipeline in eays-to-use_pipelines folder uses sysc commmand but has different workflow.
 
@@ -144,10 +144,45 @@ The four available workflows of sysc :
   +---+------------------------------------------------------------------------+---+-------------------------------+
 
 ```
-
-## How to finetune paremeters ?
-
 To to avoid redundant work, the pipelines in easy-to-use_pipelines folder only provide the required paremeters. However, sysc as the main entry, provide all detail parameters that you need. Therefor, we recommend you create your own pipeline based on them add modify the parameters as your wish.
+
+
+## Commom Q & A 
+
+### How to re-run after program exit by error？
+
+First of all, please read the log and err files to find out why program exit. Invalid or incomplete parameters are the main reasons.
+The sysc command create tag file to log finished steps, therefor, just re-run the same command will automaticlly skip fininshed steps and continue.
+
+### How to re-run with different parameters？
+
+After you modify your pipelines, please move the rename folder so that program will create new folder and restart without the influence of previous data.
+
+For example, if you only change the parameter of ```cluster_k21```, please ```rename/move/delete``` both ```step03.1.k21``` and ```step03.2.k21``` so that program will re-run both ```cluster_k21``` and ```consensus_cluster_k21```. In this case, please keep ```step01.k21``` and ```step02.1.k21``` unchanged so that program will re-use those data.
+
+### How to finetune parameters ?
+
+* the ngs depth parameters
+
+Here are the most important parameters that you shall check.
+
+Those five parameters exist in both ```build_s40``` and ```build_k21``` actions.
+```
+  --auto_bounds
+  --m-lower    
+  --m-upper    
+  --p-lower    
+  --p-upper    
+```
+By default ```--auto_bounds=1``` so that program will infer the bounds automaticlly. 
+
+An interactive html named ```kmer_frequency.html``` will be created in ```step02.1.k21``` or ```step02.1.s40``` folder like below :
+
+![image](https://user-images.githubusercontent.com/8720584/198863141-3c87ff07-e5a4-47ff-9c4d-367ff1a55264.png)
+
+If the host reads are not the majority of all your reads, you should set ```--auto_bounds=0``` and custom your depth threshold base on this html image.
+
+
 
 ## What is strobemer?
 
