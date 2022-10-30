@@ -147,7 +147,7 @@ The four available workflows of sysc :
 To to avoid redundant work, the pipelines in easy-to-use_pipelines folder only provide the required paremeters. However, sysc as the main entry, provide all detail parameters that you need. Therefor, we recommend you create your own pipeline based on them add modify the parameters as your wish.
 
 
-## Commom Q & A 
+## Common Q & A 
 
 ### How to re-run after program exit by error？
 
