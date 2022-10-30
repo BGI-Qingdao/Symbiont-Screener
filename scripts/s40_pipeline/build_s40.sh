@@ -265,9 +265,8 @@ if [[ $AUTO_BOUNDS == 1 ]] ; then
     MUPPER=`grep UPPER_INDEX maternal.bounds.txt| awk -F '=' '{print $2}'`
     PLOWER=`grep LOWER_INDEX paternal.bounds.txt| awk -F '=' '{print $2}'`
     PUPPER=`grep UPPER_INDEX paternal.bounds.txt| awk -F '=' '{print $2}'`
-
-    $DRAW_KF || exit 1
 fi
+$DRAW_KF || exit 1
 
 echo "  the real used kmer-count bounds of maternal is [ $MLOWER , $MUPPER ] "
 echo "  the real used kmer-count bounds of paternal is [ $PLOWER , $PUPPER ] "

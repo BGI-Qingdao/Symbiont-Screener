@@ -131,17 +131,17 @@ Each pipeline in eays-to-use_pipelines folder uses sysc commmand but has differe
 
 ```
 The four available workflows of sysc :
-  +---------------------------------------------------------------------------------------+-------------------------------+
-  |                                       Workflows                                       |     Example pipeline          |
-  +-------+------------------------------------------------------------------------+------+-------------------------------+
-  |       | -> build_s40 -> density_s40 -> trio_result_s40 ----------------------> |      |  sysc_strobmer_mode.sh        | 
-  |       |                                      |                                 |      |                               |
-  |       |                                cluster_s40 -> consensus_cluster_s40 -> |      |  sysc_strobmercluster_mode.sh |
-  | START |                                                                        | END  |                               |
-  |       | -> build_k21 -> density_k21 -> trio_result_k21 ----------------------> |      |  sysc_kmer_mode.sh            |
-  |       |                                      |                                 |      |                               |
-  |       |                                cluster_k21 -> consensus_cluster_k21 -> |      |  sysc_kmercluster_mode.sh     |
-  +-------+------------------------------------------------------------------------+------+-------------------------------+
+  +--------------------------------------------------------------------------------+-------------------------------+
+  |                                   Workflows                                    |     Example pipeline          |
+  +---+------------------------------------------------------------------------+---+-------------------------------+
+  |   | -> build_s40 -> density_s40 -> trio_result_s40 ----------------------> |   |  sysc_strobmer_mode.sh        | 
+  | S |                     |                                                  |   |                               |
+  | T |                     +--------> cluster_s40 -> consensus_cluster_s40 -> | E |  sysc_strobmercluster_mode.sh |
+  | A |                                                                        | N |                               |
+  | R | -> build_k21 -> density_k21 -> trio_result_k21 ----------------------> | D |  sysc_kmer_mode.sh            |
+  | T |                     |                                                  |   |                               |
+  |   |                     +--------> cluster_k21 -> consensus_cluster_k21 -> |   |  sysc_kmercluster_mode.sh     |
+  +---+------------------------------------------------------------------------+---+-------------------------------+
 
 ```
 

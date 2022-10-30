@@ -21,7 +21,7 @@ echo "#----------------------------------------"
 # top level usage
 ###########################################################
 function TopUsage() {
-    echo "Usage : sysc <action> [options]"
+    echo "Usage : ./sysc <action> [options]"
     echo ""
     echo "Actions:"
     echo "  +---------+-----------------------+-----------------------+"
@@ -35,23 +35,25 @@ function TopUsage() {
     echo "  |step03.1 | cluster_s40           | cluster_k21           |"
     echo "  |step03.2 | consensus_cluster_s40 | consensus_cluster_k21 |"
     echo "  +---------+-----------------------+-----------------------+"
+echo ""
+echo "Try sysc <action> -h to see detail usage for each action like: ./sysc build_s40 -h" 
 echo """
 
 The four available workflows of sysc :
-  +---------------------------------------------------------------------------------------+-------------------------------+
-  |                                       Workflows                                       |     example pipeline          |
-  +-------+------------------------------------------------------------------------+------+-------------------------------+
-  |       | -> build_s40 -> density_s40 -> trio_result_s40 ----------------------> |      |  sysc_strobmer_mode.sh        |
-  |       |                                      |                                 |      |                               |
-  |       |                                cluster_s40 -> consensus_cluster_s40 -> |      |  sysc_strobmercluster_mode.sh |
-  | START |                                                                        | END  |                               |
-  |       | -> build_k21 -> density_k21 -> trio_result_k21 ----------------------> |      |  sysc_kmer_mode.sh            |
-  |       |                                      |                                 |      |                               |
-  |       |                                cluster_k21 -> consensus_cluster_k21 -> |      |  sysc_kmercluster_mode.sh     |
-  +-------+------------------------------------------------------------------------+------+-------------------------------+
+  +--------------------------------------------------------------------------------+-------------------------------+
+  |                                   Workflows                                    |     Example pipeline          |
+  +---+------------------------------------------------------------------------+---+-------------------------------+
+  |   | -> build_s40 -> density_s40 -> trio_result_s40 ----------------------> |   |  sysc_strobmer_mode.sh        |
+  | S |                     |                                                  |   |                               |
+  | T |                     +--------> cluster_s40 -> consensus_cluster_s40 -> | E |  sysc_strobmercluster_mode.sh |
+  | A |                                                                        | N |                               |
+  | R | -> build_k21 -> density_k21 -> trio_result_k21 ----------------------> | D |  sysc_kmer_mode.sh            |
+  | T |                     |                                                  |   |                               |
+  |   |                     +--------> cluster_k21 -> consensus_cluster_k21 -> |   |  sysc_kmercluster_mode.sh     |
+  +---+------------------------------------------------------------------------+---+-------------------------------+
 
+Please find example pipelines in easy-to-use_pipelines folder.
 """
-
 }
 
 if [[ $# -lt 1 || $1 == "-h" || $1 == "--help" ]] ; then
@@ -219,7 +221,7 @@ case $1 in
      'trio_result_k21')
         trio_result_k21_sh=$SSPATH"/scripts/k21_pipeline/trio_result_k21.sh"
         shift
-        if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
+        if [[ $# -eq 0 || ( $1 != '-h' && $1 != "--help" ) ]] ; then
             trio_data='step02.1.k21/trio_density.data.txt'
             if [[ ! -e $trio_data ]] ; then 
                 echo "ERROR: please run density_k21 action first ! exit ..."
@@ -228,7 +230,7 @@ case $1 in
             $trio_result_k21_sh $* \
                       --input $trio_data || exit 402
         else
-            $trio_result_k21_sh $* --input $trio_data || exit 401
+            $trio_result_k21_sh -h || exit 401
         fi
         exit 0
         ;;

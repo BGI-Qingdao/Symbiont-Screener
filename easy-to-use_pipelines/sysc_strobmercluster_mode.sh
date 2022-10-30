@@ -85,8 +85,6 @@ $SYSC density_s40 --thread 8 \
                   --offspring $SONTGS \
                   1>density_s40.log 2>density_s40.err 
 
-$SYSC trio_result_s40 1>trio_result_s40.log 2>trio_result_s40.err
-
 $SYSC cluster_s40 --thread 8 \
                   --offspring $SONTGS \
                   1>cluster_s40.log  2>cluster_s40.err

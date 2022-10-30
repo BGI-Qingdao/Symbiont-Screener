@@ -61,15 +61,18 @@ do
             shift
             ;;
         "--paternal_mer")
-            PATERNAL_MER=$2
+            tmp=`realpath $2`
+            PATERNAL_MER=$tmp
             shift
             ;;
         "--maternal_mer")
-            MATERNAL_MER=$2
+            tmp=`realpath $2`
+            MATERNAL_MER=$tmp
             shift
             ;;
         "--shared_mer")
-            SHARED_MER=$2
+            tmp=`realpath $2`
+            SHARED_MER=$tmp
             shift
             ;;
         "--offspring_format")
@@ -81,7 +84,8 @@ do
             shift
             ;;
         "--dtd")
-            DRAW_TD=`realpath $2`
+            tmp=`realpath $2`
+            DRAW_TD=`realpath $tmp`
             shift
             ;;
         *)

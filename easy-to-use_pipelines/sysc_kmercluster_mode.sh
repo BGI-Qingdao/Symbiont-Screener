@@ -85,8 +85,6 @@ $SYSC density_k21 --thread 8 \
                   --offspring $SONTGS \
                   1>density_k21.log 2>density_k21.err 
 
-$SYSC trio_result_k21 1>trio_result_k21.log 2>trio_result_k21.err
-
 $SYSC cluster_k21 --thread 8 \
                   --offspring $SONTGS \
                   1>cluster_k21.log  2>cluster_k21.err

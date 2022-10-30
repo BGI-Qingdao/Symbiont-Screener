@@ -3,11 +3,11 @@
 import pandas as pd
 import plotly.express as px
 
-pdata=pd.read_csv('paternal.histo',header=None,sep=' ')
+pdata=pd.read_csv('paternal.histo',header=None,sep=r' |\t',engine='python')
 pdata.columns=['frequency_of_kmers', 'number_of_distinct_kmers']
 pdata['source']='paternal'
 
-mdata=pd.read_csv('maternal.histo',header=None,sep=' ')
+mdata=pd.read_csv('maternal.histo',header=None,sep=r' |\t',engine='python')
 mdata.columns=['frequency_of_kmers', 'number_of_distinct_kmers']
 mdata['source']='maternal'
 
