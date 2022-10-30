@@ -99,5 +99,5 @@ $SYSC consensus_cluster_k21 --min_hit 10 \
 $SEQKIT grep -f step03.2.k21/readname.min-hit10.txt \
                 $SONTGS >host.fa
 
-$SEQKIT grep -f step03.2.k21/readname.other.min-hit10.txt \
+$SEQKIT grep -v -f step03.2.k21/readname.min-hit10.txt \
                 $SONTGS > symbiont.fa
