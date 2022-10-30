@@ -162,7 +162,7 @@ For example, if you only change the parameter of ```cluster_k21```, please ```re
 
 ### How to finetune parameters ?
 
-* the ngs depth parameters
+* The ngs depth parameters
 
 Here are the most important parameters that you shall check.
 
@@ -182,7 +182,17 @@ An interactive html named ```kmer_frequency.html``` will be created in ```step02
 
 If the host reads are not the majority of all your reads, you should set ```--auto_bounds=0``` and custom your depth threshold base on this html image.
 
+* The minimum number of best-hit for consensus clustering.
 
+In with cluster mode, an interactive html image named ```cluster.html``` will be created in ```step03.1.s40``` or ```step03.1.k21``` folder like below :
+
+![image](https://user-images.githubusercontent.com/8720584/198863720-c4622262-85d0-4cf9-95d8-48ba69c616d0.png)
+
+Please set the ```--min_hit``` paramter by the guide of this image.
+
+* Other parameters
+
+Please check our detailed usage for other paremeter like the threads, memory control ,etc... 
 
 ## What is strobemer?
 
