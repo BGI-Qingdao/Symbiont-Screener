@@ -160,7 +160,7 @@ After you modify your pipeline, please move or rename previous result files so t
 
 For example, if you only change the parameter of ```cluster_k21```, please ```rename/move/delete``` both ```step03.1.k21``` and ```step03.2.k21``` so that program will re-run both ```cluster_k21``` and ```consensus_cluster_k21```. In this case, please keep ```step01.k21``` and ```step02.1.k21``` unchanged so that program will re-use those results.
 
-### How can I finetune parameters ?
+### How can I finetune parameters?
 
 * The ngs depth parameters
 
