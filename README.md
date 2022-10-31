@@ -24,6 +24,10 @@ git clone https://github.com/BGI-Qingdao/Symbiont-Screener  ./Symbiont-Screener
 cd  ./Symbiont-Screener/sources
 make
 ```
+
+## Publication
+* Preprint: [Symbiont-Screener: a reference-free filter to automatically separate host sequences and contaminants for long reads or co-barcoded reads by unsupervised clustering](https://www.biorxiv.org/content/10.1101/2020.10.26.354621v1)
+
 ## Quick start with the test dataset
 
 To run Symbiont-Screener, the minimum input dataset contains one paternal NGS read file, one maternal NGS read file, and one child‘s TGS read file.
