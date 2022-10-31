@@ -4,6 +4,9 @@ Symbiont-Screener is a reference-free approach to identifying high-confidence ho
 
 <img src="https://user-images.githubusercontent.com/38022049/198184294-45610387-79dc-4860-a3b8-4b82315f0b42.png" width="800">
 
+## Publication
+* Preprint: [Symbiont-Screener: a reference-free filter to automatically separate host sequences and contaminants for long reads or co-barcoded reads by unsupervised clustering](https://www.biorxiv.org/content/10.1101/2020.10.26.354621v1)
+
 ## Dependencies
 System requirement:
 * make
@@ -25,8 +28,7 @@ cd  ./Symbiont-Screener/sources
 make
 ```
 
-## Publication
-* Preprint: [Symbiont-Screener: a reference-free filter to automatically separate host sequences and contaminants for long reads or co-barcoded reads by unsupervised clustering](https://www.biorxiv.org/content/10.1101/2020.10.26.354621v1)
+
 
 ## Quick start with the test dataset
 
