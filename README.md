@@ -15,7 +15,7 @@ System requirement:
     * plotly
 
 Third-party software:
-* [strobmers](https://github.com/ksahlin/strobemers
+* [strobmers](https://github.com/ksahlin/strobemers)
 
 ## Download and compile
 
