@@ -90,7 +90,7 @@ mix_simpb.fasta.gz
 
 * sysc usage:
 
- * type ```./Symbioint-Screener/sysc -h``` and get:
+   * type ```./Symbioint-Screener/sysc -h``` and get:
 
 ```
 Usage : sysc <action> [options]
