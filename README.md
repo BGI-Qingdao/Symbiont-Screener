@@ -5,7 +5,7 @@ Symbiont-Screener is a reference-free approach to identifying high-confidence ho
 <img src="https://user-images.githubusercontent.com/38022049/198184294-45610387-79dc-4860-a3b8-4b82315f0b42.png" width="800">
 
 ## Dependencies
-
+System requirement:
 * make
 * gcc/g++ (version>4.8.5 to support c++11)
 * python3 in your environment with packages :
@@ -13,6 +13,9 @@ Symbiont-Screener is a reference-free approach to identifying high-confidence ho
     * pandas
     * sklearn
     * plotly
+
+Third-party software:
+* [strobmers](https://github.com/ksahlin/strobemers
 
 ## Download and compile
 
