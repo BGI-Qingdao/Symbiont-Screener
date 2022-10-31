@@ -1,5 +1,7 @@
 # Symbiont-Screener
 
+## Description
+
 Symbiont-Screener is a reference-free approach to identifying high-confidence host's long reads from symbionts and contaminants and overcoming the low sequencing accuracy according to a trio-based screening model.
 
 <img src="https://user-images.githubusercontent.com/38022049/198184294-45610387-79dc-4860-a3b8-4b82315f0b42.png" width="800">
