@@ -40,31 +40,31 @@ paternal_mix_simngs.v2.fasta.gz
 mix_simpb.fasta.gz
 ```
 
-* example1: run Symbiont-Screener in strobemer mode with clustering. (recommended)
+* example1: run Symbiont-Screener in **strobemer mode with clustering**. (**recommended**)
 
 ```
-./Symbiont-Screener/easy-to-use_pipelines/sysc_strobmercluster_mode.sh --maternal maternal_mix_simngs.v2.fasta.gz \
+   ./Symbiont-Screener/easy-to-use_pipelines/sysc_strobmercluster_mode.sh --maternal maternal_mix_simngs.v2.fasta.gz \
                                                                        --paternal paternal_mix_simngs.v2.fasta.gz \
                                                                        --offspring  mix_simpb.fasta.gz
 ```
-* example2: run Symbiont-Screener in strobemer mode without further clustering.
+* example2: run Symbiont-Screener in **strobemer mode without further clustering**.
 
 ```
-./Symbiont-Screener/easy-to-use_pipelines/sysc_strobmer_mode.sh        --maternal maternal_mix_simngs.v2.fasta.gz \
+   ./Symbiont-Screener/easy-to-use_pipelines/sysc_strobmer_mode.sh        --maternal maternal_mix_simngs.v2.fasta.gz \
                                                                        --paternal paternal_mix_simngs.v2.fasta.gz \
                                                                        --offspring  mix_simpb.fasta.gz
 ```
-* example3: run Symbiont-Screener in k-mer mode with clustering.
+* example3: run Symbiont-Screener in **k-mer mode with clustering**.
 
 ```
-./Symbiont-Screener/easy-to-use_pipelines/sysc_kmercluster_mode.sh     --maternal maternal_mix_simngs.v2.fasta.gz \
+   ./Symbiont-Screener/easy-to-use_pipelines/sysc_kmercluster_mode.sh     --maternal maternal_mix_simngs.v2.fasta.gz \
                                                                        --paternal paternal_mix_simngs.v2.fasta.gz \
                                                                        --offspring  mix_simpb.fasta.gz
 ```
-* example4: run Symbiont-Screener in k-mer mode without further clustering.
+* example4: run Symbiont-Screener in **k-mer mode without further clustering**.
 
 ```
-./Symbiont-Screener/easy-to-use_pipelines/sysc_kmer_mode.sh            --maternal maternal_mix_simngs.v2.fasta.gz \
+   ./Symbiont-Screener/easy-to-use_pipelines/sysc_kmer_mode.sh            --maternal maternal_mix_simngs.v2.fasta.gz \
                                                                        --paternal paternal_mix_simngs.v2.fasta.gz \
                                                                        --offspring  mix_simpb.fasta.gz
 ```
