@@ -88,7 +88,7 @@ mix_simpb.fasta.gz
 
 ### sysc : the main entry of Symbiont-Screener.
 
-* sysc usage
+* sysc usage:
 
  * type ```./Symbioint-Screener/sysc -h``` and get:
 
@@ -109,7 +109,7 @@ Actions:
   +---------+-----------------------+-----------------------+
 ```
 
-* Module Usage
+* module usage:
    * Each action has it's own usage, for example ```./Symbioint-Screener/sysc build_s40 -h``` get:
 
 ```
@@ -144,9 +144,9 @@ Options  :
 
 * Please see details of all other actions by ```sysc <action> -h```
 
-   * The workflows in example pipelines.
+   * The workflows in example pipelines:
 
-   * Each pipeline in easy-to-use_pipelines folder uses sysc command but has different workflows.
+     Each pipeline in easy-to-use_pipelines folder uses sysc command but has different workflows.
 
 
 ```
