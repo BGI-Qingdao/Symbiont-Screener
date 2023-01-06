@@ -9,8 +9,8 @@ SSPATH=`realpath $SSPATH`
 ###########################################################
 # software version and basic logs
 ###########################################################
-VERSION='0.5-0-3'
-RELEASE_DATE='2022/10/30'
+VERSION='1.0-0-0'
+RELEASE_DATE='2023/01/06'
 echo "#----------------------------------------"
 echo "LOG : version           -- $VERSION"
 echo "LOG : release date      -- $RELEASE_DATE"
@@ -65,20 +65,20 @@ echo "CMD : $0 $*"
 ###########################################################
 # sanity checking of installation
 ###########################################################
-# thirdparty
-JELLY=$SSPATH"/thirdparty/jellyfishbin/jellyfish-linux"
-MERYL=$SSPATH"/thirdparty/merylbin/meryl"
-SEQKIT=$SSPATH"/thirdparty/seqkitbin/seqkit"
-# in house
-D3L=$SSPATH"/bin/density_3lib"
-D3LS=$SSPATH"/bin/density_3lib_strobemer"
-K2S=$SSPATH"/bin/kmer2strobemer"
-GCNMER=$SSPATH"/bin/gc_nmer"
-BGM_MAIN=$SSPATH"/scripts/bayes_gaussian_cluster/main_logic.py"
+# thirdparty in conda env
+JELLY=jellyfish
+MERYL=meryl
+SEQKIT=seqkit
+# in conda env
+D3L=$SSPATH"/symbiontscreenerbin/density_3lib"
+D3LS=$SSPATH"/symbiontscreenerbin/density_3lib_strobemer"
+K2S=$SSPATH"/symbiontscreenerbin/kmer2strobemer"
+GCNMER=$SSPATH"/symbiontscreenerbin/gc_nmer"
+BGM_MAIN=$SSPATH"/symbiontscreenerbin/bayes_gaussian_cluster/main_logic.py"
 # visualize script
-DRAW_KF=$SSPATH"/scripts/draw/draw_kmer_frequency.py"
-DRAW_CL=$SSPATH"/scripts/draw/draw_cluster.py"
-DRAW_TD=$SSPATH"/scripts/draw/draw_trio_density.py"
+DRAW_KF=$SSPATH"/symbiontscreenerbin/draw/draw_kmer_frequency.py"
+DRAW_CL=$SSPATH"/symbiontscreenerbin/draw/draw_cluster.py"
+DRAW_TD=$SSPATH"/symbiontscreenerbin/draw/draw_trio_density.py"
 
 # sanity check
 if [[ ! -e $K2S
@@ -100,7 +100,7 @@ fi
 ###########################################################
 case $1 in
     'build_s40')
-        build_s40_sh=$SSPATH"/scripts/s40_pipeline/build_s40.sh"
+        build_s40_sh=$SSPATH"/symbiontscreenerbin/s40_pipeline/build_s40.sh"
         shift
         if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
             $build_s40_sh $* \
@@ -113,7 +113,7 @@ case $1 in
         exit 0
         ;;
     'density_s40')
-        density_s40_sh=$SSPATH"/scripts/s40_pipeline/density_s40.sh"
+        density_s40_sh=$SSPATH"/symbiontscreenerbin/s40_pipeline/density_s40.sh"
         shift
         if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
             pom='step01.s40/paternal_only.strobemer'
@@ -135,7 +135,7 @@ case $1 in
         exit 0
         ;;
     'trio_result_s40')
-        trio_result_s40_sh=$SSPATH"/scripts/s40_pipeline/trio_result_s40.sh"
+        trio_result_s40_sh=$SSPATH"/symbiontscreenerbin/s40_pipeline/trio_result_s40.sh"
         shift
         if [[ $# -eq 0 || ( $1 != '-h' && $1 != "--help" ) ]] ; then
             trio_data='step02.1.s40/trio_density.data.txt'
@@ -151,7 +151,7 @@ case $1 in
         exit 0
         ;;
     'cluster_s40')
-        cluster_s40_sh=$SSPATH"/scripts/s40_pipeline/cluster_s40.sh"
+        cluster_s40_sh=$SSPATH"/symbiontscreenerbin/s40_pipeline/cluster_s40.sh"
         shift
         if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
             trio_data='step02.1.s40/trio_density.data.txt'
@@ -169,7 +169,7 @@ case $1 in
         exit 0
         ;;
     'consensus_cluster_s40')
-        consensus_cluster_s40_sh=$SSPATH"/scripts/s40_pipeline/consensus_cluster_s40.sh"
+        consensus_cluster_s40_sh=$SSPATH"/symbiontscreenerbin/s40_pipeline/consensus_cluster_s40.sh"
         shift
         if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
             cluster_result='step03.1.s40/final.result.txt'
@@ -185,7 +185,7 @@ case $1 in
         exit 0
         ;;
     'build_k21')
-        build_k21_sh=$SSPATH"/scripts/k21_pipeline/build_k21.sh"
+        build_k21_sh=$SSPATH"/symbiontscreenerbin/k21_pipeline/build_k21.sh"
         shift
         if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
             $build_k21_sh $* \
@@ -197,7 +197,7 @@ case $1 in
         exit 0
         ;;
     'density_k21')
-        density_k21_sh=$SSPATH"/scripts/k21_pipeline/density_k21.sh"
+        density_k21_sh=$SSPATH"/symbiontscreenerbin/k21_pipeline/density_k21.sh"
         shift
         if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
             pom='step01.k21/paternal.mer'
@@ -219,7 +219,7 @@ case $1 in
         exit 0
         ;;
      'trio_result_k21')
-        trio_result_k21_sh=$SSPATH"/scripts/k21_pipeline/trio_result_k21.sh"
+        trio_result_k21_sh=$SSPATH"/symbiontscreenerbin/k21_pipeline/trio_result_k21.sh"
         shift
         if [[ $# -eq 0 || ( $1 != '-h' && $1 != "--help" ) ]] ; then
             trio_data='step02.1.k21/trio_density.data.txt'
@@ -235,7 +235,7 @@ case $1 in
         exit 0
         ;;
     'cluster_k21')
-        cluster_k21_sh=$SSPATH"/scripts/k21_pipeline/cluster_k21.sh"
+        cluster_k21_sh=$SSPATH"/symbiontscreenerbin/k21_pipeline/cluster_k21.sh"
         shift
         if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
             trio_data='step02.1.k21/trio_density.data.txt'
@@ -253,7 +253,7 @@ case $1 in
         exit 0
         ;;
     'consensus_cluster_k21')
-        consensus_cluster_k21_sh=$SSPATH"/scripts/k21_pipeline/consensus_cluster_k21.sh"
+        consensus_cluster_k21_sh=$SSPATH"/symbiontscreenerbin/k21_pipeline/consensus_cluster_k21.sh"
         shift
         if [[ $# -gt 0 && $1 != '-h' && $1 != "--help" ]] ; then
             cluster_result='step03.1.k21/final.result.txt'

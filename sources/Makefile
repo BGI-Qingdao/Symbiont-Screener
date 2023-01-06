@@ -1,35 +1,36 @@
-.PHONY: all clean
+.PHONY: all clean cpbin
 
-all: ../bin density_3lib density_3lib_stlfr gc_nmer gc_nmer_stlfr  kmer2strobemer density_3lib_strobemer
+CC  ?= gcc
+CXX ?= g++
 
-../bin: kmer2strobemer density_3lib_strobemer density_3lib gc_nmer
-	mkdir -p ../bin
-	cp kmer2strobemer density_3lib_strobemer density_3lib gc_nmer ../bin/
+CXXFLAGS += -std=c++11 -I./gzstream -I./strobemer
 
-gc_nmer: gc_nmer.cpp gzstream/gzstream.C gzstream/gzstream.h
-	g++ -c -g  gzstream/gzstream.C -I./gzstream -lz -o gzstream.o
-	g++ -g -std=c++11 gc_nmer.cpp gzstream.o -lz -lpthread -o gc_nmer 
+LD_FLAGS += -lz -lpthread
 
-gc_nmer_stlfr: gc_nmer_stlfr.cpp gzstream/gzstream.C gzstream/gzstream.h
-	g++ -c -g  gzstream/gzstream.C -I./gzstream -lz -o gzstream.o
-	g++ -g -std=c++11 gc_nmer_stlfr.cpp gzstream.o -lz -lpthread -o gc_nmer_stlfr
+all: cpbin density_3lib gc_nmer  kmer2strobemer density_3lib_strobemer
 
-density_3lib : density_3lib.cpp gzstream/gzstream.C gzstream/gzstream.h
-	g++ -c -g  gzstream/gzstream.C -I./gzstream -lz -o gzstream.o
-	g++ -g -std=c++11 density_3lib.cpp gzstream.o -lz -lpthread -o density_3lib
+cpbin: kmer2strobemer density_3lib_strobemer density_3lib gc_nmer
+	mkdir -p ../symbiontscreenerbin
+	cp kmer2strobemer density_3lib_strobemer density_3lib gc_nmer ../symbiontscreenerbin/
 
-density_3lib_stlfr : density_3lib_stlfr.cpp gzstream/gzstream.C gzstream/gzstream.h kmer/kmer.h
-	g++ -c -g  gzstream/gzstream.C -I./gzstream -lz -o gzstream.o
-	g++ -g -std=c++11  density_3lib_stlfr.cpp gzstream.o -lz -lpthread -o density_3lib_stlfr
+gzstream.o: gzstream/gzstream.C gzstream/gzstream.h
+	${CXX} -c gzstream/gzstream.C ${CXXFLAGS} ${LD_FLAGS} -o gzstream.o
 
-kmer2strobemer: kmer2strobemer.cpp strobemer/strobemer.cpp strobemer/strobemer.h
-	g++ -c -std=c++11 -g strobemer/strobemer.cpp -I./strobemer -o strobemer.o
-	g++ -g -std=c++11 kmer2strobemer.cpp strobemer.o -o kmer2strobemer
+strobemer.o: strobemer/strobemer.cpp strobemer/strobemer.h
+	${CXX} ${CXXFLAGS} -c strobemer/strobemer.cpp ${LD_FLAGS} -o strobemer.o
 
-density_3lib_strobemer: density_3lib_strobemer.cpp gzstream/gzstream.C gzstream/gzstream.h strobemer/strobemer.cpp strobemer/strobemer.h
-	g++ -c -g  gzstream/gzstream.C -I./gzstream -lz -o gzstream.o
-	g++ -c -std=c++11 -g strobemer/strobemer.cpp -I./strobemer -o strobemer.o
-	g++ -g -std=c++11 density_3lib_strobemer.cpp gzstream.o strobemer.o -lz -lpthread -o density_3lib_strobemer
+gc_nmer: gc_nmer.cpp gzstream.o
+	${CXX} ${CXXFLAGS}  gc_nmer.cpp gzstream.o ${LD_FLAGS} -o gc_nmer
+
+density_3lib : density_3lib.cpp gzstream.o
+	${CXX} ${CXXFLAGS} density_3lib.cpp gzstream.o ${LD_FLAGS} -o density_3lib
+
+kmer2strobemer: kmer2strobemer.cpp strobemer.o
+	${CXX} ${CXXFLAGS} kmer2strobemer.cpp strobemer.o ${LD_FLAGS} -o kmer2strobemer
+
+density_3lib_strobemer: density_3lib_strobemer.cpp gzstream.o strobemer.o
+	${CXX} ${CXXFLAGS}  density_3lib_strobemer.cpp gzstream.o strobemer.o ${LD_FLAGS} -o density_3lib_strobemer
+
 clean :
 	rm -f density_3lib density_3lib_stlfr gc_nmer gc_nmer_stlfr kmer2strobemer density_3lib_strobemer
 	rm -f *.o gzstream/*.o strobemer/*.o
