@@ -24,13 +24,21 @@ Third-party software:
 
 ## Download and compile
 
+### from conda
+
+```
+conda install -c intel scikit-learn
+conda install -c bioconda symbiontscreener
+```
+notice: easy-to-use_pipelines are not included in the conda version, please use sysc directly
+
+### from source codes
+ 
 ```
 git clone https://github.com/BGI-Qingdao/Symbiont-Screener  ./Symbiont-Screener
-cd  ./Symbiont-Screener/sources
+cd  ./Symbiont-Screener
 make
 ```
-
-
 
 ## Quick start with the test dataset
 
