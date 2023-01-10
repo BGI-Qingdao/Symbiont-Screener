@@ -36,7 +36,7 @@ notice: easy-to-use_pipelines are not included in the conda version, please use 
  
 ```
 git clone https://github.com/BGI-Qingdao/Symbiont-Screener  ./Symbiont-Screener
-cd  ./Symbiont-Screener
+cd  ./Symbiont-Screener/sources
 make
 ```
 
