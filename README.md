@@ -12,7 +12,7 @@ Symbiont-Screener: A reference-free tool to separate host sequences from symbion
 
 If you find MetaTrass is useful in your research, please cite：
 
-* Online published:  [Xu M, Guo L, Qi Y, Shi C, Liu X, Chen J, Han J, Deng L, Liu X and Fan G (2023) Symbiont-screener: A reference-free tool to separate host sequences from symbionts for error-prone long reads.] Front. Mar. Sci. 10:1087447. doi: 10.3389/fmars.2023.1087447](https://www.frontiersin.org/articles/10.3389/fmars.2023.1087447/full)
+* Online published: [Xu M, Guo L, Qi Y, Shi C, Liu X, Chen J, Han J, Deng L, Liu X and Fan G (2023) Symbiont-screener: A reference-free tool to separate host sequences from symbionts for error-prone long reads. Front. Mar. Sci. 10:1087447. doi: 10.3389/fmars.2023.1087447](https://www.frontiersin.org/articles/10.3389/fmars.2023.1087447/full)
 
 * Preprint: [Xu M, Guo L, Shi C, Liu X, Chen J, Liu X and Fan G (2020) Symbiont-Screener: a reference-free filter to automatically separate host sequences and contaminants for long reads or co-barcoded reads by unsupervised clustering. bioRxiv 2020.10.26.354621. doi: 10.1101/2020.10.26.354621](https://www.biorxiv.org/content/10.1101/2020.10.26.354621v1)
 
