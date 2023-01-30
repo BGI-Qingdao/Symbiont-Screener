@@ -6,9 +6,9 @@ Symbiont-Screener is a reference-free approach to identifying high-confidence ho
 
 <img src="https://user-images.githubusercontent.com/38022049/198184294-45610387-79dc-4860-a3b8-4b82315f0b42.png" width="800">
 
-## Citing Symbiont-screener
+## Citing Symbiont-Screener
 
-Symbiont-screener: A reference-free tool to separate host sequences from symbionts for error-prone long reads
+Symbiont-Screener: A reference-free tool to separate host sequences from symbionts for error-prone long reads
 
 If you find MetaTrass is useful in your research, please cite：
 
