@@ -39,3 +39,4 @@ class ConsensusResult:
                 self.hosts[i] = 1
             else :
                 self.hosts[i] = 0
+

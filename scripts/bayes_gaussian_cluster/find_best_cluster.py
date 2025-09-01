@@ -64,4 +64,3 @@ class BestHitFinder:
             return False , -1 , -1
         else :
             return True , best_hit ,second_best_hit
-

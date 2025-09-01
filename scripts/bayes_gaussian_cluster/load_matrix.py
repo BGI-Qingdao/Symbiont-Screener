@@ -17,6 +17,3 @@ class MatrixLoader:
             self.formula_predict = self.T[:,1]
             self.X = np.hstack( (self.T[:,2:] ,self.M ) )
             self.Y =  self.T[:,0]
-
-
-

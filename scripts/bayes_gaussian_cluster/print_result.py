@@ -14,3 +14,4 @@ def print_result(predict_Y,consensus_Y,Y_score,Ys_score):
     print("formula_predict\tconsensus_result\tbest_count\tsecond_best_count")
     for i in range(len(predict_Y)):
         print("%d\t%d\t%d\t%d"%(predict_Y[i],consensus_Y[i],Y_score[i],Ys_score[i]))
+

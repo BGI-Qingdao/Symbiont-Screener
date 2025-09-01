@@ -46,3 +46,4 @@ class OPTs:
         if( self.trio_file == '' or self.mer2_file == '' ):
             print("Error: -t and -m are necessary !!! exit ..." ,file=sys.stderr)
             sys.exit(2)
+

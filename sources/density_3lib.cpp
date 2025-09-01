@@ -24,6 +24,7 @@ std::string get_name(const std::string & name ){
     return ret ;
 }
 
+
 void logtime(){
     time_t now = time(0);
     char* dt = ctime(&now);

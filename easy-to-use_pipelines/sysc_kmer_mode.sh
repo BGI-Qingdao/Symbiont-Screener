@@ -21,6 +21,7 @@ usage of example pipeline - sysc_strobmer_mode.sh:
 """
 }
 
+
 echo "CMD :$0 $*"
 if [[ $# == 0 || $1 == '-h' || $1 == "--help" ]] ; then
     usage

@@ -348,3 +348,4 @@ else
 fi
 echo "step01.s40 output : paternal_only.strobemer & maternal_only.strobemer & common_only.strobemer"
 cd -
+

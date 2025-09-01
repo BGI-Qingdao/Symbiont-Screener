@@ -55,3 +55,4 @@ def log_hit(i,hits):
         tt=np.sum(hits==j)
         ll[j]=tt
     print("Info : hit frequency %s"% str(ll),file=sys.stderr,flush = True)
+

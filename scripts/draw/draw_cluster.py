@@ -28,3 +28,5 @@ fdata['count']=cache.reshape(-1)
 
 fig = px.bar(fdata, x="hit", y="count",color='type')
 fig.write_html('cluster.html')
+
+
